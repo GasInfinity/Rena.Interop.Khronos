@@ -27,7 +27,7 @@ public unsafe partial class GlCompat
     
     // Extensions
     
-    public GlCompat(delegate* unmanaged<byte*, void*> loadFunc)
+    public GlCompat(delegate* <byte*, void*> loadFunc)
     {
         fixed(byte* name = "glGetString"u8)
             glGetString = (delegate* unmanaged<int, byte*>)loadFunc(name);

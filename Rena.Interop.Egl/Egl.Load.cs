@@ -15,7 +15,7 @@ public unsafe partial class Egl
     
     // Extensions
     
-    public Egl(delegate* unmanaged<byte*, void*> loadFunc)
+    public Egl(delegate* <byte*, void*> loadFunc)
     {
         fixed(byte* name = "eglGetDisplay"u8)
             eglGetDisplay = (delegate* unmanaged<void*, void*>)loadFunc(name);

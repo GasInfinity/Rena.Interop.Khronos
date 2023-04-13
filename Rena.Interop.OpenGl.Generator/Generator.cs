@@ -7,7 +7,7 @@ namespace Rena.Interop.OpenGl.Generator;
 // TODO: Refactor this one day, it's only a MVP
 public class Generator
 {
-    const string LoadProcType = "delegate* unmanaged<byte*, void*>";
+    const string LoadProcType = "delegate* <byte*, void*>";
 
     private readonly string apiString;
     private readonly string functionPrefix;
@@ -52,7 +52,14 @@ public class Generator
 
     private void GenerateUtil()
     {
-        using FileStream utilFile = File.OpenWrite($"{Options.OutputPath}/{Options.ClassName}.Util.cs");
+        var output = $"{Options.OutputPath}/{Options.ClassName}.Util.cs";
+
+        var dirName = Path.GetDirectoryName(output);
+
+        if (!string.IsNullOrEmpty(dirName))
+            _ = Directory.CreateDirectory(dirName);
+
+        using FileStream utilFile = File.Create(output);
         using StreamWriter utilWriter = new(utilFile);
         using IndentedTextWriter writer = new(utilWriter);
 
@@ -96,7 +103,14 @@ public partial class {Options.ClassName}
 
     private void GenerateLoader()
     {
-        using FileStream loaderFile = File.OpenWrite($"{Options.OutputPath}/{Options.ClassName}.Load.cs");
+        var output = $"{Options.OutputPath}/{Options.ClassName}.Load.cs";
+
+        var dirName = Path.GetDirectoryName(output);
+
+        if (!string.IsNullOrEmpty(dirName))
+            _ = Directory.CreateDirectory(dirName);
+
+        using FileStream loaderFile = File.Create(output);
         using StreamWriter loaderWriter = new(loaderFile);
         using IndentedTextWriter writer = new(loaderWriter);
 
@@ -162,7 +176,14 @@ public partial class {Options.ClassName}
 
     private void GenerateEnums(IReadOnlyList<SpecEnums> enumsList)
     {
-        using FileStream enumFile = File.OpenWrite($"{Options.OutputPath}/{Options.ClassName}.Constants.cs");
+        var output = $"{Options.OutputPath}/{Options.ClassName}.Constants.cs";
+
+        var dirName = Path.GetDirectoryName(output);
+
+        if (!string.IsNullOrEmpty(dirName))
+            _ = Directory.CreateDirectory(dirName);
+
+        using FileStream enumFile = File.Create(output);
         using StreamWriter enumWriter = new(enumFile);
         using IndentedTextWriter writer = new(enumWriter);
 
@@ -192,7 +213,14 @@ public partial class {Options.ClassName}
 
     private void GenerateFunctionMembers(IReadOnlyList<Commands> commandsList)
     {
-        using FileStream functionsFile = File.OpenWrite($"{Options.OutputPath}/{Options.ClassName}.FunctionMembers.cs");
+        var output = $"{Options.OutputPath}/{Options.ClassName}.FunctionMembers.cs";
+
+        var dirName = Path.GetDirectoryName(output);
+
+        if (!string.IsNullOrEmpty(dirName))
+            _ = Directory.CreateDirectory(dirName);
+
+        using FileStream functionsFile = File.Create(output);
         using StreamWriter functionsWriter = new(functionsFile);
         using IndentedTextWriter writer = new(functionsWriter);
 
@@ -218,7 +246,14 @@ public partial class {Options.ClassName}
 
     private void GenerateFunctions(IReadOnlyList<Commands> commandsList)
     {
-        using FileStream functionsFile = File.OpenWrite($"{Options.OutputPath}/{Options.ClassName}.Functions.cs");
+        var output = $"{Options.OutputPath}/{Options.ClassName}.Functions.cs";
+
+        var dirName = Path.GetDirectoryName(output);
+
+        if (!string.IsNullOrEmpty(dirName))
+            _ = Directory.CreateDirectory(dirName);
+
+        using FileStream functionsFile = File.Create(output);
         using StreamWriter functionsWriter = new(functionsFile);
         using IndentedTextWriter writer = new(functionsWriter);
 
@@ -332,11 +367,11 @@ public partial class {Options.ClassName}
         writer.WriteLine("if(eglGetDisplay == null || eglGetCurrentDisplay == null || eglQueryString == null || eglGetError == null) return;");
 
         writer.WriteLine("var display = eglGetCurrentDisplay();");
-        
-        if(Options.Version.IsIncluded(new() { Major = 1, Minor = 4 }))
+
+        if (Options.Version.IsIncluded(new() { Major = 1, Minor = 4 }))
             writer.WriteLine("if(display == (void*)EGL_NO_DISPLAY) display = eglGetDisplay((void*)EGL_DEFAULT_DISPLAY);");
-        
-        if(Options.Version.IsIncluded(new() { Major = 1, Minor = 5 }))
+
+        if (Options.Version.IsIncluded(new() { Major = 1, Minor = 5 }))
             writer.WriteLine("if(display == (void*)EGL_NO_DISPLAY) return;");
 
         writer.WriteLine("var version = eglQueryString(display, EGL_VERSION);");

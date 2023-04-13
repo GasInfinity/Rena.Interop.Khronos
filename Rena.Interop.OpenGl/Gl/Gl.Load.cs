@@ -27,7 +27,7 @@ public unsafe partial class Gl
     
     // Extensions
     
-    public Gl(delegate* unmanaged<byte*, void*> loadFunc)
+    public Gl(delegate* <byte*, void*> loadFunc)
     {
         fixed(byte* name = "glGetString"u8)
             glGetString = (delegate* unmanaged<int, byte*>)loadFunc(name);
