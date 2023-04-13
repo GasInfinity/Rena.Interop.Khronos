@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rena.Interop.OpenGl", "Rena.Interop.OpenGl\Rena.Interop.OpenGl.csproj", "{CF7B469C-F7BA-45A8-84D1-2990598DF09F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rena.Interop.Egl", "Rena.Interop.Egl\Rena.Interop.Egl.csproj", "{AC9E29C1-EAC7-4246-A4C4-256E6D338FFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rena.Interop.OpenGl.Generator", "Rena.Interop.OpenGl.Generator\Rena.Interop.OpenGl.Generator.csproj", "{0548E955-4575-41D5-8B1F-C8DE230C6DB8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF7B469C-F7BA-45A8-84D1-2990598DF09F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF7B469C-F7BA-45A8-84D1-2990598DF09F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF7B469C-F7BA-45A8-84D1-2990598DF09F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF7B469C-F7BA-45A8-84D1-2990598DF09F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0548E955-4575-41D5-8B1F-C8DE230C6DB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0548E955-4575-41D5-8B1F-C8DE230C6DB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0548E955-4575-41D5-8B1F-C8DE230C6DB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0548E955-4575-41D5-8B1F-C8DE230C6DB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC9E29C1-EAC7-4246-A4C4-256E6D338FFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC9E29C1-EAC7-4246-A4C4-256E6D338FFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC9E29C1-EAC7-4246-A4C4-256E6D338FFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC9E29C1-EAC7-4246-A4C4-256E6D338FFD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
