@@ -78,20 +78,30 @@ public partial class {Options.ClassName}
     internal static bool TryParseVersion(ReadOnlySpan<byte> value, out ushort major, out ushort minor)
     {{
         const byte DotAscii = (byte)'.';
-
+        const byte SpaceAscii = (byte)' ';
+        
         if (value.StartsWith(OpenGlEsCmPrefix))
-            value = value[OpenGlEsCmPrefix.Length..];
+            value = value[(OpenGlEsCmPrefix.Length + 1)..];
         else if (value.StartsWith(OpenGlEsCxPrefix))
-            value = value[OpenGlEsCxPrefix.Length..];
+            value = value[(OpenGlEsCxPrefix.Length + 1)..];
         else if (value.StartsWith(OpenGlScPrefix))
-            value = value[OpenGlScPrefix.Length..];
+            value = value[(OpenGlScPrefix.Length + 1)..];
         else if (value.StartsWith(OpenGlEsPrefix))
-            value = value[OpenGlEsPrefix.Length..];
+            value = value[(OpenGlEsPrefix.Length + 1)..];
 
         var dotIndex = value.IndexOf(DotAscii);
-
+        var spaceIndex = value.IndexOf(SpaceAscii);
+        
+        if(dotIndex == -1)
+        {{
+            (major, minor) = (default, default);
+            return false;
+        }}
+        
+        var lastIndex = spaceIndex != -1 ? spaceIndex : value.Length;
+        
         if (Utf8Parser.TryParse(value[..dotIndex], out major, out _)
-        && Utf8Parser.TryParse(value[(dotIndex + 1)..], out minor, out _))
+        && Utf8Parser.TryParse(value[(dotIndex + 1)..lastIndex], out minor, out _))
             return true;
 
         major = minor = 0;
@@ -460,12 +470,8 @@ public partial class {Options.ClassName}
     private static string ProcessConstantValueType(string value)
     {
         const string Prefix = "0x";
-        const string EglCast = "EGL_CAST(";
 
         var number = value.AsSpan();
-
-        if (number.StartsWith(EglCast))
-            number = number[(number.IndexOf(',') + 1)..number.IndexOf(')')];
 
         if (number.StartsWith(Prefix))
             number = number[Prefix.Length..];
