@@ -1,6 +1,6 @@
 #! /bin/sh
 
-dotnet run --project "Rena.Interop.OpenGl.Generator/Rena.Interop.OpenGl.Generator.csproj" -- --api Gl --profile Core --output Rena.Interop.OpenGl/Gl --class-name "Gl" --namespace Rena.Interop.OpenGl --api-version 4.5
-dotnet run --project "Rena.Interop.OpenGl.Generator/Rena.Interop.OpenGl.Generator.csproj" -- --api Gl --profile Compatibility --output Rena.Interop.OpenGl/GlCompat --class-name "GlCompat" --namespace Rena.Interop.OpenGl --api-version 4.5
-dotnet run --project "Rena.Interop.OpenGl.Generator/Rena.Interop.OpenGl.Generator.csproj" -- --api Gles2 --output Rena.Interop.OpenGl/Gles2 --class-name "Gles2" --namespace Rena.Interop.OpenGl --api-version 3.2
-dotnet run --project "Rena.Interop.OpenGl.Generator/Rena.Interop.OpenGl.Generator.csproj" -- --api Egl --output Rena.Interop.Egl/ --class-name "Egl" --namespace Rena.Interop.Egl --api-version 1.5
+dotnet run --project "Rena.Interop.OpenGL.Generator/Rena.Interop.OpenGL.Generator.csproj" -- --api GL    --profile Core          --output Rena.Interop.OpenGL/GL       --class-name GL       --namespace Rena.Interop.OpenGL --api-version 4.6
+dotnet run --project "Rena.Interop.OpenGL.Generator/Rena.Interop.OpenGL.Generator.csproj" -- --api GL    --profile Compatibility --output Rena.Interop.OpenGL/GLCompat --class-name GLCompat --namespace Rena.Interop.OpenGL --api-version 4.6
+dotnet run --project "Rena.Interop.OpenGL.Generator/Rena.Interop.OpenGL.Generator.csproj" -- --api GLES2                         --output Rena.Interop.OpenGL/GLES2    --class-name GLES2    --namespace Rena.Interop.OpenGL --api-version 3.2
+dotnet run --project "Rena.Interop.OpenGL.Generator/Rena.Interop.OpenGL.Generator.csproj" -- --api EGL                           --output Rena.Interop.EGL/            --class-name EGL      --namespace Rena.Interop.EGL    --api-version 1.5
