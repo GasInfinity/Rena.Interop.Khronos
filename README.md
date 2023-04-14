@@ -1,2 +1,2 @@
-# Rena.Interop.OpenGl
-Raw OpenGl related interop bindings generated with Rena.Interop.OpenGl.Generator
+# Rena.Interop.OpenGL
+Raw OpenGL related bindings generated with Rena.Interop.OpenGL.Generator
