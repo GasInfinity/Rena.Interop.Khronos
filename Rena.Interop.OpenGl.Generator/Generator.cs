@@ -166,7 +166,7 @@ public partial class {Options.ClassName}
                 if (!IsFunctionIncluded(command))
                     continue;
 
-                writer.WriteLine($"fixed(byte* name = \"{c.Name}\"u8)");
+                writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName(c.Name)})");
                 writer.Indent++;
                 writer.WriteLine($"{c.Name} = ({GenerateFunctionPointerType(command)})loadFunc(name);");
                 writer.Indent--;
@@ -240,9 +240,21 @@ public partial class {Options.ClassName}
         writer.WriteLine('{');
         writer.Indent++;
         foreach (var commands in commandsList)
+            GenerateMemberNames(writer, commands);
+        writer.WriteLine();
+        foreach (var commands in commandsList)
             GenerateMembers(writer, commands);
         writer.Indent--;
         writer.WriteLine('}');
+    }
+
+    private void GenerateMemberNames(IndentedTextWriter writer, Commands commands)
+    {
+        foreach (var command in commands.CommandList)
+        {
+            if (IsFunctionIncluded(command))
+                writer.WriteLine($"internal static ReadOnlySpan<byte> {GetUtf8StringFieldName(command.Proto.Name)} => \"{command.Proto.Name}\"u8;");
+        }
     }
 
     private void GenerateMembers(IndentedTextWriter writer, Commands commands)
@@ -340,9 +352,9 @@ public partial class {Options.ClassName}
         }
     }
 
-    private void WriteGlLoading(IndentedTextWriter writer)
+    private static void WriteGlLoading(IndentedTextWriter writer)
     {
-        writer.WriteLine("fixed(byte* name = \"glGetString\"u8)");
+        writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName("glGetString")})");
         writer.Indent++;
         writer.WriteLine($"glGetString = (delegate* unmanaged<int, byte*>)loadFunc(name);");
         writer.Indent--;
@@ -354,22 +366,22 @@ public partial class {Options.ClassName}
 
     private void WriteEglLoading(IndentedTextWriter writer)
     {
-        writer.WriteLine("fixed(byte* name = \"eglGetDisplay\"u8)");
+        writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName("eglGetDisplay")})");
         writer.Indent++;
         writer.WriteLine("eglGetDisplay = (delegate* unmanaged<void*, void*>)loadFunc(name);");
         writer.Indent--;
 
-        writer.WriteLine("fixed(byte* name = \"eglGetCurrentDisplay\"u8)");
+        writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName("eglGetCurrentDisplay")})");
         writer.Indent++;
         writer.WriteLine("eglGetCurrentDisplay = (delegate* unmanaged<void*>)loadFunc(name);");
         writer.Indent--;
 
-        writer.WriteLine("fixed(byte* name = \"eglQueryString\"u8)");
+        writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName("eglQueryString")})");
         writer.Indent++;
         writer.WriteLine("eglQueryString = (delegate* unmanaged<void*, int, byte*>)loadFunc(name);");
         writer.Indent--;
 
-        writer.WriteLine("fixed(byte* name = \"eglGetError\"u8)");
+        writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName("eglGetError")})");
         writer.Indent++;
         writer.WriteLine("eglGetError = (delegate* unmanaged<int>)loadFunc(name);");
         writer.Indent--;
@@ -484,4 +496,7 @@ public partial class {Options.ClassName}
             return "long";
         return "ulong";
     }
+
+    private static string GetUtf8StringFieldName(string functionName)
+        => $"{functionName}FunctionName";
 }

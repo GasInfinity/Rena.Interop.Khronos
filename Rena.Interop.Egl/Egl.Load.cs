@@ -17,13 +17,13 @@ public unsafe partial class Egl
     
     public Egl(delegate* <byte*, void*> loadFunc)
     {
-        fixed(byte* name = "eglGetDisplay"u8)
+        fixed(byte* name = eglGetDisplayFunctionName)
             eglGetDisplay = (delegate* unmanaged<void*, void*>)loadFunc(name);
-        fixed(byte* name = "eglGetCurrentDisplay"u8)
+        fixed(byte* name = eglGetCurrentDisplayFunctionName)
             eglGetCurrentDisplay = (delegate* unmanaged<void*>)loadFunc(name);
-        fixed(byte* name = "eglQueryString"u8)
+        fixed(byte* name = eglQueryStringFunctionName)
             eglQueryString = (delegate* unmanaged<void*, int, byte*>)loadFunc(name);
-        fixed(byte* name = "eglGetError"u8)
+        fixed(byte* name = eglGetErrorFunctionName)
             eglGetError = (delegate* unmanaged<int>)loadFunc(name);
         if(eglGetDisplay == null || eglGetCurrentDisplay == null || eglQueryString == null || eglGetError == null) return;
         var display = eglGetCurrentDisplay();
@@ -43,79 +43,79 @@ public unsafe partial class Egl
         
         if(Version10)
         {
-            fixed(byte* name = "eglChooseConfig"u8)
+            fixed(byte* name = eglChooseConfigFunctionName)
                 eglChooseConfig = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLint */ int*, /* EGLConfig */ void**, /* EGLint */ int, /* EGLint */ int*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglCopyBuffers"u8)
+            fixed(byte* name = eglCopyBuffersFunctionName)
                 eglCopyBuffers = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLSurface */ void*, /* EGLNativePixmapType */ void*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglCreateContext"u8)
+            fixed(byte* name = eglCreateContextFunctionName)
                 eglCreateContext = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLConfig */ void*, /* EGLContext */ void*, /* EGLint */ int*, /* EGLContext */ void*>)loadFunc(name);
-            fixed(byte* name = "eglCreatePbufferSurface"u8)
+            fixed(byte* name = eglCreatePbufferSurfaceFunctionName)
                 eglCreatePbufferSurface = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLConfig */ void*, /* EGLint */ int*, /* EGLSurface */ void*>)loadFunc(name);
-            fixed(byte* name = "eglCreatePixmapSurface"u8)
+            fixed(byte* name = eglCreatePixmapSurfaceFunctionName)
                 eglCreatePixmapSurface = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLConfig */ void*, /* EGLNativePixmapType */ void*, /* EGLint */ int*, /* EGLSurface */ void*>)loadFunc(name);
-            fixed(byte* name = "eglCreateWindowSurface"u8)
+            fixed(byte* name = eglCreateWindowSurfaceFunctionName)
                 eglCreateWindowSurface = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLConfig */ void*, /* EGLNativeWindowType */ void*, /* EGLint */ int*, /* EGLSurface */ void*>)loadFunc(name);
-            fixed(byte* name = "eglDestroyContext"u8)
+            fixed(byte* name = eglDestroyContextFunctionName)
                 eglDestroyContext = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLContext */ void*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglDestroySurface"u8)
+            fixed(byte* name = eglDestroySurfaceFunctionName)
                 eglDestroySurface = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLSurface */ void*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglGetConfigAttrib"u8)
+            fixed(byte* name = eglGetConfigAttribFunctionName)
                 eglGetConfigAttrib = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLConfig */ void*, /* EGLint */ int, /* EGLint */ int*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglGetConfigs"u8)
+            fixed(byte* name = eglGetConfigsFunctionName)
                 eglGetConfigs = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLConfig */ void**, /* EGLint */ int, /* EGLint */ int*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglGetCurrentDisplay"u8)
+            fixed(byte* name = eglGetCurrentDisplayFunctionName)
                 eglGetCurrentDisplay = (delegate* unmanaged</* EGLDisplay */ void*>)loadFunc(name);
-            fixed(byte* name = "eglGetCurrentSurface"u8)
+            fixed(byte* name = eglGetCurrentSurfaceFunctionName)
                 eglGetCurrentSurface = (delegate* unmanaged</* EGLint */ int, /* EGLSurface */ void*>)loadFunc(name);
-            fixed(byte* name = "eglGetDisplay"u8)
+            fixed(byte* name = eglGetDisplayFunctionName)
                 eglGetDisplay = (delegate* unmanaged</* EGLNativeDisplayType */ void*, /* EGLDisplay */ void*>)loadFunc(name);
-            fixed(byte* name = "eglGetError"u8)
+            fixed(byte* name = eglGetErrorFunctionName)
                 eglGetError = (delegate* unmanaged</* EGLint */ int>)loadFunc(name);
-            fixed(byte* name = "eglGetProcAddress"u8)
+            fixed(byte* name = eglGetProcAddressFunctionName)
                 eglGetProcAddress = (delegate* unmanaged</* char */ byte*, /* __eglMustCastToProperFunctionPointerType */ void*>)loadFunc(name);
-            fixed(byte* name = "eglInitialize"u8)
+            fixed(byte* name = eglInitializeFunctionName)
                 eglInitialize = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLint */ int*, /* EGLint */ int*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglMakeCurrent"u8)
+            fixed(byte* name = eglMakeCurrentFunctionName)
                 eglMakeCurrent = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLSurface */ void*, /* EGLSurface */ void*, /* EGLContext */ void*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglQueryContext"u8)
+            fixed(byte* name = eglQueryContextFunctionName)
                 eglQueryContext = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLContext */ void*, /* EGLint */ int, /* EGLint */ int*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglQueryString"u8)
+            fixed(byte* name = eglQueryStringFunctionName)
                 eglQueryString = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLint */ int, /* char */ byte*>)loadFunc(name);
-            fixed(byte* name = "eglQuerySurface"u8)
+            fixed(byte* name = eglQuerySurfaceFunctionName)
                 eglQuerySurface = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLSurface */ void*, /* EGLint */ int, /* EGLint */ int*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglSwapBuffers"u8)
+            fixed(byte* name = eglSwapBuffersFunctionName)
                 eglSwapBuffers = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLSurface */ void*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglTerminate"u8)
+            fixed(byte* name = eglTerminateFunctionName)
                 eglTerminate = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglWaitGL"u8)
+            fixed(byte* name = eglWaitGLFunctionName)
                 eglWaitGL = (delegate* unmanaged</* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglWaitNative"u8)
+            fixed(byte* name = eglWaitNativeFunctionName)
                 eglWaitNative = (delegate* unmanaged</* EGLint */ int, /* EGLBoolean */ int>)loadFunc(name);
         }
         
         if(Version11)
         {
-            fixed(byte* name = "eglBindTexImage"u8)
+            fixed(byte* name = eglBindTexImageFunctionName)
                 eglBindTexImage = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLSurface */ void*, /* EGLint */ int, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglReleaseTexImage"u8)
+            fixed(byte* name = eglReleaseTexImageFunctionName)
                 eglReleaseTexImage = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLSurface */ void*, /* EGLint */ int, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglSurfaceAttrib"u8)
+            fixed(byte* name = eglSurfaceAttribFunctionName)
                 eglSurfaceAttrib = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLSurface */ void*, /* EGLint */ int, /* EGLint */ int, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglSwapInterval"u8)
+            fixed(byte* name = eglSwapIntervalFunctionName)
                 eglSwapInterval = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLint */ int, /* EGLBoolean */ int>)loadFunc(name);
         }
         
         if(Version12)
         {
-            fixed(byte* name = "eglBindAPI"u8)
+            fixed(byte* name = eglBindAPIFunctionName)
                 eglBindAPI = (delegate* unmanaged</* EGLenum */ int, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglQueryAPI"u8)
+            fixed(byte* name = eglQueryAPIFunctionName)
                 eglQueryAPI = (delegate* unmanaged</* EGLenum */ int>)loadFunc(name);
-            fixed(byte* name = "eglCreatePbufferFromClientBuffer"u8)
+            fixed(byte* name = eglCreatePbufferFromClientBufferFunctionName)
                 eglCreatePbufferFromClientBuffer = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLenum */ int, /* EGLClientBuffer */ void*, /* EGLConfig */ void*, /* EGLint */ int*, /* EGLSurface */ void*>)loadFunc(name);
-            fixed(byte* name = "eglReleaseThread"u8)
+            fixed(byte* name = eglReleaseThreadFunctionName)
                 eglReleaseThread = (delegate* unmanaged</* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglWaitClient"u8)
+            fixed(byte* name = eglWaitClientFunctionName)
                 eglWaitClient = (delegate* unmanaged</* EGLBoolean */ int>)loadFunc(name);
         }
         
@@ -125,31 +125,31 @@ public unsafe partial class Egl
         
         if(Version14)
         {
-            fixed(byte* name = "eglGetCurrentContext"u8)
+            fixed(byte* name = eglGetCurrentContextFunctionName)
                 eglGetCurrentContext = (delegate* unmanaged</* EGLContext */ void*>)loadFunc(name);
         }
         
         if(Version15)
         {
-            fixed(byte* name = "eglCreateSync"u8)
+            fixed(byte* name = eglCreateSyncFunctionName)
                 eglCreateSync = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLenum */ int, /* EGLAttrib */ nint*, /* EGLSync */ void*>)loadFunc(name);
-            fixed(byte* name = "eglDestroySync"u8)
+            fixed(byte* name = eglDestroySyncFunctionName)
                 eglDestroySync = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLSync */ void*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglClientWaitSync"u8)
+            fixed(byte* name = eglClientWaitSyncFunctionName)
                 eglClientWaitSync = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLSync */ void*, /* EGLint */ int, /* EGLTime */ ulong, /* EGLint */ int>)loadFunc(name);
-            fixed(byte* name = "eglGetSyncAttrib"u8)
+            fixed(byte* name = eglGetSyncAttribFunctionName)
                 eglGetSyncAttrib = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLSync */ void*, /* EGLint */ int, /* EGLAttrib */ nint*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglCreateImage"u8)
+            fixed(byte* name = eglCreateImageFunctionName)
                 eglCreateImage = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLContext */ void*, /* EGLenum */ int, /* EGLClientBuffer */ void*, /* EGLAttrib */ nint*, /* EGLImage */ void*>)loadFunc(name);
-            fixed(byte* name = "eglDestroyImage"u8)
+            fixed(byte* name = eglDestroyImageFunctionName)
                 eglDestroyImage = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLImage */ void*, /* EGLBoolean */ int>)loadFunc(name);
-            fixed(byte* name = "eglGetPlatformDisplay"u8)
+            fixed(byte* name = eglGetPlatformDisplayFunctionName)
                 eglGetPlatformDisplay = (delegate* unmanaged</* EGLenum */ int, /* void */ void*, /* EGLAttrib */ nint*, /* EGLDisplay */ void*>)loadFunc(name);
-            fixed(byte* name = "eglCreatePlatformWindowSurface"u8)
+            fixed(byte* name = eglCreatePlatformWindowSurfaceFunctionName)
                 eglCreatePlatformWindowSurface = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLConfig */ void*, /* void */ void*, /* EGLAttrib */ nint*, /* EGLSurface */ void*>)loadFunc(name);
-            fixed(byte* name = "eglCreatePlatformPixmapSurface"u8)
+            fixed(byte* name = eglCreatePlatformPixmapSurfaceFunctionName)
                 eglCreatePlatformPixmapSurface = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLConfig */ void*, /* void */ void*, /* EGLAttrib */ nint*, /* EGLSurface */ void*>)loadFunc(name);
-            fixed(byte* name = "eglWaitSync"u8)
+            fixed(byte* name = eglWaitSyncFunctionName)
                 eglWaitSync = (delegate* unmanaged</* EGLDisplay */ void*, /* EGLSync */ void*, /* EGLint */ int, /* EGLBoolean */ int>)loadFunc(name);
         }
         
