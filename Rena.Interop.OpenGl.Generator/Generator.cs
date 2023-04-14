@@ -366,16 +366,6 @@ public partial class {Options.ClassName}
 
     private void WriteEglLoading(IndentedTextWriter writer)
     {
-        writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName("eglGetDisplay")})");
-        writer.Indent++;
-        writer.WriteLine("eglGetDisplay = (delegate* unmanaged<void*, void*>)loadFunc(name);");
-        writer.Indent--;
-
-        writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName("eglGetCurrentDisplay")})");
-        writer.Indent++;
-        writer.WriteLine("eglGetCurrentDisplay = (delegate* unmanaged<void*>)loadFunc(name);");
-        writer.Indent--;
-
         writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName("eglQueryString")})");
         writer.Indent++;
         writer.WriteLine("eglQueryString = (delegate* unmanaged<void*, int, byte*>)loadFunc(name);");
@@ -386,17 +376,9 @@ public partial class {Options.ClassName}
         writer.WriteLine("eglGetError = (delegate* unmanaged<int>)loadFunc(name);");
         writer.Indent--;
 
-        writer.WriteLine("if(eglGetDisplay == null || eglGetCurrentDisplay == null || eglQueryString == null || eglGetError == null) return;");
+        writer.WriteLine("if(eglQueryString == null || eglGetError == null) return;");
 
-        writer.WriteLine("var display = eglGetCurrentDisplay();");
-
-        if (Options.Version.IsIncluded(new() { Major = 1, Minor = 4 }))
-            writer.WriteLine("if(display == (void*)EGL_NO_DISPLAY) display = eglGetDisplay((void*)EGL_DEFAULT_DISPLAY);");
-
-        if (Options.Version.IsIncluded(new() { Major = 1, Minor = 5 }))
-            writer.WriteLine("if(display == (void*)EGL_NO_DISPLAY) return;");
-
-        writer.WriteLine("var version = eglQueryString(display, EGL_VERSION);");
+        writer.WriteLine("var version = eglQueryString((void*)EGL_NO_DISPLAY, EGL_VERSION);");
         writer.WriteLine("_ = eglGetError();");
 
         writer.WriteLine("if(version == null) (Major, Minor) = (1, 0);");

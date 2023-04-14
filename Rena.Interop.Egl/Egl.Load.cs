@@ -17,19 +17,12 @@ public unsafe partial class Egl
     
     public Egl(delegate* <byte*, void*> loadFunc)
     {
-        fixed(byte* name = eglGetDisplayFunctionName)
-            eglGetDisplay = (delegate* unmanaged<void*, void*>)loadFunc(name);
-        fixed(byte* name = eglGetCurrentDisplayFunctionName)
-            eglGetCurrentDisplay = (delegate* unmanaged<void*>)loadFunc(name);
         fixed(byte* name = eglQueryStringFunctionName)
             eglQueryString = (delegate* unmanaged<void*, int, byte*>)loadFunc(name);
         fixed(byte* name = eglGetErrorFunctionName)
             eglGetError = (delegate* unmanaged<int>)loadFunc(name);
-        if(eglGetDisplay == null || eglGetCurrentDisplay == null || eglQueryString == null || eglGetError == null) return;
-        var display = eglGetCurrentDisplay();
-        if(display == (void*)EGL_NO_DISPLAY) display = eglGetDisplay((void*)EGL_DEFAULT_DISPLAY);
-        if(display == (void*)EGL_NO_DISPLAY) return;
-        var version = eglQueryString(display, EGL_VERSION);
+        if(eglQueryString == null || eglGetError == null) return;
+        var version = eglQueryString((void*)EGL_NO_DISPLAY, EGL_VERSION);
         _ = eglGetError();
         if(version == null) (Major, Minor) = (1, 0);
         else if(!TryParseVersion(MemoryMarshal.CreateReadOnlySpanFromNullTerminated(version), out Major, out Minor)) return;
