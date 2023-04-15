@@ -13,7 +13,7 @@ public unsafe partial class GLES2
     
     // Extensions
     
-    public GLES2(delegate* <byte*, void*> loadFunc)
+    public GLES2(LoadFunction loadFunc)
     {
         fixed(byte* name = glGetStringFunctionName)
             glGetString = (delegate* unmanaged<int, byte*>)loadFunc(name);

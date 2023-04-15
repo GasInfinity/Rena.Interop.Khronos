@@ -15,7 +15,7 @@ public unsafe partial class EGL
     
     // Extensions
     
-    public EGL(delegate* <byte*, void*> loadFunc)
+    public EGL(LoadFunction loadFunc)
     {
         fixed(byte* name = eglQueryStringFunctionName)
             eglQueryString = (delegate* unmanaged<void*, int, byte*>)loadFunc(name);

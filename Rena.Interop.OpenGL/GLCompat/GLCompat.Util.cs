@@ -3,8 +3,10 @@ using System.Buffers.Text;
 
 namespace Rena.Interop.OpenGL;
 
-public partial class GLCompat
+public unsafe partial class GLCompat
 {
+    public delegate void* LoadFunction(byte* name);
+
     internal static ReadOnlySpan<byte> OpenGlEsCmPrefix => "OpenGL ES-CM"u8;
     internal static ReadOnlySpan<byte> OpenGlEsCxPrefix => "OpenGL ES-CX"u8;
     internal static ReadOnlySpan<byte> OpenGlScPrefix => "OpenGL SC"u8;

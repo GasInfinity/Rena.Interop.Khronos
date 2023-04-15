@@ -3,8 +3,10 @@ using System.Buffers.Text;
 
 namespace Rena.Interop.EGL;
 
-public partial class EGL
+public unsafe partial class EGL
 {
+    public delegate void* LoadFunction(byte* name);
+
     internal static ReadOnlySpan<byte> OpenGlEsCmPrefix => "OpenGL ES-CM"u8;
     internal static ReadOnlySpan<byte> OpenGlEsCxPrefix => "OpenGL ES-CX"u8;
     internal static ReadOnlySpan<byte> OpenGlScPrefix => "OpenGL SC"u8;

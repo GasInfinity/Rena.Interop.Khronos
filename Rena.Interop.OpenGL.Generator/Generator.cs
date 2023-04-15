@@ -7,7 +7,7 @@ namespace Rena.Interop.OpenGL.Generator;
 // TODO: Refactor this one day, it's only a MVP
 public class Generator
 {
-    const string LoadProcType = "delegate* <byte*, void*>";
+    const string LoadFunctionName = "LoadFunction";
 
     private readonly string apiString;
     private readonly string functionPrefix;
@@ -68,8 +68,10 @@ using System.Buffers.Text;
 
 namespace {Options.Namespace};
 
-public partial class {Options.ClassName}
+public unsafe partial class {Options.ClassName}
 {{
+    public delegate void* {LoadFunctionName}(byte* name);
+
     internal static ReadOnlySpan<byte> OpenGlEsCmPrefix => ""OpenGL ES-CM""u8;
     internal static ReadOnlySpan<byte> OpenGlEsCxPrefix => ""OpenGL ES-CX""u8;
     internal static ReadOnlySpan<byte> OpenGlScPrefix => ""OpenGL SC""u8;
@@ -143,7 +145,7 @@ public partial class {Options.ClassName}
             writer.WriteLine($"public readonly bool {extension.Name[(apiString.Length + 1)..].Replace("3DFX", "ThreeDFX")};");
 
         writer.WriteLine();
-        writer.WriteLine($"public {Options.ClassName}({LoadProcType} loadFunc)");
+        writer.WriteLine($"public {Options.ClassName}({LoadFunctionName} loadFunc)");
         writer.WriteLine('{');
         writer.Indent++;
         WriteApiSpecificLoading(writer);
