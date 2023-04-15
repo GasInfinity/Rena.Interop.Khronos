@@ -19,8 +19,8 @@ public partial class EGL
     public const int EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT = unchecked((int)0x00000002);
     public const int EGL_FALSE = unchecked((int)0);
     public const int EGL_TRUE = unchecked((int)1);
-    public const ulong EGL_DONT_CARE = unchecked((ulong)-1);
-    public const ulong EGL_UNKNOWN = unchecked((ulong)-1);
+    public const int EGL_DONT_CARE = unchecked((int)-1);
+    public const int EGL_UNKNOWN = unchecked((int)-1);
     public const int EGL_NO_CONTEXT = unchecked((int)0);
     public const int EGL_NO_DISPLAY = unchecked((int)0);
     public const int EGL_NO_IMAGE = unchecked((int)0);

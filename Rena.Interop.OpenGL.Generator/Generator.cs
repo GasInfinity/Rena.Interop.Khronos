@@ -467,16 +467,20 @@ public unsafe partial class {Options.ClassName}
     {
         const string Prefix = "0x";
 
+        var numberStyle = NumberStyles.Integer;
         var number = value.AsSpan();
 
         if (number.StartsWith(Prefix))
+        {
             number = number[Prefix.Length..];
+            numberStyle = NumberStyles.HexNumber;
+        }
 
-        if (int.TryParse(number, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _))
+        if (int.TryParse(number, numberStyle, CultureInfo.InvariantCulture, out _))
             return "int";
-        if (uint.TryParse(number, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _))
+        if (uint.TryParse(number, numberStyle, CultureInfo.InvariantCulture, out _))
             return "uint";
-        if (long.TryParse(number, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _))
+        if (long.TryParse(number, numberStyle, CultureInfo.InvariantCulture, out _))
             return "long";
         return "ulong";
     }
