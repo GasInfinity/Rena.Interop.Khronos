@@ -12,7 +12,6 @@ public interface IType : ISpanFormattable
         if (value.StartsWith(ConstKeyword))
             value = value[ConstKeyword.Length..];
 
-        value = value.Trim();
         var firstAsterisk = value.IndexOf('*');
 
         if (firstAsterisk == -1)
@@ -31,17 +30,30 @@ public interface IType : ISpanFormattable
 
         value = value[firstAsterisk..];
 
-        while (value.Length > 0 && value[0] is '*' or ' ')
-        {
-            if (value[0] is '*')
-                type = new PointerType()
-                {
-                    InnerType = type
-                };
+        type = ParsePointers(type, ref value);
 
-            value = value[1..];
+        if (value.StartsWith(ConstKeyword))
+        {
+            value = value[ConstKeyword.Length..];
+            type = ParsePointers(type, ref value);
         }
 
         return type;
+    }
+
+    private static IType ParsePointers(IType inner, ref ReadOnlySpan<char> type)
+    {
+        while (type.Length > 0 && type[0] is '*' or ' ')
+        {
+            if (type[0] is '*')
+                inner = new PointerType()
+                {
+                    InnerType = inner
+                };
+
+            type = type[1..];
+        }
+
+        return inner;
     }
 }

@@ -1200,7 +1200,7 @@ public unsafe partial class GLCompat
     private readonly delegate* unmanaged</* GLsizei */ int, /* GLuint */ uint*, /* void */ void> glCreateRenderbuffers;
     private readonly delegate* unmanaged</* GLsizei */ int, /* GLuint */ uint*, /* void */ void> glCreateSamplers;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLuint */ uint> glCreateShader;
-    private readonly delegate* unmanaged</* GLenum */ int, /* GLsizei */ int, /* GLchar */ byte*, /* GLuint */ uint> glCreateShaderProgramv;
+    private readonly delegate* unmanaged</* GLenum */ int, /* GLsizei */ int, /* GLchar */ byte**, /* GLuint */ uint> glCreateShaderProgramv;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLsizei */ int, /* GLuint */ uint*, /* void */ void> glCreateTextures;
     private readonly delegate* unmanaged</* GLsizei */ int, /* GLuint */ uint*, /* void */ void> glCreateTransformFeedbacks;
     private readonly delegate* unmanaged</* GLsizei */ int, /* GLuint */ uint*, /* void */ void> glCreateVertexArrays;
@@ -1439,7 +1439,7 @@ public unsafe partial class GLCompat
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLenum */ int, /* GLuint */ uint, /* GLint */ int*, /* void */ void> glGetTransformFeedbacki_v;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLenum */ int, /* GLint */ int*, /* void */ void> glGetTransformFeedbackiv;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLchar */ byte*, /* GLuint */ uint> glGetUniformBlockIndex;
-    private readonly delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte*, /* GLuint */ uint*, /* void */ void> glGetUniformIndices;
+    private readonly delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte**, /* GLuint */ uint*, /* void */ void> glGetUniformIndices;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLchar */ byte*, /* GLint */ int> glGetUniformLocation;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLint */ int, /* GLuint */ uint*, /* void */ void> glGetUniformSubroutineuiv;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLint */ int, /* GLdouble */ double*, /* void */ void> glGetUniformdv;
@@ -1558,8 +1558,8 @@ public unsafe partial class GLCompat
     private readonly delegate* unmanaged</* GLenum */ int, /* GLint */ int*, /* GLsizei */ int*, /* GLsizei */ int, /* void */ void> glMultiDrawArrays;
     private readonly delegate* unmanaged</* GLenum */ int, /* void */ void*, /* GLsizei */ int, /* GLsizei */ int, /* void */ void> glMultiDrawArraysIndirect;
     private readonly delegate* unmanaged</* GLenum */ int, /* void */ void*, /* GLintptr */ nint, /* GLsizei */ int, /* GLsizei */ int, /* void */ void> glMultiDrawArraysIndirectCount;
-    private readonly delegate* unmanaged</* GLenum */ int, /* GLsizei */ int*, /* GLenum */ int, /* void */ void*, /* GLsizei */ int, /* void */ void> glMultiDrawElements;
-    private readonly delegate* unmanaged</* GLenum */ int, /* GLsizei */ int*, /* GLenum */ int, /* void */ void*, /* GLsizei */ int, /* GLint */ int*, /* void */ void> glMultiDrawElementsBaseVertex;
+    private readonly delegate* unmanaged</* GLenum */ int, /* GLsizei */ int*, /* GLenum */ int, /* void */ void**, /* GLsizei */ int, /* void */ void> glMultiDrawElements;
+    private readonly delegate* unmanaged</* GLenum */ int, /* GLsizei */ int*, /* GLenum */ int, /* void */ void**, /* GLsizei */ int, /* GLint */ int*, /* void */ void> glMultiDrawElementsBaseVertex;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLenum */ int, /* void */ void*, /* GLsizei */ int, /* GLsizei */ int, /* void */ void> glMultiDrawElementsIndirect;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLenum */ int, /* void */ void*, /* GLintptr */ nint, /* GLsizei */ int, /* GLsizei */ int, /* void */ void> glMultiDrawElementsIndirectCount;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLdouble */ double, /* void */ void> glMultiTexCoord1d;
@@ -1796,7 +1796,7 @@ public unsafe partial class GLCompat
     private readonly delegate* unmanaged</* GLsizei */ int, /* GLuint */ uint*, /* void */ void> glSelectBuffer;
     private readonly delegate* unmanaged</* GLenum */ int, /* void */ void> glShadeModel;
     private readonly delegate* unmanaged</* GLsizei */ int, /* GLuint */ uint*, /* GLenum */ int, /* void */ void*, /* GLsizei */ int, /* void */ void> glShaderBinary;
-    private readonly delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte*, /* GLint */ int*, /* void */ void> glShaderSource;
+    private readonly delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte**, /* GLint */ int*, /* void */ void> glShaderSource;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLuint */ uint, /* GLuint */ uint, /* void */ void> glShaderStorageBlockBinding;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLchar */ byte*, /* GLuint */ uint, /* GLuint */ uint*, /* GLuint */ uint*, /* void */ void> glSpecializeShader;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLint */ int, /* GLuint */ uint, /* void */ void> glStencilFunc;
@@ -1897,7 +1897,7 @@ public unsafe partial class GLCompat
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLenum */ int, /* GLuint */ uint, /* GLenum */ int, /* GLuint */ uint, /* GLuint */ uint, /* GLuint */ uint, /* GLuint */ uint, /* void */ void> glTextureView;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLuint */ uint, /* GLuint */ uint, /* void */ void> glTransformFeedbackBufferBase;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLuint */ uint, /* GLuint */ uint, /* GLintptr */ nint, /* GLsizeiptr */ nint, /* void */ void> glTransformFeedbackBufferRange;
-    private readonly delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte*, /* GLenum */ int, /* void */ void> glTransformFeedbackVaryings;
+    private readonly delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte**, /* GLenum */ int, /* void */ void> glTransformFeedbackVaryings;
     private readonly delegate* unmanaged</* GLdouble */ double, /* GLdouble */ double, /* GLdouble */ double, /* void */ void> glTranslated;
     private readonly delegate* unmanaged</* GLfloat */ float, /* GLfloat */ float, /* GLfloat */ float, /* void */ void> glTranslatef;
     private readonly delegate* unmanaged</* GLint */ int, /* GLdouble */ double, /* void */ void> glUniform1d;

@@ -416,7 +416,7 @@ public unsafe partial class GLES2
     private readonly delegate* unmanaged</* GLenum */ int, /* GLint */ int, /* GLint */ int, /* GLint */ int, /* GLint */ int, /* GLint */ int, /* GLint */ int, /* GLsizei */ int, /* GLsizei */ int, /* void */ void> glCopyTexSubImage3D;
     private readonly delegate* unmanaged</* GLuint */ uint> glCreateProgram;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLuint */ uint> glCreateShader;
-    private readonly delegate* unmanaged</* GLenum */ int, /* GLsizei */ int, /* GLchar */ byte*, /* GLuint */ uint> glCreateShaderProgramv;
+    private readonly delegate* unmanaged</* GLenum */ int, /* GLsizei */ int, /* GLchar */ byte**, /* GLuint */ uint> glCreateShaderProgramv;
     private readonly delegate* unmanaged</* GLenum */ int, /* void */ void> glCullFace;
     private readonly delegate* unmanaged</* GLDEBUGPROC */ delegate* unmanaged<int, int, uint, int, nint, sbyte*, void*, void>, /* void */ void*, /* void */ void> glDebugMessageCallback;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLenum */ int, /* GLenum */ int, /* GLsizei */ int, /* GLuint */ uint*, /* GLboolean */ int, /* void */ void> glDebugMessageControl;
@@ -538,7 +538,7 @@ public unsafe partial class GLES2
     private readonly delegate* unmanaged</* GLenum */ int, /* GLenum */ int, /* GLint */ int*, /* void */ void> glGetTexParameteriv;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLuint */ uint, /* GLsizei */ int, /* GLsizei */ int*, /* GLsizei */ int*, /* GLenum */ int*, /* GLchar */ byte*, /* void */ void> glGetTransformFeedbackVarying;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLchar */ byte*, /* GLuint */ uint> glGetUniformBlockIndex;
-    private readonly delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte*, /* GLuint */ uint*, /* void */ void> glGetUniformIndices;
+    private readonly delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte**, /* GLuint */ uint*, /* void */ void> glGetUniformIndices;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLchar */ byte*, /* GLint */ int> glGetUniformLocation;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLint */ int, /* GLfloat */ float*, /* void */ void> glGetUniformfv;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLint */ int, /* GLint */ int*, /* void */ void> glGetUniformiv;
@@ -635,7 +635,7 @@ public unsafe partial class GLES2
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLenum */ int, /* GLint */ int*, /* void */ void> glSamplerParameteriv;
     private readonly delegate* unmanaged</* GLint */ int, /* GLint */ int, /* GLsizei */ int, /* GLsizei */ int, /* void */ void> glScissor;
     private readonly delegate* unmanaged</* GLsizei */ int, /* GLuint */ uint*, /* GLenum */ int, /* void */ void*, /* GLsizei */ int, /* void */ void> glShaderBinary;
-    private readonly delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte*, /* GLint */ int*, /* void */ void> glShaderSource;
+    private readonly delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte**, /* GLint */ int*, /* void */ void> glShaderSource;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLint */ int, /* GLuint */ uint, /* void */ void> glStencilFunc;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLenum */ int, /* GLint */ int, /* GLuint */ uint, /* void */ void> glStencilFuncSeparate;
     private readonly delegate* unmanaged</* GLuint */ uint, /* void */ void> glStencilMask;
@@ -658,7 +658,7 @@ public unsafe partial class GLES2
     private readonly delegate* unmanaged</* GLenum */ int, /* GLsizei */ int, /* GLenum */ int, /* GLsizei */ int, /* GLsizei */ int, /* GLsizei */ int, /* GLboolean */ int, /* void */ void> glTexStorage3DMultisample;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLint */ int, /* GLint */ int, /* GLint */ int, /* GLsizei */ int, /* GLsizei */ int, /* GLenum */ int, /* GLenum */ int, /* void */ void*, /* void */ void> glTexSubImage2D;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLint */ int, /* GLint */ int, /* GLint */ int, /* GLint */ int, /* GLsizei */ int, /* GLsizei */ int, /* GLsizei */ int, /* GLenum */ int, /* GLenum */ int, /* void */ void*, /* void */ void> glTexSubImage3D;
-    private readonly delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte*, /* GLenum */ int, /* void */ void> glTransformFeedbackVaryings;
+    private readonly delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte**, /* GLenum */ int, /* void */ void> glTransformFeedbackVaryings;
     private readonly delegate* unmanaged</* GLint */ int, /* GLfloat */ float, /* void */ void> glUniform1f;
     private readonly delegate* unmanaged</* GLint */ int, /* GLsizei */ int, /* GLfloat */ float*, /* void */ void> glUniform1fv;
     private readonly delegate* unmanaged</* GLint */ int, /* GLint */ int, /* void */ void> glUniform1i;

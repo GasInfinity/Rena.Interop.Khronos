@@ -112,7 +112,7 @@ public unsafe partial class GLES2
         => glCreateProgram();
     public /* GLuint */ uint CreateShader(/* GLenum */ int @type)
         => glCreateShader(@type);
-    public /* GLuint */ uint CreateShaderProgramv(/* GLenum */ int @type, /* GLsizei */ int @count, /* GLchar */ byte* @strings)
+    public /* GLuint */ uint CreateShaderProgramv(/* GLenum */ int @type, /* GLsizei */ int @count, /* GLchar */ byte** @strings)
         => glCreateShaderProgramv(@type, @count, @strings);
     public /* void */ void CullFace(/* GLenum */ int @mode)
         => glCullFace(@mode);
@@ -356,7 +356,7 @@ public unsafe partial class GLES2
         => glGetTransformFeedbackVarying(@program, @index, @bufSize, @length, @size, @type, @name);
     public /* GLuint */ uint GetUniformBlockIndex(/* GLuint */ uint @program, /* GLchar */ byte* @uniformBlockName)
         => glGetUniformBlockIndex(@program, @uniformBlockName);
-    public /* void */ void GetUniformIndices(/* GLuint */ uint @program, /* GLsizei */ int @uniformCount, /* GLchar */ byte* @uniformNames, /* GLuint */ uint* @uniformIndices)
+    public /* void */ void GetUniformIndices(/* GLuint */ uint @program, /* GLsizei */ int @uniformCount, /* GLchar */ byte** @uniformNames, /* GLuint */ uint* @uniformIndices)
         => glGetUniformIndices(@program, @uniformCount, @uniformNames, @uniformIndices);
     public /* GLint */ int GetUniformLocation(/* GLuint */ uint @program, /* GLchar */ byte* @name)
         => glGetUniformLocation(@program, @name);
@@ -550,7 +550,7 @@ public unsafe partial class GLES2
         => glScissor(@x, @y, @width, @height);
     public /* void */ void ShaderBinary(/* GLsizei */ int @count, /* GLuint */ uint* @shaders, /* GLenum */ int @binaryFormat, /* void */ void* @binary, /* GLsizei */ int @length)
         => glShaderBinary(@count, @shaders, @binaryFormat, @binary, @length);
-    public /* void */ void ShaderSource(/* GLuint */ uint @shader, /* GLsizei */ int @count, /* GLchar */ byte* @string, /* GLint */ int* @length)
+    public /* void */ void ShaderSource(/* GLuint */ uint @shader, /* GLsizei */ int @count, /* GLchar */ byte** @string, /* GLint */ int* @length)
         => glShaderSource(@shader, @count, @string, @length);
     public /* void */ void StencilFunc(/* GLenum */ int @func, /* GLint */ int @ref, /* GLuint */ uint @mask)
         => glStencilFunc(@func, @ref, @mask);
@@ -596,7 +596,7 @@ public unsafe partial class GLES2
         => glTexSubImage2D(@target, @level, @xoffset, @yoffset, @width, @height, @format, @type, @pixels);
     public /* void */ void TexSubImage3D(/* GLenum */ int @target, /* GLint */ int @level, /* GLint */ int @xoffset, /* GLint */ int @yoffset, /* GLint */ int @zoffset, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLsizei */ int @depth, /* GLenum */ int @format, /* GLenum */ int @type, /* void */ void* @pixels)
         => glTexSubImage3D(@target, @level, @xoffset, @yoffset, @zoffset, @width, @height, @depth, @format, @type, @pixels);
-    public /* void */ void TransformFeedbackVaryings(/* GLuint */ uint @program, /* GLsizei */ int @count, /* GLchar */ byte* @varyings, /* GLenum */ int @bufferMode)
+    public /* void */ void TransformFeedbackVaryings(/* GLuint */ uint @program, /* GLsizei */ int @count, /* GLchar */ byte** @varyings, /* GLenum */ int @bufferMode)
         => glTransformFeedbackVaryings(@program, @count, @varyings, @bufferMode);
     public /* void */ void Uniform1f(/* GLint */ int @location, /* GLfloat */ float @v0)
         => glUniform1f(@location, @v0);

@@ -198,7 +198,7 @@ public unsafe partial class GL
         => glCreateSamplers(@n, @samplers);
     public /* GLuint */ uint CreateShader(/* GLenum */ int @type)
         => glCreateShader(@type);
-    public /* GLuint */ uint CreateShaderProgramv(/* GLenum */ int @type, /* GLsizei */ int @count, /* GLchar */ byte* @strings)
+    public /* GLuint */ uint CreateShaderProgramv(/* GLenum */ int @type, /* GLsizei */ int @count, /* GLchar */ byte** @strings)
         => glCreateShaderProgramv(@type, @count, @strings);
     public /* void */ void CreateTextures(/* GLenum */ int @target, /* GLsizei */ int @n, /* GLuint */ uint* @textures)
         => glCreateTextures(@target, @n, @textures);
@@ -574,7 +574,7 @@ public unsafe partial class GL
         => glGetTransformFeedbackiv(@xfb, @pname, @param);
     public /* GLuint */ uint GetUniformBlockIndex(/* GLuint */ uint @program, /* GLchar */ byte* @uniformBlockName)
         => glGetUniformBlockIndex(@program, @uniformBlockName);
-    public /* void */ void GetUniformIndices(/* GLuint */ uint @program, /* GLsizei */ int @uniformCount, /* GLchar */ byte* @uniformNames, /* GLuint */ uint* @uniformIndices)
+    public /* void */ void GetUniformIndices(/* GLuint */ uint @program, /* GLsizei */ int @uniformCount, /* GLchar */ byte** @uniformNames, /* GLuint */ uint* @uniformIndices)
         => glGetUniformIndices(@program, @uniformCount, @uniformNames, @uniformIndices);
     public /* GLint */ int GetUniformLocation(/* GLuint */ uint @program, /* GLchar */ byte* @name)
         => glGetUniformLocation(@program, @name);
@@ -692,9 +692,9 @@ public unsafe partial class GL
         => glMultiDrawArraysIndirect(@mode, @indirect, @drawcount, @stride);
     public /* void */ void MultiDrawArraysIndirectCount(/* GLenum */ int @mode, /* void */ void* @indirect, /* GLintptr */ nint @drawcount, /* GLsizei */ int @maxdrawcount, /* GLsizei */ int @stride)
         => glMultiDrawArraysIndirectCount(@mode, @indirect, @drawcount, @maxdrawcount, @stride);
-    public /* void */ void MultiDrawElements(/* GLenum */ int @mode, /* GLsizei */ int* @count, /* GLenum */ int @type, /* void */ void* @indices, /* GLsizei */ int @drawcount)
+    public /* void */ void MultiDrawElements(/* GLenum */ int @mode, /* GLsizei */ int* @count, /* GLenum */ int @type, /* void */ void** @indices, /* GLsizei */ int @drawcount)
         => glMultiDrawElements(@mode, @count, @type, @indices, @drawcount);
-    public /* void */ void MultiDrawElementsBaseVertex(/* GLenum */ int @mode, /* GLsizei */ int* @count, /* GLenum */ int @type, /* void */ void* @indices, /* GLsizei */ int @drawcount, /* GLint */ int* @basevertex)
+    public /* void */ void MultiDrawElementsBaseVertex(/* GLenum */ int @mode, /* GLsizei */ int* @count, /* GLenum */ int @type, /* void */ void** @indices, /* GLsizei */ int @drawcount, /* GLint */ int* @basevertex)
         => glMultiDrawElementsBaseVertex(@mode, @count, @type, @indices, @drawcount, @basevertex);
     public /* void */ void MultiDrawElementsIndirect(/* GLenum */ int @mode, /* GLenum */ int @type, /* void */ void* @indirect, /* GLsizei */ int @drawcount, /* GLsizei */ int @stride)
         => glMultiDrawElementsIndirect(@mode, @type, @indirect, @drawcount, @stride);
@@ -908,7 +908,7 @@ public unsafe partial class GL
         => glScissorIndexedv(@index, @v);
     public /* void */ void ShaderBinary(/* GLsizei */ int @count, /* GLuint */ uint* @shaders, /* GLenum */ int @binaryFormat, /* void */ void* @binary, /* GLsizei */ int @length)
         => glShaderBinary(@count, @shaders, @binaryFormat, @binary, @length);
-    public /* void */ void ShaderSource(/* GLuint */ uint @shader, /* GLsizei */ int @count, /* GLchar */ byte* @string, /* GLint */ int* @length)
+    public /* void */ void ShaderSource(/* GLuint */ uint @shader, /* GLsizei */ int @count, /* GLchar */ byte** @string, /* GLint */ int* @length)
         => glShaderSource(@shader, @count, @string, @length);
     public /* void */ void ShaderStorageBlockBinding(/* GLuint */ uint @program, /* GLuint */ uint @storageBlockIndex, /* GLuint */ uint @storageBlockBinding)
         => glShaderStorageBlockBinding(@program, @storageBlockIndex, @storageBlockBinding);
@@ -1008,7 +1008,7 @@ public unsafe partial class GL
         => glTransformFeedbackBufferBase(@xfb, @index, @buffer);
     public /* void */ void TransformFeedbackBufferRange(/* GLuint */ uint @xfb, /* GLuint */ uint @index, /* GLuint */ uint @buffer, /* GLintptr */ nint @offset, /* GLsizeiptr */ nint @size)
         => glTransformFeedbackBufferRange(@xfb, @index, @buffer, @offset, @size);
-    public /* void */ void TransformFeedbackVaryings(/* GLuint */ uint @program, /* GLsizei */ int @count, /* GLchar */ byte* @varyings, /* GLenum */ int @bufferMode)
+    public /* void */ void TransformFeedbackVaryings(/* GLuint */ uint @program, /* GLsizei */ int @count, /* GLchar */ byte** @varyings, /* GLenum */ int @bufferMode)
         => glTransformFeedbackVaryings(@program, @count, @varyings, @bufferMode);
     public /* void */ void Uniform1d(/* GLint */ int @location, /* GLdouble */ double @x)
         => glUniform1d(@location, @x);

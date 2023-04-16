@@ -852,7 +852,7 @@ public unsafe partial class GLCompat
             fixed(byte* name = glMultiDrawArraysFunctionName)
                 glMultiDrawArrays = (delegate* unmanaged</* GLenum */ int, /* GLint */ int*, /* GLsizei */ int*, /* GLsizei */ int, /* void */ void>)loadFunc(name);
             fixed(byte* name = glMultiDrawElementsFunctionName)
-                glMultiDrawElements = (delegate* unmanaged</* GLenum */ int, /* GLsizei */ int*, /* GLenum */ int, /* void */ void*, /* GLsizei */ int, /* void */ void>)loadFunc(name);
+                glMultiDrawElements = (delegate* unmanaged</* GLenum */ int, /* GLsizei */ int*, /* GLenum */ int, /* void */ void**, /* GLsizei */ int, /* void */ void>)loadFunc(name);
             fixed(byte* name = glPointParameterfFunctionName)
                 glPointParameterf = (delegate* unmanaged</* GLenum */ int, /* GLfloat */ float, /* void */ void>)loadFunc(name);
             fixed(byte* name = glPointParameterfvFunctionName)
@@ -1056,7 +1056,7 @@ public unsafe partial class GLCompat
             fixed(byte* name = glLinkProgramFunctionName)
                 glLinkProgram = (delegate* unmanaged</* GLuint */ uint, /* void */ void>)loadFunc(name);
             fixed(byte* name = glShaderSourceFunctionName)
-                glShaderSource = (delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte*, /* GLint */ int*, /* void */ void>)loadFunc(name);
+                glShaderSource = (delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte**, /* GLint */ int*, /* void */ void>)loadFunc(name);
             fixed(byte* name = glUseProgramFunctionName)
                 glUseProgram = (delegate* unmanaged</* GLuint */ uint, /* void */ void>)loadFunc(name);
             fixed(byte* name = glUniform1fFunctionName)
@@ -1214,7 +1214,7 @@ public unsafe partial class GLCompat
             fixed(byte* name = glBindBufferBaseFunctionName)
                 glBindBufferBase = (delegate* unmanaged</* GLenum */ int, /* GLuint */ uint, /* GLuint */ uint, /* void */ void>)loadFunc(name);
             fixed(byte* name = glTransformFeedbackVaryingsFunctionName)
-                glTransformFeedbackVaryings = (delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte*, /* GLenum */ int, /* void */ void>)loadFunc(name);
+                glTransformFeedbackVaryings = (delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte**, /* GLenum */ int, /* void */ void>)loadFunc(name);
             fixed(byte* name = glGetTransformFeedbackVaryingFunctionName)
                 glGetTransformFeedbackVarying = (delegate* unmanaged</* GLuint */ uint, /* GLuint */ uint, /* GLsizei */ int, /* GLsizei */ int*, /* GLsizei */ int*, /* GLenum */ int*, /* GLchar */ byte*, /* void */ void>)loadFunc(name);
             fixed(byte* name = glClampColorFunctionName)
@@ -1376,7 +1376,7 @@ public unsafe partial class GLCompat
             fixed(byte* name = glCopyBufferSubDataFunctionName)
                 glCopyBufferSubData = (delegate* unmanaged</* GLenum */ int, /* GLenum */ int, /* GLintptr */ nint, /* GLintptr */ nint, /* GLsizeiptr */ nint, /* void */ void>)loadFunc(name);
             fixed(byte* name = glGetUniformIndicesFunctionName)
-                glGetUniformIndices = (delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte*, /* GLuint */ uint*, /* void */ void>)loadFunc(name);
+                glGetUniformIndices = (delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLchar */ byte**, /* GLuint */ uint*, /* void */ void>)loadFunc(name);
             fixed(byte* name = glGetActiveUniformsivFunctionName)
                 glGetActiveUniformsiv = (delegate* unmanaged</* GLuint */ uint, /* GLsizei */ int, /* GLuint */ uint*, /* GLenum */ int, /* GLint */ int*, /* void */ void>)loadFunc(name);
             fixed(byte* name = glGetActiveUniformNameFunctionName)
@@ -1406,7 +1406,7 @@ public unsafe partial class GLCompat
             fixed(byte* name = glDrawElementsInstancedBaseVertexFunctionName)
                 glDrawElementsInstancedBaseVertex = (delegate* unmanaged</* GLenum */ int, /* GLsizei */ int, /* GLenum */ int, /* void */ void*, /* GLsizei */ int, /* GLint */ int, /* void */ void>)loadFunc(name);
             fixed(byte* name = glMultiDrawElementsBaseVertexFunctionName)
-                glMultiDrawElementsBaseVertex = (delegate* unmanaged</* GLenum */ int, /* GLsizei */ int*, /* GLenum */ int, /* void */ void*, /* GLsizei */ int, /* GLint */ int*, /* void */ void>)loadFunc(name);
+                glMultiDrawElementsBaseVertex = (delegate* unmanaged</* GLenum */ int, /* GLsizei */ int*, /* GLenum */ int, /* void */ void**, /* GLsizei */ int, /* GLint */ int*, /* void */ void>)loadFunc(name);
             fixed(byte* name = glProvokingVertexFunctionName)
                 glProvokingVertex = (delegate* unmanaged</* GLenum */ int, /* void */ void>)loadFunc(name);
             fixed(byte* name = glFenceSyncFunctionName)
@@ -1678,7 +1678,7 @@ public unsafe partial class GLCompat
             fixed(byte* name = glActiveShaderProgramFunctionName)
                 glActiveShaderProgram = (delegate* unmanaged</* GLuint */ uint, /* GLuint */ uint, /* void */ void>)loadFunc(name);
             fixed(byte* name = glCreateShaderProgramvFunctionName)
-                glCreateShaderProgramv = (delegate* unmanaged</* GLenum */ int, /* GLsizei */ int, /* GLchar */ byte*, /* GLuint */ uint>)loadFunc(name);
+                glCreateShaderProgramv = (delegate* unmanaged</* GLenum */ int, /* GLsizei */ int, /* GLchar */ byte**, /* GLuint */ uint>)loadFunc(name);
             fixed(byte* name = glBindProgramPipelineFunctionName)
                 glBindProgramPipeline = (delegate* unmanaged</* GLuint */ uint, /* void */ void>)loadFunc(name);
             fixed(byte* name = glDeleteProgramPipelinesFunctionName)
