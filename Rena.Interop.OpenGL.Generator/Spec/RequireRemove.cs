@@ -12,8 +12,9 @@ public class RequireRemove
     private readonly List<Command> commands = new();
     private readonly List<SpecEnum> enums = new();
 
-    public GLProfile Profile { get; init; }
     public Api Api { get; init; }
+    public GLApi GLApi { get; init; }
+    public GLProfile Profile { get; init; }
 
     public IReadOnlyList<Command> Commands
         => commands;
@@ -23,8 +24,10 @@ public class RequireRemove
 
     public RequireRemove(XmlElement element)
     {
+        Api = ApiExtensions.FromFeatureString(element.GetAttribute(XmlApi), out var glApi);
+        GLApi = glApi;
+
         Profile = GLProfileExtensions.FromXmlString(element.GetAttribute(XmlProfile));
-        Api = ApiExtensions.FromXmlString(element.GetAttribute(XmlApi));
 
         foreach (XmlNode child in element)
         {

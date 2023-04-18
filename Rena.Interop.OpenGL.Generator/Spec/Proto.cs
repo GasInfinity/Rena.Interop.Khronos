@@ -8,11 +8,11 @@ public class Proto
 
     const string XmlName = "name";
     const string XmlGroup = "group";
-    
+
     public IType Type { get; init; }
     public string Name { get; init; }
     public string Group { get; init; }
-    
+
     public Proto(XmlElement element)
     {
         Name = element[XmlName]?.InnerText ?? string.Empty;

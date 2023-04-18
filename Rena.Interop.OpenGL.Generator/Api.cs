@@ -1,42 +1,53 @@
 namespace Rena.Interop.OpenGL.Generator;
 
+[Flags]
 public enum Api : byte
 {
-    None,
     GL,
-    GLES1,
-    GLES2,
-    GLSC2,
     GLX,
-    GLW,
+    WGL,
     EGL
 }
 
 public static class ApiExtensions
 {
-    public static string ToXmlString(this Api api)
+    public static string ToFeatureString(this Api api, GLApi glApi = GLApi.GL)
         => api switch
         {
-            Api.GL => "gl",
-            Api.GLES1 => "gles1",
-            Api.GLES2 => "gles2",
-            Api.GLSC2 => "glsc2",
+            Api.GL => glApi.ToFeatureString(),
             Api.GLX => "glx",
-            Api.GLW => "glw",
+            Api.WGL => "wgl",
             Api.EGL => "egl",
             _ => string.Empty
         };
 
-    public static Api FromXmlString(string api)
+    public static Api FromFeatureString(string api, out GLApi glApi)
+    {
+        glApi = api switch
+        {
+            "gl" => GLApi.GL,
+            "gles1" => GLApi.GLES1,
+            "gles2" => GLApi.GLES2,
+            "glsc2" => GLApi.GLSC2,
+            _ => default
+        };
+
+        return api switch
+        {
+            "glx" => Api.GLX,
+            "glw" => Api.WGL,
+            "egl" => Api.EGL,
+            _ => Api.GL
+        };
+    }
+
+    public static string GetPrefix(this Api api)
         => api switch
         {
-            "gl" => Api.GL,
-            "gles1" => Api.GLES1,
-            "gles2" => Api.GLES2,
-            "glsc2" => Api.GLSC2,
-            "glx" => Api.GLX,
-            "glw" => Api.GLW,
-            "egl" => Api.EGL,
-            _ => Api.None
+            Api.GL => "gl",
+            Api.GLX => "glX",
+            Api.WGL => "wgl",
+            Api.EGL => "egl",
+            _ => string.Empty
         };
 }

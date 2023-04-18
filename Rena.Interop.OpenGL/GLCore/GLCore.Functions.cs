@@ -1,6 +1,6 @@
 namespace Rena.Interop.OpenGL;
 
-public unsafe partial class GL
+public unsafe partial class GLCore
 {
     public /* void */ void CullFace(/* GLenum */ int @mode)
         => glCullFace(@mode);
@@ -392,46 +392,6 @@ public unsafe partial class GL
         => glVertexAttrib4usv(@index, @v);
     public /* void */ void VertexAttribPointer(/* GLuint */ uint @index, /* GLint */ int @size, /* GLenum */ int @type, /* GLboolean */ int @normalized, /* GLsizei */ int @stride, /* void */ void* @pointer)
         => glVertexAttribPointer(@index, @size, @type, @normalized, @stride, @pointer);
-    public /* void */ void BindFramebuffer(/* GLenum */ int @target, /* GLuint */ uint @framebuffer)
-        => glBindFramebuffer(@target, @framebuffer);
-    public /* void */ void BindRenderbuffer(/* GLenum */ int @target, /* GLuint */ uint @renderbuffer)
-        => glBindRenderbuffer(@target, @renderbuffer);
-    public /* GLenum */ int CheckFramebufferStatus(/* GLenum */ int @target)
-        => glCheckFramebufferStatus(@target);
-    public /* void */ void ClearDepthf(/* GLfloat */ float @d)
-        => glClearDepthf(@d);
-    public /* void */ void DeleteFramebuffers(/* GLsizei */ int @n, /* GLuint */ uint* @framebuffers)
-        => glDeleteFramebuffers(@n, @framebuffers);
-    public /* void */ void DeleteRenderbuffers(/* GLsizei */ int @n, /* GLuint */ uint* @renderbuffers)
-        => glDeleteRenderbuffers(@n, @renderbuffers);
-    public /* void */ void DepthRangef(/* GLfloat */ float @n, /* GLfloat */ float @f)
-        => glDepthRangef(@n, @f);
-    public /* void */ void FramebufferRenderbuffer(/* GLenum */ int @target, /* GLenum */ int @attachment, /* GLenum */ int @renderbuffertarget, /* GLuint */ uint @renderbuffer)
-        => glFramebufferRenderbuffer(@target, @attachment, @renderbuffertarget, @renderbuffer);
-    public /* void */ void FramebufferTexture2D(/* GLenum */ int @target, /* GLenum */ int @attachment, /* GLenum */ int @textarget, /* GLuint */ uint @texture, /* GLint */ int @level)
-        => glFramebufferTexture2D(@target, @attachment, @textarget, @texture, @level);
-    public /* void */ void GenerateMipmap(/* GLenum */ int @target)
-        => glGenerateMipmap(@target);
-    public /* void */ void GenFramebuffers(/* GLsizei */ int @n, /* GLuint */ uint* @framebuffers)
-        => glGenFramebuffers(@n, @framebuffers);
-    public /* void */ void GenRenderbuffers(/* GLsizei */ int @n, /* GLuint */ uint* @renderbuffers)
-        => glGenRenderbuffers(@n, @renderbuffers);
-    public /* void */ void GetFramebufferAttachmentParameteriv(/* GLenum */ int @target, /* GLenum */ int @attachment, /* GLenum */ int @pname, /* GLint */ int* @params)
-        => glGetFramebufferAttachmentParameteriv(@target, @attachment, @pname, @params);
-    public /* void */ void GetRenderbufferParameteriv(/* GLenum */ int @target, /* GLenum */ int @pname, /* GLint */ int* @params)
-        => glGetRenderbufferParameteriv(@target, @pname, @params);
-    public /* void */ void GetShaderPrecisionFormat(/* GLenum */ int @shadertype, /* GLenum */ int @precisiontype, /* GLint */ int* @range, /* GLint */ int* @precision)
-        => glGetShaderPrecisionFormat(@shadertype, @precisiontype, @range, @precision);
-    public /* GLboolean */ int IsFramebuffer(/* GLuint */ uint @framebuffer)
-        => glIsFramebuffer(@framebuffer);
-    public /* GLboolean */ int IsRenderbuffer(/* GLuint */ uint @renderbuffer)
-        => glIsRenderbuffer(@renderbuffer);
-    public /* void */ void ReleaseShaderCompiler()
-        => glReleaseShaderCompiler();
-    public /* void */ void RenderbufferStorage(/* GLenum */ int @target, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height)
-        => glRenderbufferStorage(@target, @internalformat, @width, @height);
-    public /* void */ void ShaderBinary(/* GLsizei */ int @count, /* GLuint */ uint* @shaders, /* GLenum */ int @binaryFormat, /* void */ void* @binary, /* GLsizei */ int @length)
-        => glShaderBinary(@count, @shaders, @binaryFormat, @binary, @length);
     public /* void */ void UniformMatrix2x3fv(/* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
         => glUniformMatrix2x3fv(@location, @count, @transpose, @value);
     public /* void */ void UniformMatrix3x2fv(/* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
@@ -560,10 +520,40 @@ public unsafe partial class GL
         => glClearBufferfi(@buffer, @drawbuffer, @depth, @stencil);
     public /* GLubyte */ byte* GetStringi(/* GLenum */ int @name, /* GLuint */ uint @index)
         => glGetStringi(@name, @index);
+    public /* GLboolean */ int IsRenderbuffer(/* GLuint */ uint @renderbuffer)
+        => glIsRenderbuffer(@renderbuffer);
+    public /* void */ void BindRenderbuffer(/* GLenum */ int @target, /* GLuint */ uint @renderbuffer)
+        => glBindRenderbuffer(@target, @renderbuffer);
+    public /* void */ void DeleteRenderbuffers(/* GLsizei */ int @n, /* GLuint */ uint* @renderbuffers)
+        => glDeleteRenderbuffers(@n, @renderbuffers);
+    public /* void */ void GenRenderbuffers(/* GLsizei */ int @n, /* GLuint */ uint* @renderbuffers)
+        => glGenRenderbuffers(@n, @renderbuffers);
+    public /* void */ void RenderbufferStorage(/* GLenum */ int @target, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height)
+        => glRenderbufferStorage(@target, @internalformat, @width, @height);
+    public /* void */ void GetRenderbufferParameteriv(/* GLenum */ int @target, /* GLenum */ int @pname, /* GLint */ int* @params)
+        => glGetRenderbufferParameteriv(@target, @pname, @params);
+    public /* GLboolean */ int IsFramebuffer(/* GLuint */ uint @framebuffer)
+        => glIsFramebuffer(@framebuffer);
+    public /* void */ void BindFramebuffer(/* GLenum */ int @target, /* GLuint */ uint @framebuffer)
+        => glBindFramebuffer(@target, @framebuffer);
+    public /* void */ void DeleteFramebuffers(/* GLsizei */ int @n, /* GLuint */ uint* @framebuffers)
+        => glDeleteFramebuffers(@n, @framebuffers);
+    public /* void */ void GenFramebuffers(/* GLsizei */ int @n, /* GLuint */ uint* @framebuffers)
+        => glGenFramebuffers(@n, @framebuffers);
+    public /* GLenum */ int CheckFramebufferStatus(/* GLenum */ int @target)
+        => glCheckFramebufferStatus(@target);
     public /* void */ void FramebufferTexture1D(/* GLenum */ int @target, /* GLenum */ int @attachment, /* GLenum */ int @textarget, /* GLuint */ uint @texture, /* GLint */ int @level)
         => glFramebufferTexture1D(@target, @attachment, @textarget, @texture, @level);
+    public /* void */ void FramebufferTexture2D(/* GLenum */ int @target, /* GLenum */ int @attachment, /* GLenum */ int @textarget, /* GLuint */ uint @texture, /* GLint */ int @level)
+        => glFramebufferTexture2D(@target, @attachment, @textarget, @texture, @level);
     public /* void */ void FramebufferTexture3D(/* GLenum */ int @target, /* GLenum */ int @attachment, /* GLenum */ int @textarget, /* GLuint */ uint @texture, /* GLint */ int @level, /* GLint */ int @zoffset)
         => glFramebufferTexture3D(@target, @attachment, @textarget, @texture, @level, @zoffset);
+    public /* void */ void FramebufferRenderbuffer(/* GLenum */ int @target, /* GLenum */ int @attachment, /* GLenum */ int @renderbuffertarget, /* GLuint */ uint @renderbuffer)
+        => glFramebufferRenderbuffer(@target, @attachment, @renderbuffertarget, @renderbuffer);
+    public /* void */ void GetFramebufferAttachmentParameteriv(/* GLenum */ int @target, /* GLenum */ int @attachment, /* GLenum */ int @pname, /* GLint */ int* @params)
+        => glGetFramebufferAttachmentParameteriv(@target, @attachment, @pname, @params);
+    public /* void */ void GenerateMipmap(/* GLenum */ int @target)
+        => glGenerateMipmap(@target);
     public /* void */ void BlitFramebuffer(/* GLint */ int @srcX0, /* GLint */ int @srcY0, /* GLint */ int @srcX1, /* GLint */ int @srcY1, /* GLint */ int @dstX0, /* GLint */ int @dstY0, /* GLint */ int @dstX1, /* GLint */ int @dstY1, /* GLbitfield */ int @mask, /* GLenum */ int @filter)
         => glBlitFramebuffer(@srcX0, @srcY0, @srcX1, @srcY1, @dstX0, @dstY0, @dstX1, @dstY1, @mask, @filter);
     public /* void */ void RenderbufferStorageMultisample(/* GLenum */ int @target, /* GLsizei */ int @samples, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height)
@@ -582,12 +572,22 @@ public unsafe partial class GL
         => glGenVertexArrays(@n, @arrays);
     public /* GLboolean */ int IsVertexArray(/* GLuint */ uint @array)
         => glIsVertexArray(@array);
+    public /* void */ void DrawArraysInstanced(/* GLenum */ int @mode, /* GLint */ int @first, /* GLsizei */ int @count, /* GLsizei */ int @instancecount)
+        => glDrawArraysInstanced(@mode, @first, @count, @instancecount);
+    public /* void */ void DrawElementsInstanced(/* GLenum */ int @mode, /* GLsizei */ int @count, /* GLenum */ int @type, /* void */ void* @indices, /* GLsizei */ int @instancecount)
+        => glDrawElementsInstanced(@mode, @count, @type, @indices, @instancecount);
+    public /* void */ void TexBuffer(/* GLenum */ int @target, /* GLenum */ int @internalformat, /* GLuint */ uint @buffer)
+        => glTexBuffer(@target, @internalformat, @buffer);
+    public /* void */ void PrimitiveRestartIndex(/* GLuint */ uint @index)
+        => glPrimitiveRestartIndex(@index);
     public /* void */ void CopyBufferSubData(/* GLenum */ int @readTarget, /* GLenum */ int @writeTarget, /* GLintptr */ nint @readOffset, /* GLintptr */ nint @writeOffset, /* GLsizeiptr */ nint @size)
         => glCopyBufferSubData(@readTarget, @writeTarget, @readOffset, @writeOffset, @size);
     public /* void */ void GetUniformIndices(/* GLuint */ uint @program, /* GLsizei */ int @uniformCount, /* GLchar */ byte** @uniformNames, /* GLuint */ uint* @uniformIndices)
         => glGetUniformIndices(@program, @uniformCount, @uniformNames, @uniformIndices);
     public /* void */ void GetActiveUniformsiv(/* GLuint */ uint @program, /* GLsizei */ int @uniformCount, /* GLuint */ uint* @uniformIndices, /* GLenum */ int @pname, /* GLint */ int* @params)
         => glGetActiveUniformsiv(@program, @uniformCount, @uniformIndices, @pname, @params);
+    public /* void */ void GetActiveUniformName(/* GLuint */ uint @program, /* GLuint */ uint @uniformIndex, /* GLsizei */ int @bufSize, /* GLsizei */ int* @length, /* GLchar */ byte* @uniformName)
+        => glGetActiveUniformName(@program, @uniformIndex, @bufSize, @length, @uniformName);
     public /* GLuint */ uint GetUniformBlockIndex(/* GLuint */ uint @program, /* GLchar */ byte* @uniformBlockName)
         => glGetUniformBlockIndex(@program, @uniformBlockName);
     public /* void */ void GetActiveUniformBlockiv(/* GLuint */ uint @program, /* GLuint */ uint @uniformBlockIndex, /* GLenum */ int @pname, /* GLint */ int* @params)
@@ -596,10 +596,16 @@ public unsafe partial class GL
         => glGetActiveUniformBlockName(@program, @uniformBlockIndex, @bufSize, @length, @uniformBlockName);
     public /* void */ void UniformBlockBinding(/* GLuint */ uint @program, /* GLuint */ uint @uniformBlockIndex, /* GLuint */ uint @uniformBlockBinding)
         => glUniformBlockBinding(@program, @uniformBlockIndex, @uniformBlockBinding);
-    public /* void */ void DrawArraysInstanced(/* GLenum */ int @mode, /* GLint */ int @first, /* GLsizei */ int @count, /* GLsizei */ int @instancecount)
-        => glDrawArraysInstanced(@mode, @first, @count, @instancecount);
-    public /* void */ void DrawElementsInstanced(/* GLenum */ int @mode, /* GLsizei */ int @count, /* GLenum */ int @type, /* void */ void* @indices, /* GLsizei */ int @instancecount)
-        => glDrawElementsInstanced(@mode, @count, @type, @indices, @instancecount);
+    public /* void */ void DrawElementsBaseVertex(/* GLenum */ int @mode, /* GLsizei */ int @count, /* GLenum */ int @type, /* void */ void* @indices, /* GLint */ int @basevertex)
+        => glDrawElementsBaseVertex(@mode, @count, @type, @indices, @basevertex);
+    public /* void */ void DrawRangeElementsBaseVertex(/* GLenum */ int @mode, /* GLuint */ uint @start, /* GLuint */ uint @end, /* GLsizei */ int @count, /* GLenum */ int @type, /* void */ void* @indices, /* GLint */ int @basevertex)
+        => glDrawRangeElementsBaseVertex(@mode, @start, @end, @count, @type, @indices, @basevertex);
+    public /* void */ void DrawElementsInstancedBaseVertex(/* GLenum */ int @mode, /* GLsizei */ int @count, /* GLenum */ int @type, /* void */ void* @indices, /* GLsizei */ int @instancecount, /* GLint */ int @basevertex)
+        => glDrawElementsInstancedBaseVertex(@mode, @count, @type, @indices, @instancecount, @basevertex);
+    public /* void */ void MultiDrawElementsBaseVertex(/* GLenum */ int @mode, /* GLsizei */ int* @count, /* GLenum */ int @type, /* void */ void** @indices, /* GLsizei */ int @drawcount, /* GLint */ int* @basevertex)
+        => glMultiDrawElementsBaseVertex(@mode, @count, @type, @indices, @drawcount, @basevertex);
+    public /* void */ void ProvokingVertex(/* GLenum */ int @mode)
+        => glProvokingVertex(@mode);
     public /* GLsync */ void* FenceSync(/* GLenum */ int @condition, /* GLbitfield */ int @flags)
         => glFenceSync(@condition, @flags);
     public /* GLboolean */ int IsSync(/* GLsync */ void* @sync)
@@ -618,6 +624,20 @@ public unsafe partial class GL
         => glGetInteger64i_v(@target, @index, @data);
     public /* void */ void GetBufferParameteri64v(/* GLenum */ int @target, /* GLenum */ int @pname, /* GLint64 */ long* @params)
         => glGetBufferParameteri64v(@target, @pname, @params);
+    public /* void */ void FramebufferTexture(/* GLenum */ int @target, /* GLenum */ int @attachment, /* GLuint */ uint @texture, /* GLint */ int @level)
+        => glFramebufferTexture(@target, @attachment, @texture, @level);
+    public /* void */ void TexImage2DMultisample(/* GLenum */ int @target, /* GLsizei */ int @samples, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLboolean */ int @fixedsamplelocations)
+        => glTexImage2DMultisample(@target, @samples, @internalformat, @width, @height, @fixedsamplelocations);
+    public /* void */ void TexImage3DMultisample(/* GLenum */ int @target, /* GLsizei */ int @samples, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLsizei */ int @depth, /* GLboolean */ int @fixedsamplelocations)
+        => glTexImage3DMultisample(@target, @samples, @internalformat, @width, @height, @depth, @fixedsamplelocations);
+    public /* void */ void GetMultisamplefv(/* GLenum */ int @pname, /* GLuint */ uint @index, /* GLfloat */ float* @val)
+        => glGetMultisamplefv(@pname, @index, @val);
+    public /* void */ void SampleMaski(/* GLuint */ uint @maskNumber, /* GLbitfield */ int @mask)
+        => glSampleMaski(@maskNumber, @mask);
+    public /* void */ void BindFragDataLocationIndexed(/* GLuint */ uint @program, /* GLuint */ uint @colorNumber, /* GLuint */ uint @index, /* GLchar */ byte* @name)
+        => glBindFragDataLocationIndexed(@program, @colorNumber, @index, @name);
+    public /* GLint */ int GetFragDataIndex(/* GLuint */ uint @program, /* GLchar */ byte* @name)
+        => glGetFragDataIndex(@program, @name);
     public /* void */ void GenSamplers(/* GLsizei */ int @count, /* GLuint */ uint* @samplers)
         => glGenSamplers(@count, @samplers);
     public /* void */ void DeleteSamplers(/* GLsizei */ int @count, /* GLuint */ uint* @samplers)
@@ -634,264 +654,26 @@ public unsafe partial class GL
         => glSamplerParameterf(@sampler, @pname, @param);
     public /* void */ void SamplerParameterfv(/* GLuint */ uint @sampler, /* GLenum */ int @pname, /* GLfloat */ float* @param)
         => glSamplerParameterfv(@sampler, @pname, @param);
-    public /* void */ void GetSamplerParameteriv(/* GLuint */ uint @sampler, /* GLenum */ int @pname, /* GLint */ int* @params)
-        => glGetSamplerParameteriv(@sampler, @pname, @params);
-    public /* void */ void GetSamplerParameterfv(/* GLuint */ uint @sampler, /* GLenum */ int @pname, /* GLfloat */ float* @params)
-        => glGetSamplerParameterfv(@sampler, @pname, @params);
-    public /* void */ void VertexAttribDivisor(/* GLuint */ uint @index, /* GLuint */ uint @divisor)
-        => glVertexAttribDivisor(@index, @divisor);
-    public /* void */ void BindTransformFeedback(/* GLenum */ int @target, /* GLuint */ uint @id)
-        => glBindTransformFeedback(@target, @id);
-    public /* void */ void DeleteTransformFeedbacks(/* GLsizei */ int @n, /* GLuint */ uint* @ids)
-        => glDeleteTransformFeedbacks(@n, @ids);
-    public /* void */ void GenTransformFeedbacks(/* GLsizei */ int @n, /* GLuint */ uint* @ids)
-        => glGenTransformFeedbacks(@n, @ids);
-    public /* GLboolean */ int IsTransformFeedback(/* GLuint */ uint @id)
-        => glIsTransformFeedback(@id);
-    public /* void */ void PauseTransformFeedback()
-        => glPauseTransformFeedback();
-    public /* void */ void ResumeTransformFeedback()
-        => glResumeTransformFeedback();
-    public /* void */ void GetProgramBinary(/* GLuint */ uint @program, /* GLsizei */ int @bufSize, /* GLsizei */ int* @length, /* GLenum */ int* @binaryFormat, /* void */ void* @binary)
-        => glGetProgramBinary(@program, @bufSize, @length, @binaryFormat, @binary);
-    public /* void */ void ProgramBinary(/* GLuint */ uint @program, /* GLenum */ int @binaryFormat, /* void */ void* @binary, /* GLsizei */ int @length)
-        => glProgramBinary(@program, @binaryFormat, @binary, @length);
-    public /* void */ void ProgramParameteri(/* GLuint */ uint @program, /* GLenum */ int @pname, /* GLint */ int @value)
-        => glProgramParameteri(@program, @pname, @value);
-    public /* void */ void InvalidateFramebuffer(/* GLenum */ int @target, /* GLsizei */ int @numAttachments, /* GLenum */ int* @attachments)
-        => glInvalidateFramebuffer(@target, @numAttachments, @attachments);
-    public /* void */ void InvalidateSubFramebuffer(/* GLenum */ int @target, /* GLsizei */ int @numAttachments, /* GLenum */ int* @attachments, /* GLint */ int @x, /* GLint */ int @y, /* GLsizei */ int @width, /* GLsizei */ int @height)
-        => glInvalidateSubFramebuffer(@target, @numAttachments, @attachments, @x, @y, @width, @height);
-    public /* void */ void TexStorage2D(/* GLenum */ int @target, /* GLsizei */ int @levels, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height)
-        => glTexStorage2D(@target, @levels, @internalformat, @width, @height);
-    public /* void */ void TexStorage3D(/* GLenum */ int @target, /* GLsizei */ int @levels, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLsizei */ int @depth)
-        => glTexStorage3D(@target, @levels, @internalformat, @width, @height, @depth);
-    public /* void */ void GetInternalformativ(/* GLenum */ int @target, /* GLenum */ int @internalformat, /* GLenum */ int @pname, /* GLsizei */ int @count, /* GLint */ int* @params)
-        => glGetInternalformativ(@target, @internalformat, @pname, @count, @params);
-    public /* void */ void TexBuffer(/* GLenum */ int @target, /* GLenum */ int @internalformat, /* GLuint */ uint @buffer)
-        => glTexBuffer(@target, @internalformat, @buffer);
-    public /* void */ void PrimitiveRestartIndex(/* GLuint */ uint @index)
-        => glPrimitiveRestartIndex(@index);
-    public /* void */ void GetActiveUniformName(/* GLuint */ uint @program, /* GLuint */ uint @uniformIndex, /* GLsizei */ int @bufSize, /* GLsizei */ int* @length, /* GLchar */ byte* @uniformName)
-        => glGetActiveUniformName(@program, @uniformIndex, @bufSize, @length, @uniformName);
-    public /* void */ void DispatchCompute(/* GLuint */ uint @num_groups_x, /* GLuint */ uint @num_groups_y, /* GLuint */ uint @num_groups_z)
-        => glDispatchCompute(@num_groups_x, @num_groups_y, @num_groups_z);
-    public /* void */ void DispatchComputeIndirect(/* GLintptr */ nint @indirect)
-        => glDispatchComputeIndirect(@indirect);
-    public /* void */ void DrawArraysIndirect(/* GLenum */ int @mode, /* void */ void* @indirect)
-        => glDrawArraysIndirect(@mode, @indirect);
-    public /* void */ void DrawElementsIndirect(/* GLenum */ int @mode, /* GLenum */ int @type, /* void */ void* @indirect)
-        => glDrawElementsIndirect(@mode, @type, @indirect);
-    public /* void */ void FramebufferParameteri(/* GLenum */ int @target, /* GLenum */ int @pname, /* GLint */ int @param)
-        => glFramebufferParameteri(@target, @pname, @param);
-    public /* void */ void GetFramebufferParameteriv(/* GLenum */ int @target, /* GLenum */ int @pname, /* GLint */ int* @params)
-        => glGetFramebufferParameteriv(@target, @pname, @params);
-    public /* void */ void GetProgramInterfaceiv(/* GLuint */ uint @program, /* GLenum */ int @programInterface, /* GLenum */ int @pname, /* GLint */ int* @params)
-        => glGetProgramInterfaceiv(@program, @programInterface, @pname, @params);
-    public /* GLuint */ uint GetProgramResourceIndex(/* GLuint */ uint @program, /* GLenum */ int @programInterface, /* GLchar */ byte* @name)
-        => glGetProgramResourceIndex(@program, @programInterface, @name);
-    public /* void */ void GetProgramResourceName(/* GLuint */ uint @program, /* GLenum */ int @programInterface, /* GLuint */ uint @index, /* GLsizei */ int @bufSize, /* GLsizei */ int* @length, /* GLchar */ byte* @name)
-        => glGetProgramResourceName(@program, @programInterface, @index, @bufSize, @length, @name);
-    public /* void */ void GetProgramResourceiv(/* GLuint */ uint @program, /* GLenum */ int @programInterface, /* GLuint */ uint @index, /* GLsizei */ int @propCount, /* GLenum */ int* @props, /* GLsizei */ int @count, /* GLsizei */ int* @length, /* GLint */ int* @params)
-        => glGetProgramResourceiv(@program, @programInterface, @index, @propCount, @props, @count, @length, @params);
-    public /* GLint */ int GetProgramResourceLocation(/* GLuint */ uint @program, /* GLenum */ int @programInterface, /* GLchar */ byte* @name)
-        => glGetProgramResourceLocation(@program, @programInterface, @name);
-    public /* void */ void UseProgramStages(/* GLuint */ uint @pipeline, /* GLbitfield */ int @stages, /* GLuint */ uint @program)
-        => glUseProgramStages(@pipeline, @stages, @program);
-    public /* void */ void ActiveShaderProgram(/* GLuint */ uint @pipeline, /* GLuint */ uint @program)
-        => glActiveShaderProgram(@pipeline, @program);
-    public /* GLuint */ uint CreateShaderProgramv(/* GLenum */ int @type, /* GLsizei */ int @count, /* GLchar */ byte** @strings)
-        => glCreateShaderProgramv(@type, @count, @strings);
-    public /* void */ void BindProgramPipeline(/* GLuint */ uint @pipeline)
-        => glBindProgramPipeline(@pipeline);
-    public /* void */ void DeleteProgramPipelines(/* GLsizei */ int @n, /* GLuint */ uint* @pipelines)
-        => glDeleteProgramPipelines(@n, @pipelines);
-    public /* void */ void GenProgramPipelines(/* GLsizei */ int @n, /* GLuint */ uint* @pipelines)
-        => glGenProgramPipelines(@n, @pipelines);
-    public /* GLboolean */ int IsProgramPipeline(/* GLuint */ uint @pipeline)
-        => glIsProgramPipeline(@pipeline);
-    public /* void */ void GetProgramPipelineiv(/* GLuint */ uint @pipeline, /* GLenum */ int @pname, /* GLint */ int* @params)
-        => glGetProgramPipelineiv(@pipeline, @pname, @params);
-    public /* void */ void ProgramUniform1i(/* GLuint */ uint @program, /* GLint */ int @location, /* GLint */ int @v0)
-        => glProgramUniform1i(@program, @location, @v0);
-    public /* void */ void ProgramUniform2i(/* GLuint */ uint @program, /* GLint */ int @location, /* GLint */ int @v0, /* GLint */ int @v1)
-        => glProgramUniform2i(@program, @location, @v0, @v1);
-    public /* void */ void ProgramUniform3i(/* GLuint */ uint @program, /* GLint */ int @location, /* GLint */ int @v0, /* GLint */ int @v1, /* GLint */ int @v2)
-        => glProgramUniform3i(@program, @location, @v0, @v1, @v2);
-    public /* void */ void ProgramUniform4i(/* GLuint */ uint @program, /* GLint */ int @location, /* GLint */ int @v0, /* GLint */ int @v1, /* GLint */ int @v2, /* GLint */ int @v3)
-        => glProgramUniform4i(@program, @location, @v0, @v1, @v2, @v3);
-    public /* void */ void ProgramUniform1ui(/* GLuint */ uint @program, /* GLint */ int @location, /* GLuint */ uint @v0)
-        => glProgramUniform1ui(@program, @location, @v0);
-    public /* void */ void ProgramUniform2ui(/* GLuint */ uint @program, /* GLint */ int @location, /* GLuint */ uint @v0, /* GLuint */ uint @v1)
-        => glProgramUniform2ui(@program, @location, @v0, @v1);
-    public /* void */ void ProgramUniform3ui(/* GLuint */ uint @program, /* GLint */ int @location, /* GLuint */ uint @v0, /* GLuint */ uint @v1, /* GLuint */ uint @v2)
-        => glProgramUniform3ui(@program, @location, @v0, @v1, @v2);
-    public /* void */ void ProgramUniform4ui(/* GLuint */ uint @program, /* GLint */ int @location, /* GLuint */ uint @v0, /* GLuint */ uint @v1, /* GLuint */ uint @v2, /* GLuint */ uint @v3)
-        => glProgramUniform4ui(@program, @location, @v0, @v1, @v2, @v3);
-    public /* void */ void ProgramUniform1f(/* GLuint */ uint @program, /* GLint */ int @location, /* GLfloat */ float @v0)
-        => glProgramUniform1f(@program, @location, @v0);
-    public /* void */ void ProgramUniform2f(/* GLuint */ uint @program, /* GLint */ int @location, /* GLfloat */ float @v0, /* GLfloat */ float @v1)
-        => glProgramUniform2f(@program, @location, @v0, @v1);
-    public /* void */ void ProgramUniform3f(/* GLuint */ uint @program, /* GLint */ int @location, /* GLfloat */ float @v0, /* GLfloat */ float @v1, /* GLfloat */ float @v2)
-        => glProgramUniform3f(@program, @location, @v0, @v1, @v2);
-    public /* void */ void ProgramUniform4f(/* GLuint */ uint @program, /* GLint */ int @location, /* GLfloat */ float @v0, /* GLfloat */ float @v1, /* GLfloat */ float @v2, /* GLfloat */ float @v3)
-        => glProgramUniform4f(@program, @location, @v0, @v1, @v2, @v3);
-    public /* void */ void ProgramUniform1iv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLint */ int* @value)
-        => glProgramUniform1iv(@program, @location, @count, @value);
-    public /* void */ void ProgramUniform2iv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLint */ int* @value)
-        => glProgramUniform2iv(@program, @location, @count, @value);
-    public /* void */ void ProgramUniform3iv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLint */ int* @value)
-        => glProgramUniform3iv(@program, @location, @count, @value);
-    public /* void */ void ProgramUniform4iv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLint */ int* @value)
-        => glProgramUniform4iv(@program, @location, @count, @value);
-    public /* void */ void ProgramUniform1uiv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLuint */ uint* @value)
-        => glProgramUniform1uiv(@program, @location, @count, @value);
-    public /* void */ void ProgramUniform2uiv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLuint */ uint* @value)
-        => glProgramUniform2uiv(@program, @location, @count, @value);
-    public /* void */ void ProgramUniform3uiv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLuint */ uint* @value)
-        => glProgramUniform3uiv(@program, @location, @count, @value);
-    public /* void */ void ProgramUniform4uiv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLuint */ uint* @value)
-        => glProgramUniform4uiv(@program, @location, @count, @value);
-    public /* void */ void ProgramUniform1fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLfloat */ float* @value)
-        => glProgramUniform1fv(@program, @location, @count, @value);
-    public /* void */ void ProgramUniform2fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLfloat */ float* @value)
-        => glProgramUniform2fv(@program, @location, @count, @value);
-    public /* void */ void ProgramUniform3fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLfloat */ float* @value)
-        => glProgramUniform3fv(@program, @location, @count, @value);
-    public /* void */ void ProgramUniform4fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLfloat */ float* @value)
-        => glProgramUniform4fv(@program, @location, @count, @value);
-    public /* void */ void ProgramUniformMatrix2fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
-        => glProgramUniformMatrix2fv(@program, @location, @count, @transpose, @value);
-    public /* void */ void ProgramUniformMatrix3fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
-        => glProgramUniformMatrix3fv(@program, @location, @count, @transpose, @value);
-    public /* void */ void ProgramUniformMatrix4fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
-        => glProgramUniformMatrix4fv(@program, @location, @count, @transpose, @value);
-    public /* void */ void ProgramUniformMatrix2x3fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
-        => glProgramUniformMatrix2x3fv(@program, @location, @count, @transpose, @value);
-    public /* void */ void ProgramUniformMatrix3x2fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
-        => glProgramUniformMatrix3x2fv(@program, @location, @count, @transpose, @value);
-    public /* void */ void ProgramUniformMatrix2x4fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
-        => glProgramUniformMatrix2x4fv(@program, @location, @count, @transpose, @value);
-    public /* void */ void ProgramUniformMatrix4x2fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
-        => glProgramUniformMatrix4x2fv(@program, @location, @count, @transpose, @value);
-    public /* void */ void ProgramUniformMatrix3x4fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
-        => glProgramUniformMatrix3x4fv(@program, @location, @count, @transpose, @value);
-    public /* void */ void ProgramUniformMatrix4x3fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
-        => glProgramUniformMatrix4x3fv(@program, @location, @count, @transpose, @value);
-    public /* void */ void ValidateProgramPipeline(/* GLuint */ uint @pipeline)
-        => glValidateProgramPipeline(@pipeline);
-    public /* void */ void GetProgramPipelineInfoLog(/* GLuint */ uint @pipeline, /* GLsizei */ int @bufSize, /* GLsizei */ int* @length, /* GLchar */ byte* @infoLog)
-        => glGetProgramPipelineInfoLog(@pipeline, @bufSize, @length, @infoLog);
-    public /* void */ void BindImageTexture(/* GLuint */ uint @unit, /* GLuint */ uint @texture, /* GLint */ int @level, /* GLboolean */ int @layered, /* GLint */ int @layer, /* GLenum */ int @access, /* GLenum */ int @format)
-        => glBindImageTexture(@unit, @texture, @level, @layered, @layer, @access, @format);
-    public /* void */ void MemoryBarrier(/* GLbitfield */ int @barriers)
-        => glMemoryBarrier(@barriers);
-    public /* void */ void MemoryBarrierByRegion(/* GLbitfield */ int @barriers)
-        => glMemoryBarrierByRegion(@barriers);
-    public /* void */ void TexStorage2DMultisample(/* GLenum */ int @target, /* GLsizei */ int @samples, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLboolean */ int @fixedsamplelocations)
-        => glTexStorage2DMultisample(@target, @samples, @internalformat, @width, @height, @fixedsamplelocations);
-    public /* void */ void GetMultisamplefv(/* GLenum */ int @pname, /* GLuint */ uint @index, /* GLfloat */ float* @val)
-        => glGetMultisamplefv(@pname, @index, @val);
-    public /* void */ void SampleMaski(/* GLuint */ uint @maskNumber, /* GLbitfield */ int @mask)
-        => glSampleMaski(@maskNumber, @mask);
-    public /* void */ void BindVertexBuffer(/* GLuint */ uint @bindingindex, /* GLuint */ uint @buffer, /* GLintptr */ nint @offset, /* GLsizei */ int @stride)
-        => glBindVertexBuffer(@bindingindex, @buffer, @offset, @stride);
-    public /* void */ void VertexAttribFormat(/* GLuint */ uint @attribindex, /* GLint */ int @size, /* GLenum */ int @type, /* GLboolean */ int @normalized, /* GLuint */ uint @relativeoffset)
-        => glVertexAttribFormat(@attribindex, @size, @type, @normalized, @relativeoffset);
-    public /* void */ void VertexAttribIFormat(/* GLuint */ uint @attribindex, /* GLint */ int @size, /* GLenum */ int @type, /* GLuint */ uint @relativeoffset)
-        => glVertexAttribIFormat(@attribindex, @size, @type, @relativeoffset);
-    public /* void */ void VertexAttribBinding(/* GLuint */ uint @attribindex, /* GLuint */ uint @bindingindex)
-        => glVertexAttribBinding(@attribindex, @bindingindex);
-    public /* void */ void VertexBindingDivisor(/* GLuint */ uint @bindingindex, /* GLuint */ uint @divisor)
-        => glVertexBindingDivisor(@bindingindex, @divisor);
-    public /* void */ void DrawElementsBaseVertex(/* GLenum */ int @mode, /* GLsizei */ int @count, /* GLenum */ int @type, /* void */ void* @indices, /* GLint */ int @basevertex)
-        => glDrawElementsBaseVertex(@mode, @count, @type, @indices, @basevertex);
-    public /* void */ void DrawRangeElementsBaseVertex(/* GLenum */ int @mode, /* GLuint */ uint @start, /* GLuint */ uint @end, /* GLsizei */ int @count, /* GLenum */ int @type, /* void */ void* @indices, /* GLint */ int @basevertex)
-        => glDrawRangeElementsBaseVertex(@mode, @start, @end, @count, @type, @indices, @basevertex);
-    public /* void */ void DrawElementsInstancedBaseVertex(/* GLenum */ int @mode, /* GLsizei */ int @count, /* GLenum */ int @type, /* void */ void* @indices, /* GLsizei */ int @instancecount, /* GLint */ int @basevertex)
-        => glDrawElementsInstancedBaseVertex(@mode, @count, @type, @indices, @instancecount, @basevertex);
-    public /* void */ void MultiDrawElementsBaseVertex(/* GLenum */ int @mode, /* GLsizei */ int* @count, /* GLenum */ int @type, /* void */ void** @indices, /* GLsizei */ int @drawcount, /* GLint */ int* @basevertex)
-        => glMultiDrawElementsBaseVertex(@mode, @count, @type, @indices, @drawcount, @basevertex);
-    public /* void */ void ProvokingVertex(/* GLenum */ int @mode)
-        => glProvokingVertex(@mode);
-    public /* void */ void FramebufferTexture(/* GLenum */ int @target, /* GLenum */ int @attachment, /* GLuint */ uint @texture, /* GLint */ int @level)
-        => glFramebufferTexture(@target, @attachment, @texture, @level);
-    public /* void */ void TexImage2DMultisample(/* GLenum */ int @target, /* GLsizei */ int @samples, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLboolean */ int @fixedsamplelocations)
-        => glTexImage2DMultisample(@target, @samples, @internalformat, @width, @height, @fixedsamplelocations);
-    public /* void */ void TexImage3DMultisample(/* GLenum */ int @target, /* GLsizei */ int @samples, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLsizei */ int @depth, /* GLboolean */ int @fixedsamplelocations)
-        => glTexImage3DMultisample(@target, @samples, @internalformat, @width, @height, @depth, @fixedsamplelocations);
-    public /* void */ void BlendBarrier()
-        => glBlendBarrier();
-    public /* void */ void CopyImageSubData(/* GLuint */ uint @srcName, /* GLenum */ int @srcTarget, /* GLint */ int @srcLevel, /* GLint */ int @srcX, /* GLint */ int @srcY, /* GLint */ int @srcZ, /* GLuint */ uint @dstName, /* GLenum */ int @dstTarget, /* GLint */ int @dstLevel, /* GLint */ int @dstX, /* GLint */ int @dstY, /* GLint */ int @dstZ, /* GLsizei */ int @srcWidth, /* GLsizei */ int @srcHeight, /* GLsizei */ int @srcDepth)
-        => glCopyImageSubData(@srcName, @srcTarget, @srcLevel, @srcX, @srcY, @srcZ, @dstName, @dstTarget, @dstLevel, @dstX, @dstY, @dstZ, @srcWidth, @srcHeight, @srcDepth);
-    public /* void */ void DebugMessageControl(/* GLenum */ int @source, /* GLenum */ int @type, /* GLenum */ int @severity, /* GLsizei */ int @count, /* GLuint */ uint* @ids, /* GLboolean */ int @enabled)
-        => glDebugMessageControl(@source, @type, @severity, @count, @ids, @enabled);
-    public /* void */ void DebugMessageInsert(/* GLenum */ int @source, /* GLenum */ int @type, /* GLuint */ uint @id, /* GLenum */ int @severity, /* GLsizei */ int @length, /* GLchar */ byte* @buf)
-        => glDebugMessageInsert(@source, @type, @id, @severity, @length, @buf);
-    public /* void */ void DebugMessageCallback(/* GLDEBUGPROC */ delegate* unmanaged<int, int, uint, int, nint, sbyte*, void*, void> @callback, /* void */ void* @userParam)
-        => glDebugMessageCallback(@callback, @userParam);
-    public /* GLuint */ uint GetDebugMessageLog(/* GLuint */ uint @count, /* GLsizei */ int @bufSize, /* GLenum */ int* @sources, /* GLenum */ int* @types, /* GLuint */ uint* @ids, /* GLenum */ int* @severities, /* GLsizei */ int* @lengths, /* GLchar */ byte* @messageLog)
-        => glGetDebugMessageLog(@count, @bufSize, @sources, @types, @ids, @severities, @lengths, @messageLog);
-    public /* void */ void PushDebugGroup(/* GLenum */ int @source, /* GLuint */ uint @id, /* GLsizei */ int @length, /* GLchar */ byte* @message)
-        => glPushDebugGroup(@source, @id, @length, @message);
-    public /* void */ void PopDebugGroup()
-        => glPopDebugGroup();
-    public /* void */ void ObjectLabel(/* GLenum */ int @identifier, /* GLuint */ uint @name, /* GLsizei */ int @length, /* GLchar */ byte* @label)
-        => glObjectLabel(@identifier, @name, @length, @label);
-    public /* void */ void GetObjectLabel(/* GLenum */ int @identifier, /* GLuint */ uint @name, /* GLsizei */ int @bufSize, /* GLsizei */ int* @length, /* GLchar */ byte* @label)
-        => glGetObjectLabel(@identifier, @name, @bufSize, @length, @label);
-    public /* void */ void ObjectPtrLabel(/* void */ void* @ptr, /* GLsizei */ int @length, /* GLchar */ byte* @label)
-        => glObjectPtrLabel(@ptr, @length, @label);
-    public /* void */ void GetObjectPtrLabel(/* void */ void* @ptr, /* GLsizei */ int @bufSize, /* GLsizei */ int* @length, /* GLchar */ byte* @label)
-        => glGetObjectPtrLabel(@ptr, @bufSize, @length, @label);
-    public /* void */ void GetPointerv(/* GLenum */ int @pname, /* void */ void** @params)
-        => glGetPointerv(@pname, @params);
-    public /* void */ void BlendEquationi(/* GLuint */ uint @buf, /* GLenum */ int @mode)
-        => glBlendEquationi(@buf, @mode);
-    public /* void */ void BlendEquationSeparatei(/* GLuint */ uint @buf, /* GLenum */ int @modeRGB, /* GLenum */ int @modeAlpha)
-        => glBlendEquationSeparatei(@buf, @modeRGB, @modeAlpha);
-    public /* void */ void BlendFunci(/* GLuint */ uint @buf, /* GLenum */ int @src, /* GLenum */ int @dst)
-        => glBlendFunci(@buf, @src, @dst);
-    public /* void */ void BlendFuncSeparatei(/* GLuint */ uint @buf, /* GLenum */ int @srcRGB, /* GLenum */ int @dstRGB, /* GLenum */ int @srcAlpha, /* GLenum */ int @dstAlpha)
-        => glBlendFuncSeparatei(@buf, @srcRGB, @dstRGB, @srcAlpha, @dstAlpha);
-    public /* void */ void PrimitiveBoundingBox(/* GLfloat */ float @minX, /* GLfloat */ float @minY, /* GLfloat */ float @minZ, /* GLfloat */ float @minW, /* GLfloat */ float @maxX, /* GLfloat */ float @maxY, /* GLfloat */ float @maxZ, /* GLfloat */ float @maxW)
-        => glPrimitiveBoundingBox(@minX, @minY, @minZ, @minW, @maxX, @maxY, @maxZ, @maxW);
-    public /* GLenum */ int GetGraphicsResetStatus()
-        => glGetGraphicsResetStatus();
-    public /* void */ void ReadnPixels(/* GLint */ int @x, /* GLint */ int @y, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLenum */ int @format, /* GLenum */ int @type, /* GLsizei */ int @bufSize, /* void */ void* @data)
-        => glReadnPixels(@x, @y, @width, @height, @format, @type, @bufSize, @data);
-    public /* void */ void GetnUniformfv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @bufSize, /* GLfloat */ float* @params)
-        => glGetnUniformfv(@program, @location, @bufSize, @params);
-    public /* void */ void GetnUniformiv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @bufSize, /* GLint */ int* @params)
-        => glGetnUniformiv(@program, @location, @bufSize, @params);
-    public /* void */ void GetnUniformuiv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @bufSize, /* GLuint */ uint* @params)
-        => glGetnUniformuiv(@program, @location, @bufSize, @params);
-    public /* void */ void MinSampleShading(/* GLfloat */ float @value)
-        => glMinSampleShading(@value);
-    public /* void */ void PatchParameteri(/* GLenum */ int @pname, /* GLint */ int @value)
-        => glPatchParameteri(@pname, @value);
     public /* void */ void SamplerParameterIiv(/* GLuint */ uint @sampler, /* GLenum */ int @pname, /* GLint */ int* @param)
         => glSamplerParameterIiv(@sampler, @pname, @param);
     public /* void */ void SamplerParameterIuiv(/* GLuint */ uint @sampler, /* GLenum */ int @pname, /* GLuint */ uint* @param)
         => glSamplerParameterIuiv(@sampler, @pname, @param);
+    public /* void */ void GetSamplerParameteriv(/* GLuint */ uint @sampler, /* GLenum */ int @pname, /* GLint */ int* @params)
+        => glGetSamplerParameteriv(@sampler, @pname, @params);
     public /* void */ void GetSamplerParameterIiv(/* GLuint */ uint @sampler, /* GLenum */ int @pname, /* GLint */ int* @params)
         => glGetSamplerParameterIiv(@sampler, @pname, @params);
+    public /* void */ void GetSamplerParameterfv(/* GLuint */ uint @sampler, /* GLenum */ int @pname, /* GLfloat */ float* @params)
+        => glGetSamplerParameterfv(@sampler, @pname, @params);
     public /* void */ void GetSamplerParameterIuiv(/* GLuint */ uint @sampler, /* GLenum */ int @pname, /* GLuint */ uint* @params)
         => glGetSamplerParameterIuiv(@sampler, @pname, @params);
-    public /* void */ void TexBufferRange(/* GLenum */ int @target, /* GLenum */ int @internalformat, /* GLuint */ uint @buffer, /* GLintptr */ nint @offset, /* GLsizeiptr */ nint @size)
-        => glTexBufferRange(@target, @internalformat, @buffer, @offset, @size);
-    public /* void */ void TexStorage3DMultisample(/* GLenum */ int @target, /* GLsizei */ int @samples, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLsizei */ int @depth, /* GLboolean */ int @fixedsamplelocations)
-        => glTexStorage3DMultisample(@target, @samples, @internalformat, @width, @height, @depth, @fixedsamplelocations);
-    public /* void */ void BindFragDataLocationIndexed(/* GLuint */ uint @program, /* GLuint */ uint @colorNumber, /* GLuint */ uint @index, /* GLchar */ byte* @name)
-        => glBindFragDataLocationIndexed(@program, @colorNumber, @index, @name);
-    public /* GLint */ int GetFragDataIndex(/* GLuint */ uint @program, /* GLchar */ byte* @name)
-        => glGetFragDataIndex(@program, @name);
     public /* void */ void QueryCounter(/* GLuint */ uint @id, /* GLenum */ int @target)
         => glQueryCounter(@id, @target);
     public /* void */ void GetQueryObjecti64v(/* GLuint */ uint @id, /* GLenum */ int @pname, /* GLint64 */ long* @params)
         => glGetQueryObjecti64v(@id, @pname, @params);
     public /* void */ void GetQueryObjectui64v(/* GLuint */ uint @id, /* GLenum */ int @pname, /* GLuint64 */ ulong* @params)
         => glGetQueryObjectui64v(@id, @pname, @params);
+    public /* void */ void VertexAttribDivisor(/* GLuint */ uint @index, /* GLuint */ uint @divisor)
+        => glVertexAttribDivisor(@index, @divisor);
     public /* void */ void VertexAttribP1ui(/* GLuint */ uint @index, /* GLenum */ int @type, /* GLboolean */ int @normalized, /* GLuint */ uint @value)
         => glVertexAttribP1ui(@index, @type, @normalized, @value);
     public /* void */ void VertexAttribP1uiv(/* GLuint */ uint @index, /* GLenum */ int @type, /* GLboolean */ int @normalized, /* GLuint */ uint* @value)
@@ -908,6 +690,20 @@ public unsafe partial class GL
         => glVertexAttribP4ui(@index, @type, @normalized, @value);
     public /* void */ void VertexAttribP4uiv(/* GLuint */ uint @index, /* GLenum */ int @type, /* GLboolean */ int @normalized, /* GLuint */ uint* @value)
         => glVertexAttribP4uiv(@index, @type, @normalized, @value);
+    public /* void */ void MinSampleShading(/* GLfloat */ float @value)
+        => glMinSampleShading(@value);
+    public /* void */ void BlendEquationi(/* GLuint */ uint @buf, /* GLenum */ int @mode)
+        => glBlendEquationi(@buf, @mode);
+    public /* void */ void BlendEquationSeparatei(/* GLuint */ uint @buf, /* GLenum */ int @modeRGB, /* GLenum */ int @modeAlpha)
+        => glBlendEquationSeparatei(@buf, @modeRGB, @modeAlpha);
+    public /* void */ void BlendFunci(/* GLuint */ uint @buf, /* GLenum */ int @src, /* GLenum */ int @dst)
+        => glBlendFunci(@buf, @src, @dst);
+    public /* void */ void BlendFuncSeparatei(/* GLuint */ uint @buf, /* GLenum */ int @srcRGB, /* GLenum */ int @dstRGB, /* GLenum */ int @srcAlpha, /* GLenum */ int @dstAlpha)
+        => glBlendFuncSeparatei(@buf, @srcRGB, @dstRGB, @srcAlpha, @dstAlpha);
+    public /* void */ void DrawArraysIndirect(/* GLenum */ int @mode, /* void */ void* @indirect)
+        => glDrawArraysIndirect(@mode, @indirect);
+    public /* void */ void DrawElementsIndirect(/* GLenum */ int @mode, /* GLenum */ int @type, /* void */ void* @indirect)
+        => glDrawElementsIndirect(@mode, @type, @indirect);
     public /* void */ void Uniform1d(/* GLint */ int @location, /* GLdouble */ double @x)
         => glUniform1d(@location, @x);
     public /* void */ void Uniform2d(/* GLint */ int @location, /* GLdouble */ double @x, /* GLdouble */ double @y)
@@ -960,8 +756,22 @@ public unsafe partial class GL
         => glGetUniformSubroutineuiv(@shadertype, @location, @params);
     public /* void */ void GetProgramStageiv(/* GLuint */ uint @program, /* GLenum */ int @shadertype, /* GLenum */ int @pname, /* GLint */ int* @values)
         => glGetProgramStageiv(@program, @shadertype, @pname, @values);
+    public /* void */ void PatchParameteri(/* GLenum */ int @pname, /* GLint */ int @value)
+        => glPatchParameteri(@pname, @value);
     public /* void */ void PatchParameterfv(/* GLenum */ int @pname, /* GLfloat */ float* @values)
         => glPatchParameterfv(@pname, @values);
+    public /* void */ void BindTransformFeedback(/* GLenum */ int @target, /* GLuint */ uint @id)
+        => glBindTransformFeedback(@target, @id);
+    public /* void */ void DeleteTransformFeedbacks(/* GLsizei */ int @n, /* GLuint */ uint* @ids)
+        => glDeleteTransformFeedbacks(@n, @ids);
+    public /* void */ void GenTransformFeedbacks(/* GLsizei */ int @n, /* GLuint */ uint* @ids)
+        => glGenTransformFeedbacks(@n, @ids);
+    public /* GLboolean */ int IsTransformFeedback(/* GLuint */ uint @id)
+        => glIsTransformFeedback(@id);
+    public /* void */ void PauseTransformFeedback()
+        => glPauseTransformFeedback();
+    public /* void */ void ResumeTransformFeedback()
+        => glResumeTransformFeedback();
     public /* void */ void DrawTransformFeedback(/* GLenum */ int @mode, /* GLuint */ uint @id)
         => glDrawTransformFeedback(@mode, @id);
     public /* void */ void DrawTransformFeedbackStream(/* GLenum */ int @mode, /* GLuint */ uint @id, /* GLuint */ uint @stream)
@@ -972,28 +782,126 @@ public unsafe partial class GL
         => glEndQueryIndexed(@target, @index);
     public /* void */ void GetQueryIndexediv(/* GLenum */ int @target, /* GLuint */ uint @index, /* GLenum */ int @pname, /* GLint */ int* @params)
         => glGetQueryIndexediv(@target, @index, @pname, @params);
+    public /* void */ void ReleaseShaderCompiler()
+        => glReleaseShaderCompiler();
+    public /* void */ void ShaderBinary(/* GLsizei */ int @count, /* GLuint */ uint* @shaders, /* GLenum */ int @binaryFormat, /* void */ void* @binary, /* GLsizei */ int @length)
+        => glShaderBinary(@count, @shaders, @binaryFormat, @binary, @length);
+    public /* void */ void GetShaderPrecisionFormat(/* GLenum */ int @shadertype, /* GLenum */ int @precisiontype, /* GLint */ int* @range, /* GLint */ int* @precision)
+        => glGetShaderPrecisionFormat(@shadertype, @precisiontype, @range, @precision);
+    public /* void */ void DepthRangef(/* GLfloat */ float @n, /* GLfloat */ float @f)
+        => glDepthRangef(@n, @f);
+    public /* void */ void ClearDepthf(/* GLfloat */ float @d)
+        => glClearDepthf(@d);
+    public /* void */ void GetProgramBinary(/* GLuint */ uint @program, /* GLsizei */ int @bufSize, /* GLsizei */ int* @length, /* GLenum */ int* @binaryFormat, /* void */ void* @binary)
+        => glGetProgramBinary(@program, @bufSize, @length, @binaryFormat, @binary);
+    public /* void */ void ProgramBinary(/* GLuint */ uint @program, /* GLenum */ int @binaryFormat, /* void */ void* @binary, /* GLsizei */ int @length)
+        => glProgramBinary(@program, @binaryFormat, @binary, @length);
+    public /* void */ void ProgramParameteri(/* GLuint */ uint @program, /* GLenum */ int @pname, /* GLint */ int @value)
+        => glProgramParameteri(@program, @pname, @value);
+    public /* void */ void UseProgramStages(/* GLuint */ uint @pipeline, /* GLbitfield */ int @stages, /* GLuint */ uint @program)
+        => glUseProgramStages(@pipeline, @stages, @program);
+    public /* void */ void ActiveShaderProgram(/* GLuint */ uint @pipeline, /* GLuint */ uint @program)
+        => glActiveShaderProgram(@pipeline, @program);
+    public /* GLuint */ uint CreateShaderProgramv(/* GLenum */ int @type, /* GLsizei */ int @count, /* GLchar */ byte** @strings)
+        => glCreateShaderProgramv(@type, @count, @strings);
+    public /* void */ void BindProgramPipeline(/* GLuint */ uint @pipeline)
+        => glBindProgramPipeline(@pipeline);
+    public /* void */ void DeleteProgramPipelines(/* GLsizei */ int @n, /* GLuint */ uint* @pipelines)
+        => glDeleteProgramPipelines(@n, @pipelines);
+    public /* void */ void GenProgramPipelines(/* GLsizei */ int @n, /* GLuint */ uint* @pipelines)
+        => glGenProgramPipelines(@n, @pipelines);
+    public /* GLboolean */ int IsProgramPipeline(/* GLuint */ uint @pipeline)
+        => glIsProgramPipeline(@pipeline);
+    public /* void */ void GetProgramPipelineiv(/* GLuint */ uint @pipeline, /* GLenum */ int @pname, /* GLint */ int* @params)
+        => glGetProgramPipelineiv(@pipeline, @pname, @params);
+    public /* void */ void ProgramUniform1i(/* GLuint */ uint @program, /* GLint */ int @location, /* GLint */ int @v0)
+        => glProgramUniform1i(@program, @location, @v0);
+    public /* void */ void ProgramUniform1iv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLint */ int* @value)
+        => glProgramUniform1iv(@program, @location, @count, @value);
+    public /* void */ void ProgramUniform1f(/* GLuint */ uint @program, /* GLint */ int @location, /* GLfloat */ float @v0)
+        => glProgramUniform1f(@program, @location, @v0);
+    public /* void */ void ProgramUniform1fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLfloat */ float* @value)
+        => glProgramUniform1fv(@program, @location, @count, @value);
     public /* void */ void ProgramUniform1d(/* GLuint */ uint @program, /* GLint */ int @location, /* GLdouble */ double @v0)
         => glProgramUniform1d(@program, @location, @v0);
     public /* void */ void ProgramUniform1dv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLdouble */ double* @value)
         => glProgramUniform1dv(@program, @location, @count, @value);
+    public /* void */ void ProgramUniform1ui(/* GLuint */ uint @program, /* GLint */ int @location, /* GLuint */ uint @v0)
+        => glProgramUniform1ui(@program, @location, @v0);
+    public /* void */ void ProgramUniform1uiv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLuint */ uint* @value)
+        => glProgramUniform1uiv(@program, @location, @count, @value);
+    public /* void */ void ProgramUniform2i(/* GLuint */ uint @program, /* GLint */ int @location, /* GLint */ int @v0, /* GLint */ int @v1)
+        => glProgramUniform2i(@program, @location, @v0, @v1);
+    public /* void */ void ProgramUniform2iv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLint */ int* @value)
+        => glProgramUniform2iv(@program, @location, @count, @value);
+    public /* void */ void ProgramUniform2f(/* GLuint */ uint @program, /* GLint */ int @location, /* GLfloat */ float @v0, /* GLfloat */ float @v1)
+        => glProgramUniform2f(@program, @location, @v0, @v1);
+    public /* void */ void ProgramUniform2fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLfloat */ float* @value)
+        => glProgramUniform2fv(@program, @location, @count, @value);
     public /* void */ void ProgramUniform2d(/* GLuint */ uint @program, /* GLint */ int @location, /* GLdouble */ double @v0, /* GLdouble */ double @v1)
         => glProgramUniform2d(@program, @location, @v0, @v1);
     public /* void */ void ProgramUniform2dv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLdouble */ double* @value)
         => glProgramUniform2dv(@program, @location, @count, @value);
+    public /* void */ void ProgramUniform2ui(/* GLuint */ uint @program, /* GLint */ int @location, /* GLuint */ uint @v0, /* GLuint */ uint @v1)
+        => glProgramUniform2ui(@program, @location, @v0, @v1);
+    public /* void */ void ProgramUniform2uiv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLuint */ uint* @value)
+        => glProgramUniform2uiv(@program, @location, @count, @value);
+    public /* void */ void ProgramUniform3i(/* GLuint */ uint @program, /* GLint */ int @location, /* GLint */ int @v0, /* GLint */ int @v1, /* GLint */ int @v2)
+        => glProgramUniform3i(@program, @location, @v0, @v1, @v2);
+    public /* void */ void ProgramUniform3iv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLint */ int* @value)
+        => glProgramUniform3iv(@program, @location, @count, @value);
+    public /* void */ void ProgramUniform3f(/* GLuint */ uint @program, /* GLint */ int @location, /* GLfloat */ float @v0, /* GLfloat */ float @v1, /* GLfloat */ float @v2)
+        => glProgramUniform3f(@program, @location, @v0, @v1, @v2);
+    public /* void */ void ProgramUniform3fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLfloat */ float* @value)
+        => glProgramUniform3fv(@program, @location, @count, @value);
     public /* void */ void ProgramUniform3d(/* GLuint */ uint @program, /* GLint */ int @location, /* GLdouble */ double @v0, /* GLdouble */ double @v1, /* GLdouble */ double @v2)
         => glProgramUniform3d(@program, @location, @v0, @v1, @v2);
     public /* void */ void ProgramUniform3dv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLdouble */ double* @value)
         => glProgramUniform3dv(@program, @location, @count, @value);
+    public /* void */ void ProgramUniform3ui(/* GLuint */ uint @program, /* GLint */ int @location, /* GLuint */ uint @v0, /* GLuint */ uint @v1, /* GLuint */ uint @v2)
+        => glProgramUniform3ui(@program, @location, @v0, @v1, @v2);
+    public /* void */ void ProgramUniform3uiv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLuint */ uint* @value)
+        => glProgramUniform3uiv(@program, @location, @count, @value);
+    public /* void */ void ProgramUniform4i(/* GLuint */ uint @program, /* GLint */ int @location, /* GLint */ int @v0, /* GLint */ int @v1, /* GLint */ int @v2, /* GLint */ int @v3)
+        => glProgramUniform4i(@program, @location, @v0, @v1, @v2, @v3);
+    public /* void */ void ProgramUniform4iv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLint */ int* @value)
+        => glProgramUniform4iv(@program, @location, @count, @value);
+    public /* void */ void ProgramUniform4f(/* GLuint */ uint @program, /* GLint */ int @location, /* GLfloat */ float @v0, /* GLfloat */ float @v1, /* GLfloat */ float @v2, /* GLfloat */ float @v3)
+        => glProgramUniform4f(@program, @location, @v0, @v1, @v2, @v3);
+    public /* void */ void ProgramUniform4fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLfloat */ float* @value)
+        => glProgramUniform4fv(@program, @location, @count, @value);
     public /* void */ void ProgramUniform4d(/* GLuint */ uint @program, /* GLint */ int @location, /* GLdouble */ double @v0, /* GLdouble */ double @v1, /* GLdouble */ double @v2, /* GLdouble */ double @v3)
         => glProgramUniform4d(@program, @location, @v0, @v1, @v2, @v3);
     public /* void */ void ProgramUniform4dv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLdouble */ double* @value)
         => glProgramUniform4dv(@program, @location, @count, @value);
+    public /* void */ void ProgramUniform4ui(/* GLuint */ uint @program, /* GLint */ int @location, /* GLuint */ uint @v0, /* GLuint */ uint @v1, /* GLuint */ uint @v2, /* GLuint */ uint @v3)
+        => glProgramUniform4ui(@program, @location, @v0, @v1, @v2, @v3);
+    public /* void */ void ProgramUniform4uiv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLuint */ uint* @value)
+        => glProgramUniform4uiv(@program, @location, @count, @value);
+    public /* void */ void ProgramUniformMatrix2fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
+        => glProgramUniformMatrix2fv(@program, @location, @count, @transpose, @value);
+    public /* void */ void ProgramUniformMatrix3fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
+        => glProgramUniformMatrix3fv(@program, @location, @count, @transpose, @value);
+    public /* void */ void ProgramUniformMatrix4fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
+        => glProgramUniformMatrix4fv(@program, @location, @count, @transpose, @value);
     public /* void */ void ProgramUniformMatrix2dv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLdouble */ double* @value)
         => glProgramUniformMatrix2dv(@program, @location, @count, @transpose, @value);
     public /* void */ void ProgramUniformMatrix3dv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLdouble */ double* @value)
         => glProgramUniformMatrix3dv(@program, @location, @count, @transpose, @value);
     public /* void */ void ProgramUniformMatrix4dv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLdouble */ double* @value)
         => glProgramUniformMatrix4dv(@program, @location, @count, @transpose, @value);
+    public /* void */ void ProgramUniformMatrix2x3fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
+        => glProgramUniformMatrix2x3fv(@program, @location, @count, @transpose, @value);
+    public /* void */ void ProgramUniformMatrix3x2fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
+        => glProgramUniformMatrix3x2fv(@program, @location, @count, @transpose, @value);
+    public /* void */ void ProgramUniformMatrix2x4fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
+        => glProgramUniformMatrix2x4fv(@program, @location, @count, @transpose, @value);
+    public /* void */ void ProgramUniformMatrix4x2fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
+        => glProgramUniformMatrix4x2fv(@program, @location, @count, @transpose, @value);
+    public /* void */ void ProgramUniformMatrix3x4fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
+        => glProgramUniformMatrix3x4fv(@program, @location, @count, @transpose, @value);
+    public /* void */ void ProgramUniformMatrix4x3fv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLfloat */ float* @value)
+        => glProgramUniformMatrix4x3fv(@program, @location, @count, @transpose, @value);
     public /* void */ void ProgramUniformMatrix2x3dv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLdouble */ double* @value)
         => glProgramUniformMatrix2x3dv(@program, @location, @count, @transpose, @value);
     public /* void */ void ProgramUniformMatrix3x2dv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLdouble */ double* @value)
@@ -1006,6 +914,10 @@ public unsafe partial class GL
         => glProgramUniformMatrix3x4dv(@program, @location, @count, @transpose, @value);
     public /* void */ void ProgramUniformMatrix4x3dv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @count, /* GLboolean */ int @transpose, /* GLdouble */ double* @value)
         => glProgramUniformMatrix4x3dv(@program, @location, @count, @transpose, @value);
+    public /* void */ void ValidateProgramPipeline(/* GLuint */ uint @pipeline)
+        => glValidateProgramPipeline(@pipeline);
+    public /* void */ void GetProgramPipelineInfoLog(/* GLuint */ uint @pipeline, /* GLsizei */ int @bufSize, /* GLsizei */ int* @length, /* GLchar */ byte* @infoLog)
+        => glGetProgramPipelineInfoLog(@pipeline, @bufSize, @length, @infoLog);
     public /* void */ void VertexAttribL1d(/* GLuint */ uint @index, /* GLdouble */ double @x)
         => glVertexAttribL1d(@index, @x);
     public /* void */ void VertexAttribL2d(/* GLuint */ uint @index, /* GLdouble */ double @x, /* GLdouble */ double @y)
@@ -1052,10 +964,20 @@ public unsafe partial class GL
         => glDrawElementsInstancedBaseInstance(@mode, @count, @type, @indices, @instancecount, @baseinstance);
     public /* void */ void DrawElementsInstancedBaseVertexBaseInstance(/* GLenum */ int @mode, /* GLsizei */ int @count, /* GLenum */ int @type, /* void */ void* @indices, /* GLsizei */ int @instancecount, /* GLint */ int @basevertex, /* GLuint */ uint @baseinstance)
         => glDrawElementsInstancedBaseVertexBaseInstance(@mode, @count, @type, @indices, @instancecount, @basevertex, @baseinstance);
+    public /* void */ void GetInternalformativ(/* GLenum */ int @target, /* GLenum */ int @internalformat, /* GLenum */ int @pname, /* GLsizei */ int @count, /* GLint */ int* @params)
+        => glGetInternalformativ(@target, @internalformat, @pname, @count, @params);
     public /* void */ void GetActiveAtomicCounterBufferiv(/* GLuint */ uint @program, /* GLuint */ uint @bufferIndex, /* GLenum */ int @pname, /* GLint */ int* @params)
         => glGetActiveAtomicCounterBufferiv(@program, @bufferIndex, @pname, @params);
+    public /* void */ void BindImageTexture(/* GLuint */ uint @unit, /* GLuint */ uint @texture, /* GLint */ int @level, /* GLboolean */ int @layered, /* GLint */ int @layer, /* GLenum */ int @access, /* GLenum */ int @format)
+        => glBindImageTexture(@unit, @texture, @level, @layered, @layer, @access, @format);
+    public /* void */ void MemoryBarrier(/* GLbitfield */ int @barriers)
+        => glMemoryBarrier(@barriers);
     public /* void */ void TexStorage1D(/* GLenum */ int @target, /* GLsizei */ int @levels, /* GLenum */ int @internalformat, /* GLsizei */ int @width)
         => glTexStorage1D(@target, @levels, @internalformat, @width);
+    public /* void */ void TexStorage2D(/* GLenum */ int @target, /* GLsizei */ int @levels, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height)
+        => glTexStorage2D(@target, @levels, @internalformat, @width, @height);
+    public /* void */ void TexStorage3D(/* GLenum */ int @target, /* GLsizei */ int @levels, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLsizei */ int @depth)
+        => glTexStorage3D(@target, @levels, @internalformat, @width, @height, @depth);
     public /* void */ void DrawTransformFeedbackInstanced(/* GLenum */ int @mode, /* GLuint */ uint @id, /* GLsizei */ int @instancecount)
         => glDrawTransformFeedbackInstanced(@mode, @id, @instancecount);
     public /* void */ void DrawTransformFeedbackStreamInstanced(/* GLenum */ int @mode, /* GLuint */ uint @id, /* GLuint */ uint @stream, /* GLsizei */ int @instancecount)
@@ -1064,6 +986,16 @@ public unsafe partial class GL
         => glClearBufferData(@target, @internalformat, @format, @type, @data);
     public /* void */ void ClearBufferSubData(/* GLenum */ int @target, /* GLenum */ int @internalformat, /* GLintptr */ nint @offset, /* GLsizeiptr */ nint @size, /* GLenum */ int @format, /* GLenum */ int @type, /* void */ void* @data)
         => glClearBufferSubData(@target, @internalformat, @offset, @size, @format, @type, @data);
+    public /* void */ void DispatchCompute(/* GLuint */ uint @num_groups_x, /* GLuint */ uint @num_groups_y, /* GLuint */ uint @num_groups_z)
+        => glDispatchCompute(@num_groups_x, @num_groups_y, @num_groups_z);
+    public /* void */ void DispatchComputeIndirect(/* GLintptr */ nint @indirect)
+        => glDispatchComputeIndirect(@indirect);
+    public /* void */ void CopyImageSubData(/* GLuint */ uint @srcName, /* GLenum */ int @srcTarget, /* GLint */ int @srcLevel, /* GLint */ int @srcX, /* GLint */ int @srcY, /* GLint */ int @srcZ, /* GLuint */ uint @dstName, /* GLenum */ int @dstTarget, /* GLint */ int @dstLevel, /* GLint */ int @dstX, /* GLint */ int @dstY, /* GLint */ int @dstZ, /* GLsizei */ int @srcWidth, /* GLsizei */ int @srcHeight, /* GLsizei */ int @srcDepth)
+        => glCopyImageSubData(@srcName, @srcTarget, @srcLevel, @srcX, @srcY, @srcZ, @dstName, @dstTarget, @dstLevel, @dstX, @dstY, @dstZ, @srcWidth, @srcHeight, @srcDepth);
+    public /* void */ void FramebufferParameteri(/* GLenum */ int @target, /* GLenum */ int @pname, /* GLint */ int @param)
+        => glFramebufferParameteri(@target, @pname, @param);
+    public /* void */ void GetFramebufferParameteriv(/* GLenum */ int @target, /* GLenum */ int @pname, /* GLint */ int* @params)
+        => glGetFramebufferParameteriv(@target, @pname, @params);
     public /* void */ void GetInternalformati64v(/* GLenum */ int @target, /* GLenum */ int @internalformat, /* GLenum */ int @pname, /* GLsizei */ int @count, /* GLint64 */ long* @params)
         => glGetInternalformati64v(@target, @internalformat, @pname, @count, @params);
     public /* void */ void InvalidateTexSubImage(/* GLuint */ uint @texture, /* GLint */ int @level, /* GLint */ int @xoffset, /* GLint */ int @yoffset, /* GLint */ int @zoffset, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLsizei */ int @depth)
@@ -1074,18 +1006,70 @@ public unsafe partial class GL
         => glInvalidateBufferSubData(@buffer, @offset, @length);
     public /* void */ void InvalidateBufferData(/* GLuint */ uint @buffer)
         => glInvalidateBufferData(@buffer);
+    public /* void */ void InvalidateFramebuffer(/* GLenum */ int @target, /* GLsizei */ int @numAttachments, /* GLenum */ int* @attachments)
+        => glInvalidateFramebuffer(@target, @numAttachments, @attachments);
+    public /* void */ void InvalidateSubFramebuffer(/* GLenum */ int @target, /* GLsizei */ int @numAttachments, /* GLenum */ int* @attachments, /* GLint */ int @x, /* GLint */ int @y, /* GLsizei */ int @width, /* GLsizei */ int @height)
+        => glInvalidateSubFramebuffer(@target, @numAttachments, @attachments, @x, @y, @width, @height);
     public /* void */ void MultiDrawArraysIndirect(/* GLenum */ int @mode, /* void */ void* @indirect, /* GLsizei */ int @drawcount, /* GLsizei */ int @stride)
         => glMultiDrawArraysIndirect(@mode, @indirect, @drawcount, @stride);
     public /* void */ void MultiDrawElementsIndirect(/* GLenum */ int @mode, /* GLenum */ int @type, /* void */ void* @indirect, /* GLsizei */ int @drawcount, /* GLsizei */ int @stride)
         => glMultiDrawElementsIndirect(@mode, @type, @indirect, @drawcount, @stride);
+    public /* void */ void GetProgramInterfaceiv(/* GLuint */ uint @program, /* GLenum */ int @programInterface, /* GLenum */ int @pname, /* GLint */ int* @params)
+        => glGetProgramInterfaceiv(@program, @programInterface, @pname, @params);
+    public /* GLuint */ uint GetProgramResourceIndex(/* GLuint */ uint @program, /* GLenum */ int @programInterface, /* GLchar */ byte* @name)
+        => glGetProgramResourceIndex(@program, @programInterface, @name);
+    public /* void */ void GetProgramResourceName(/* GLuint */ uint @program, /* GLenum */ int @programInterface, /* GLuint */ uint @index, /* GLsizei */ int @bufSize, /* GLsizei */ int* @length, /* GLchar */ byte* @name)
+        => glGetProgramResourceName(@program, @programInterface, @index, @bufSize, @length, @name);
+    public /* void */ void GetProgramResourceiv(/* GLuint */ uint @program, /* GLenum */ int @programInterface, /* GLuint */ uint @index, /* GLsizei */ int @propCount, /* GLenum */ int* @props, /* GLsizei */ int @count, /* GLsizei */ int* @length, /* GLint */ int* @params)
+        => glGetProgramResourceiv(@program, @programInterface, @index, @propCount, @props, @count, @length, @params);
+    public /* GLint */ int GetProgramResourceLocation(/* GLuint */ uint @program, /* GLenum */ int @programInterface, /* GLchar */ byte* @name)
+        => glGetProgramResourceLocation(@program, @programInterface, @name);
     public /* GLint */ int GetProgramResourceLocationIndex(/* GLuint */ uint @program, /* GLenum */ int @programInterface, /* GLchar */ byte* @name)
         => glGetProgramResourceLocationIndex(@program, @programInterface, @name);
     public /* void */ void ShaderStorageBlockBinding(/* GLuint */ uint @program, /* GLuint */ uint @storageBlockIndex, /* GLuint */ uint @storageBlockBinding)
         => glShaderStorageBlockBinding(@program, @storageBlockIndex, @storageBlockBinding);
+    public /* void */ void TexBufferRange(/* GLenum */ int @target, /* GLenum */ int @internalformat, /* GLuint */ uint @buffer, /* GLintptr */ nint @offset, /* GLsizeiptr */ nint @size)
+        => glTexBufferRange(@target, @internalformat, @buffer, @offset, @size);
+    public /* void */ void TexStorage2DMultisample(/* GLenum */ int @target, /* GLsizei */ int @samples, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLboolean */ int @fixedsamplelocations)
+        => glTexStorage2DMultisample(@target, @samples, @internalformat, @width, @height, @fixedsamplelocations);
+    public /* void */ void TexStorage3DMultisample(/* GLenum */ int @target, /* GLsizei */ int @samples, /* GLenum */ int @internalformat, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLsizei */ int @depth, /* GLboolean */ int @fixedsamplelocations)
+        => glTexStorage3DMultisample(@target, @samples, @internalformat, @width, @height, @depth, @fixedsamplelocations);
     public /* void */ void TextureView(/* GLuint */ uint @texture, /* GLenum */ int @target, /* GLuint */ uint @origtexture, /* GLenum */ int @internalformat, /* GLuint */ uint @minlevel, /* GLuint */ uint @numlevels, /* GLuint */ uint @minlayer, /* GLuint */ uint @numlayers)
         => glTextureView(@texture, @target, @origtexture, @internalformat, @minlevel, @numlevels, @minlayer, @numlayers);
+    public /* void */ void BindVertexBuffer(/* GLuint */ uint @bindingindex, /* GLuint */ uint @buffer, /* GLintptr */ nint @offset, /* GLsizei */ int @stride)
+        => glBindVertexBuffer(@bindingindex, @buffer, @offset, @stride);
+    public /* void */ void VertexAttribFormat(/* GLuint */ uint @attribindex, /* GLint */ int @size, /* GLenum */ int @type, /* GLboolean */ int @normalized, /* GLuint */ uint @relativeoffset)
+        => glVertexAttribFormat(@attribindex, @size, @type, @normalized, @relativeoffset);
+    public /* void */ void VertexAttribIFormat(/* GLuint */ uint @attribindex, /* GLint */ int @size, /* GLenum */ int @type, /* GLuint */ uint @relativeoffset)
+        => glVertexAttribIFormat(@attribindex, @size, @type, @relativeoffset);
     public /* void */ void VertexAttribLFormat(/* GLuint */ uint @attribindex, /* GLint */ int @size, /* GLenum */ int @type, /* GLuint */ uint @relativeoffset)
         => glVertexAttribLFormat(@attribindex, @size, @type, @relativeoffset);
+    public /* void */ void VertexAttribBinding(/* GLuint */ uint @attribindex, /* GLuint */ uint @bindingindex)
+        => glVertexAttribBinding(@attribindex, @bindingindex);
+    public /* void */ void VertexBindingDivisor(/* GLuint */ uint @bindingindex, /* GLuint */ uint @divisor)
+        => glVertexBindingDivisor(@bindingindex, @divisor);
+    public /* void */ void DebugMessageControl(/* GLenum */ int @source, /* GLenum */ int @type, /* GLenum */ int @severity, /* GLsizei */ int @count, /* GLuint */ uint* @ids, /* GLboolean */ int @enabled)
+        => glDebugMessageControl(@source, @type, @severity, @count, @ids, @enabled);
+    public /* void */ void DebugMessageInsert(/* GLenum */ int @source, /* GLenum */ int @type, /* GLuint */ uint @id, /* GLenum */ int @severity, /* GLsizei */ int @length, /* GLchar */ byte* @buf)
+        => glDebugMessageInsert(@source, @type, @id, @severity, @length, @buf);
+    public /* void */ void DebugMessageCallback(/* GLDEBUGPROC */ delegate* unmanaged<int, int, uint, int, nint, sbyte*, void*, void> @callback, /* void */ void* @userParam)
+        => glDebugMessageCallback(@callback, @userParam);
+    public /* GLuint */ uint GetDebugMessageLog(/* GLuint */ uint @count, /* GLsizei */ int @bufSize, /* GLenum */ int* @sources, /* GLenum */ int* @types, /* GLuint */ uint* @ids, /* GLenum */ int* @severities, /* GLsizei */ int* @lengths, /* GLchar */ byte* @messageLog)
+        => glGetDebugMessageLog(@count, @bufSize, @sources, @types, @ids, @severities, @lengths, @messageLog);
+    public /* void */ void PushDebugGroup(/* GLenum */ int @source, /* GLuint */ uint @id, /* GLsizei */ int @length, /* GLchar */ byte* @message)
+        => glPushDebugGroup(@source, @id, @length, @message);
+    public /* void */ void PopDebugGroup()
+        => glPopDebugGroup();
+    public /* void */ void ObjectLabel(/* GLenum */ int @identifier, /* GLuint */ uint @name, /* GLsizei */ int @length, /* GLchar */ byte* @label)
+        => glObjectLabel(@identifier, @name, @length, @label);
+    public /* void */ void GetObjectLabel(/* GLenum */ int @identifier, /* GLuint */ uint @name, /* GLsizei */ int @bufSize, /* GLsizei */ int* @length, /* GLchar */ byte* @label)
+        => glGetObjectLabel(@identifier, @name, @bufSize, @length, @label);
+    public /* void */ void ObjectPtrLabel(/* void */ void* @ptr, /* GLsizei */ int @length, /* GLchar */ byte* @label)
+        => glObjectPtrLabel(@ptr, @length, @label);
+    public /* void */ void GetObjectPtrLabel(/* void */ void* @ptr, /* GLsizei */ int @bufSize, /* GLsizei */ int* @length, /* GLchar */ byte* @label)
+        => glGetObjectPtrLabel(@ptr, @bufSize, @length, @label);
+    public /* void */ void GetPointerv(/* GLenum */ int @pname, /* void */ void** @params)
+        => glGetPointerv(@pname, @params);
     public /* void */ void BufferStorage(/* GLenum */ int @target, /* GLsizeiptr */ nint @size, /* void */ void* @data, /* GLbitfield */ int @flags)
         => glBufferStorage(@target, @size, @data, @flags);
     public /* void */ void ClearTexImage(/* GLuint */ uint @texture, /* GLint */ int @level, /* GLenum */ int @format, /* GLenum */ int @type, /* void */ void* @data)
@@ -1300,16 +1284,28 @@ public unsafe partial class GL
         => glGetQueryBufferObjectui64v(@id, @buffer, @pname, @offset);
     public /* void */ void GetQueryBufferObjectuiv(/* GLuint */ uint @id, /* GLuint */ uint @buffer, /* GLenum */ int @pname, /* GLintptr */ nint @offset)
         => glGetQueryBufferObjectuiv(@id, @buffer, @pname, @offset);
+    public /* void */ void MemoryBarrierByRegion(/* GLbitfield */ int @barriers)
+        => glMemoryBarrierByRegion(@barriers);
     public /* void */ void GetTextureSubImage(/* GLuint */ uint @texture, /* GLint */ int @level, /* GLint */ int @xoffset, /* GLint */ int @yoffset, /* GLint */ int @zoffset, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLsizei */ int @depth, /* GLenum */ int @format, /* GLenum */ int @type, /* GLsizei */ int @bufSize, /* void */ void* @pixels)
         => glGetTextureSubImage(@texture, @level, @xoffset, @yoffset, @zoffset, @width, @height, @depth, @format, @type, @bufSize, @pixels);
     public /* void */ void GetCompressedTextureSubImage(/* GLuint */ uint @texture, /* GLint */ int @level, /* GLint */ int @xoffset, /* GLint */ int @yoffset, /* GLint */ int @zoffset, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLsizei */ int @depth, /* GLsizei */ int @bufSize, /* void */ void* @pixels)
         => glGetCompressedTextureSubImage(@texture, @level, @xoffset, @yoffset, @zoffset, @width, @height, @depth, @bufSize, @pixels);
+    public /* GLenum */ int GetGraphicsResetStatus()
+        => glGetGraphicsResetStatus();
     public /* void */ void GetnCompressedTexImage(/* GLenum */ int @target, /* GLint */ int @lod, /* GLsizei */ int @bufSize, /* void */ void* @pixels)
         => glGetnCompressedTexImage(@target, @lod, @bufSize, @pixels);
     public /* void */ void GetnTexImage(/* GLenum */ int @target, /* GLint */ int @level, /* GLenum */ int @format, /* GLenum */ int @type, /* GLsizei */ int @bufSize, /* void */ void* @pixels)
         => glGetnTexImage(@target, @level, @format, @type, @bufSize, @pixels);
     public /* void */ void GetnUniformdv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @bufSize, /* GLdouble */ double* @params)
         => glGetnUniformdv(@program, @location, @bufSize, @params);
+    public /* void */ void GetnUniformfv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @bufSize, /* GLfloat */ float* @params)
+        => glGetnUniformfv(@program, @location, @bufSize, @params);
+    public /* void */ void GetnUniformiv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @bufSize, /* GLint */ int* @params)
+        => glGetnUniformiv(@program, @location, @bufSize, @params);
+    public /* void */ void GetnUniformuiv(/* GLuint */ uint @program, /* GLint */ int @location, /* GLsizei */ int @bufSize, /* GLuint */ uint* @params)
+        => glGetnUniformuiv(@program, @location, @bufSize, @params);
+    public /* void */ void ReadnPixels(/* GLint */ int @x, /* GLint */ int @y, /* GLsizei */ int @width, /* GLsizei */ int @height, /* GLenum */ int @format, /* GLenum */ int @type, /* GLsizei */ int @bufSize, /* void */ void* @data)
+        => glReadnPixels(@x, @y, @width, @height, @format, @type, @bufSize, @data);
     public /* void */ void TextureBarrier()
         => glTextureBarrier();
     public /* void */ void SpecializeShader(/* GLuint */ uint @shader, /* GLchar */ byte* @pEntryPoint, /* GLuint */ uint @numSpecializationConstants, /* GLuint */ uint* @pConstantIndex, /* GLuint */ uint* @pConstantValue)

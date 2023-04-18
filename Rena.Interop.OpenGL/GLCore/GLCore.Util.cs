@@ -3,7 +3,7 @@ using System.Buffers.Text;
 
 namespace Rena.Interop.OpenGL;
 
-public unsafe partial class GL
+public unsafe partial class GLCore
 {
     public delegate void* LoadFunction(byte* name);
 

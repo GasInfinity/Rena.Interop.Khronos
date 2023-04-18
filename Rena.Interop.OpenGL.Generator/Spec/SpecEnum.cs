@@ -11,7 +11,7 @@ public class SpecEnum
     const string XmlType = "type";
     const string XmlGroup = "group";
     const string XmlAlias = "alias";
-    
+
     public string Value { get; init; }
     public string Name { get; init; }
     public string Api { get; init; }

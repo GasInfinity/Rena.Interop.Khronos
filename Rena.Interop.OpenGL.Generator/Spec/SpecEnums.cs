@@ -40,7 +40,7 @@ public class SpecEnums
 
         foreach (XmlNode child in element)
         {
-            if(child.Name is SpecEnum.XmlElementName)
+            if (child.Name is SpecEnum.XmlElementName)
                 enums.Add(new((child as XmlElement)!));
         }
     }

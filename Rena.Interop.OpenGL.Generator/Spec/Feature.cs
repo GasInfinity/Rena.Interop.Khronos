@@ -15,9 +15,10 @@ public class Feature
     private readonly List<RequireRemove> removes = new();
 
     public Api Api { get; init; }
+    public GLApi GLApi { get; init; }
     public string Name { get; init; }
     public string Protect { get; init; }
-    public Version Number { get; init; }
+    public ApiVersion Number { get; init; }
 
     public IReadOnlyList<RequireRemove> Requires
         => requires;
@@ -27,11 +28,13 @@ public class Feature
 
     public Feature(XmlElement element)
     {
-        Api = ApiExtensions.FromXmlString(element.GetAttribute(XmlApi));
+        Api = ApiExtensions.FromFeatureString(element.GetAttribute(XmlApi), out var glApi);
+        GLApi = glApi;
+
         Name = element.GetAttribute(XmlName);
         Protect = element.GetAttribute(XmlProtect);
 
-        if(Version.TryParse(element.GetAttribute(XmlNumber), out Version version))
+        if (ApiVersion.TryParse(element.GetAttribute(XmlNumber), out ApiVersion version))
             Number = version;
 
         foreach (XmlNode child in element)

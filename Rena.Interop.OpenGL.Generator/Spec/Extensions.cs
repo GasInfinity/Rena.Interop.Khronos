@@ -13,9 +13,9 @@ public class Extensions
 
     public Extensions(XmlElement element)
     {
-        foreach(XmlNode child in element)
+        foreach (XmlNode child in element)
         {
-            if(child.Name is Extension.XmlElementName)
+            if (child.Name is Extension.XmlElementName)
                 extensions.Add(new((child as XmlElement)!));
         }
     }

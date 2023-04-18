@@ -1,5 +1,6 @@
 ﻿using System.Xml;
 using System.CommandLine;
+using System.Collections.Immutable;
 
 namespace Rena.Interop.OpenGL.Generator;
 
@@ -7,7 +8,11 @@ public static class Program
 {
     private static readonly Option<Api> ApiOption = new("--api", "Select the api to use") { IsRequired = true };
 
-    private static readonly Option<GLProfile> ProfileOption = new("--profile", () => GLProfile.None, "Select the OpenGL profile to use (Only affects output when api=Gl)");
+    private static readonly Option<GLApi[]> GLApis = new("--gl-apis", "Select the GL apis to use") { Arity = ArgumentArity.OneOrMore, AllowMultipleArgumentsPerToken = true };
+
+    private static readonly Option<string[]> GLVersions = new("--gl-versions", "Select the GL api versions to use (Length must match with provided apis)") { Arity = ArgumentArity.OneOrMore, AllowMultipleArgumentsPerToken = true };
+
+    private static readonly Option<GLProfile> ProfileOption = new("--profile", () => GLProfile.Compatibility, "Select the OpenGL profile to use (Only affects output when --api=GL and --gl-apis contains GL)");
 
     private static readonly Option<string> OutputOption = new("--output", "The path where the files are generated") { IsRequired = true };
 
@@ -15,13 +20,15 @@ public static class Program
 
     private static readonly Option<string> NamespaceOption = new("--namespace", "The namespace to use when generating the files") { IsRequired = true };
 
-    private static readonly Option<string> VersionOption = new("--api-version", "The version to use when generating the files") { IsRequired = true };
+    private static readonly Option<string> VersionOption = new("--api-version", "The version to use when generating the files") { };
 
     public static async Task<int> Main(string[] args)
     {
         var rootCommand = new RootCommand("OpenGL related bindings generator")
         {
             ApiOption,
+            GLApis,
+            GLVersions,
             ProfileOption,
             OutputOption,
             ClassNameOption,
@@ -29,28 +36,39 @@ public static class Program
             VersionOption
         };
 
-        rootCommand.SetHandler(Generate, ApiOption, ProfileOption, OutputOption, ClassNameOption, NamespaceOption, VersionOption);
+        rootCommand.SetHandler(Generate, ApiOption, GLApis, GLVersions, ProfileOption, OutputOption, ClassNameOption, NamespaceOption, VersionOption);
         return await rootCommand.InvokeAsync(args);
     }
-    public static void DisplayIntAndString(int delayOptionValue, string messageOptionValue)
-    {
-        Console.WriteLine($"--delay = {delayOptionValue}");
-        Console.WriteLine($"--message = {messageOptionValue}");
-    }
-    private static async Task Generate(Api api, GLProfile profile, string output, string className, string @namespace, string version)
-    {
-        if (!Version.TryParse(version, out var realVersion))
-            return;
 
+    private static async Task Generate(Api api, GLApi[] glApis, string[] glVersionsString, GLProfile profile, string output, string className, string @namespace, string apiVersionString)
+    {
+        ApiVersion apiVersion = default;
+
+        if (api is not Api.GL)
+            apiVersion = ApiVersion.Parse(apiVersionString);
+
+        if (glApis.Length != glVersionsString.Length)
+            throw new InvalidOperationException($"Mismatch between GL apis and GL versions!");
+
+        ImmutableArray<ApiVersion> glVersions = glVersionsString.Select(v => ApiVersion.Parse(v)).ToImmutableArray();
+
+        var totalGLApisBuilder = ImmutableArray.CreateBuilder<(GLApi, ApiVersion)>(glApis.Length);
+
+        for (int i = 0; i < glApis.Length; ++i)
+            totalGLApisBuilder.Add((glApis[i], glVersions[i]));
+
+        var totalGLApis = totalGLApisBuilder.MoveToImmutable();
         var url = GetSpecUrl(api);
+        Console.WriteLine($"Generating for '{api}'");
 
-        if(string.IsNullOrEmpty(url))
+        if (totalGLApis.Length > 0)
         {
-            Console.WriteLine($"Can't download xml for api '{api}', url not implemented!");
-            return;
+            foreach (var glApi in totalGLApis)
+                Console.WriteLine($"With GLApi '{glApi.Item1}' version '{glApi.Item2}'");
+
+            Console.WriteLine($"With profile '{profile}'");
         }
 
-        Console.WriteLine($"Generating for '{api}' with profile '{profile}'");
         using HttpClient client = new();
         var xml = await client.GetStringAsync(url);
         Console.WriteLine($"Downloaded xml from {url}");
@@ -65,8 +83,10 @@ public static class Program
             ClassName = className,
             Namespace = @namespace,
             Api = api,
+            GLApis = totalGLApis,
             Profile = profile,
-            Version = realVersion,
+            ApiVersion = apiVersion,
+            IncludedExtensions = ImmutableHashSet<string>.Empty
         });
 
         gen.Generate();
@@ -75,11 +95,10 @@ public static class Program
     private static string GetSpecUrl(Api api)
         => api switch
         {
-            Api.GL or Api.GLES1 or Api.GLES2 => "https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/main/xml/gl.xml",
+            Api.GL => "https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/main/xml/gl.xml",
             Api.EGL => "https://raw.githubusercontent.com/KhronosGroup/EGL-Registry/main/api/egl.xml",
-            Api.GLW => "https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/main/xml/wgl.xml",
+            Api.WGL => "https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/main/xml/wgl.xml",
             Api.GLX => "https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/main/xml/glx.xml",
-            Api.GLSC2 => string.Empty,
             _ => string.Empty
         };
 }
