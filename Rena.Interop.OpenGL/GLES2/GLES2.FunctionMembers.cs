@@ -360,7 +360,7 @@ public unsafe partial class GLES2
     internal static ReadOnlySpan<byte> glTexBufferFunctionName => "glTexBuffer"u8;
     internal static ReadOnlySpan<byte> glTexBufferRangeFunctionName => "glTexBufferRange"u8;
     internal static ReadOnlySpan<byte> glTexStorage3DMultisampleFunctionName => "glTexStorage3DMultisample"u8;
-
+    
     private readonly delegate* unmanaged</* GLenum */ int, /* void */ void> glActiveTexture;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLuint */ uint, /* void */ void> glAttachShader;
     private readonly delegate* unmanaged</* GLuint */ uint, /* GLuint */ uint, /* GLchar */ byte*, /* void */ void> glBindAttribLocation;

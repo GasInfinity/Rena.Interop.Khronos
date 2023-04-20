@@ -1050,7 +1050,7 @@ public unsafe partial class GLCompat
     internal static ReadOnlySpan<byte> glMultiDrawArraysIndirectCountFunctionName => "glMultiDrawArraysIndirectCount"u8;
     internal static ReadOnlySpan<byte> glMultiDrawElementsIndirectCountFunctionName => "glMultiDrawElementsIndirectCount"u8;
     internal static ReadOnlySpan<byte> glPolygonOffsetClampFunctionName => "glPolygonOffsetClamp"u8;
-
+    
     private readonly delegate* unmanaged</* GLenum */ int, /* void */ void> glCullFace;
     private readonly delegate* unmanaged</* GLenum */ int, /* void */ void> glFrontFace;
     private readonly delegate* unmanaged</* GLenum */ int, /* GLenum */ int, /* void */ void> glHint;

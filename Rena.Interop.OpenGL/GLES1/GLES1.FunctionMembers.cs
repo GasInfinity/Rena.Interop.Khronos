@@ -146,7 +146,7 @@ public unsafe partial class GLES1
     internal static ReadOnlySpan<byte> glTranslatexFunctionName => "glTranslatex"u8;
     internal static ReadOnlySpan<byte> glVertexPointerFunctionName => "glVertexPointer"u8;
     internal static ReadOnlySpan<byte> glViewportFunctionName => "glViewport"u8;
-
+    
     private readonly delegate* unmanaged</* GLenum */ int, /* GLfloat */ float, /* void */ void> glAlphaFunc;
     private readonly delegate* unmanaged</* GLfloat */ float, /* GLfloat */ float, /* GLfloat */ float, /* GLfloat */ float, /* void */ void> glClearColor;
     private readonly delegate* unmanaged</* GLfloat */ float, /* void */ void> glClearDepthf;

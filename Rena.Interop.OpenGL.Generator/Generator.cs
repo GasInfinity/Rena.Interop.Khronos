@@ -10,7 +10,6 @@ public class Generator
 {
     const string LoadFunctionName = "LoadFunction";
 
-    private readonly ImmutableHashSet<string> apiStrings;
     private readonly string apiPrefix;
 
     private readonly List<Command> includedCommands = new();
@@ -31,12 +30,10 @@ public class Generator
 
         if (Options.Api is Api.GL)
         {
-            apiStrings = options.GLApis.Select(gl => options.Api.ToFeatureString(gl.Api)).ToImmutableHashSet();
             apis = Registry.FeatureList.Where(a => options.GLApis.Where(gl => a.GLApi == gl.Api && gl.Version.IsIncluded(a.Number)).Any()).OrderBy(a => a.Number).ToImmutableArray();
         }
         else
         {
-            apiStrings = ImmutableHashSet.Create(options.Api.ToFeatureString());
             apis = Registry.FeatureList.Where(a => a.Api == options.Api && options.ApiVersion.IsIncluded(a.Number)).ToImmutableArray();
         }
 
@@ -160,6 +157,7 @@ public unsafe partial class {Options.ClassName}
         using StreamWriter loaderWriter = new(loaderFile);
         using IndentedTextWriter writer = new(loaderWriter);
 
+        writer.WriteLine("using System.Buffers;");
         writer.WriteLine("using System.Runtime.InteropServices;");
         writer.WriteLine();
         writer.WriteLine($"namespace {Options.Namespace};");
@@ -168,7 +166,26 @@ public unsafe partial class {Options.ClassName}
         writer.WriteLine('{');
         writer.Indent++;
 
-        if (apis.Length is not 0) // To support only generating extensions
+        switch (Options.Api) // Required things in each api
+        {
+            case Api.GL:
+                {
+                    if (includedCommands.Find(c => c.Proto.Name is "glGetString") is null)
+                        writer.WriteLine($"internal static ReadOnlySpan<byte> {GetUtf8StringFieldName("glGetString")} => \"glGetString\"u8;");
+
+                    if (includedCommands.Find(c => c.Proto.Name is "glGetStringi") is null)
+                        writer.WriteLine($"internal static ReadOnlySpan<byte> {GetUtf8StringFieldName("glGetStringi")} => \"glGetStringi\"u8;");
+
+                    if (includedEnums.Find(e => e.Name is "GL_EXTENSIONS") is null)
+                        writer.WriteLine("internal const int GL_EXTENSIONS = 0x1F03;");
+
+                    if (includedEnums.Find(e => e.Name is "GL_NUM_EXTENSIONS") is null)
+                        writer.WriteLine("internal const int GL_NUM_EXTENSIONS = 0x821D;");
+                    break;
+                }
+        }
+
+        if (!apis.IsDefaultOrEmpty) // To support only generating extensions
         {
             writer.WriteLine("public readonly ushort Major;");
             writer.WriteLine("public readonly ushort Minor;");
@@ -182,13 +199,17 @@ public unsafe partial class {Options.ClassName}
                 writer.WriteLine($"public readonly bool Version{version.Major}{version.Minor};");
 
             writer.WriteLine();
-            writer.WriteLine("// Extensions");
         }
 
-        if (extensions.Length is not 0)
+        if (!extensions.IsDefaultOrEmpty)
         {
+            writer.WriteLine("// Extensions");
+
             foreach (var extension in extensions)
+            {
+                writer.WriteLine($"internal static ReadOnlySpan<byte> {GetUtf8StringExtensionName(extension.Name)} => \"{extension.Name}\"u8;");
                 writer.WriteLine($"public readonly bool {extension.Name};");
+            }
 
             writer.WriteLine();
         }
@@ -205,7 +226,10 @@ public unsafe partial class {Options.ClassName}
         foreach (var api in apis)
         {
             writer.WriteLine();
-            writer.WriteLine($"if({(api.GLApi.IsEmbedded() ? string.Empty : "!")}IsEmbedded & Version{api.Number.Major}{api.Number.Minor})");
+            if (Options.Api is Api.GL)
+                writer.WriteLine($"if({(api.GLApi.IsEmbedded() ? string.Empty : "!")}IsEmbedded & Version{api.Number.Major}{api.Number.Minor})");
+            else
+                writer.WriteLine($"if(Version{api.Number.Major}{api.Number.Minor})");
             writer.WriteLine('{');
             writer.Indent++;
 
@@ -216,18 +240,35 @@ public unsafe partial class {Options.ClassName}
                 if (command is null)
                     continue;
 
-                writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName(c.Name)})");
-                writer.Indent++;
-                writer.WriteLine($"{c.Name} = ({GenerateFunctionPointerType(command)})loadFunc(name);");
-                writer.Indent--;
+                GenerateFixedLoadStatement(writer, GenerateFunctionPointerType(command), GetUtf8StringFieldName(command.Proto.Name), $"this.{command.Proto.Name}");
             }
 
             writer.Indent--;
             writer.WriteLine('}');
         }
 
-        writer.WriteLine();
-        WriteExtensionLoading(writer);
+        foreach (var extension in extensions)
+        {
+            writer.WriteLine();
+
+            writer.WriteLine($"if({extension.Name})");
+            writer.WriteLine('{');
+            writer.Indent++;
+
+            foreach (var c in extension.Requires.SelectMany(e => e.Commands))
+            {
+                var command = includedCommands.Find(com => com.Proto.Name == c.Name);
+
+                if (command is null)
+                    continue;
+
+                GenerateFixedLoadStatement(writer, GenerateFunctionPointerType(command), GetUtf8StringFieldName(command.Proto.Name), $"this.{command.Proto.Name}");
+            }
+
+            writer.Indent--;
+            writer.WriteLine('}');
+        }
+
         writer.Indent--;
         writer.WriteLine('}');
         writer.Indent--;
@@ -284,7 +325,7 @@ public unsafe partial class {Options.ClassName}
         writer.WriteLine('{');
         writer.Indent++;
         foreach (var command in includedCommands)
-            GenerateMemberNames(writer, command);
+            GenerateMemberName(writer, command);
         writer.WriteLine();
         foreach (var command in includedCommands)
             GenerateMembers(writer, command);
@@ -292,7 +333,7 @@ public unsafe partial class {Options.ClassName}
         writer.WriteLine('}');
     }
 
-    private void GenerateMemberNames(IndentedTextWriter writer, Command command)
+    private void GenerateMemberName(IndentedTextWriter writer, Command command)
         => writer.WriteLine($"internal static ReadOnlySpan<byte> {GetUtf8StringFieldName(command.Proto.Name)} => \"{command.Proto.Name}\"u8;");
 
     private void GenerateMembers(IndentedTextWriter writer, Command command)
@@ -378,47 +419,79 @@ public unsafe partial class {Options.ClassName}
 
     private void WriteGLLoading(IndentedTextWriter writer)
     {
-        writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName("glGetString")})");
-        writer.Indent++;
-        writer.WriteLine($"glGetString = (delegate* unmanaged<int, byte*>)loadFunc(name);");
-        writer.Indent--;
+        writer.WriteLine("delegate* unmanaged<int, byte*> glGetString;");
+        GenerateFixedLoadStatement(writer, "delegate* unmanaged<int, byte*>", GetUtf8StringFieldName("glGetString"), "glGetString");
         writer.WriteLine("if(glGetString == null) return;");
 
-        if (apis.Length is not 0)
+        if (!apis.IsDefaultOrEmpty)
         {
-            writer.WriteLine("var version = glGetString(GL_VERSION);");
-            writer.WriteLine("if(version == null) return;");
-            writer.WriteLine("if(!TryParseVersion(MemoryMarshal.CreateReadOnlySpanFromNullTerminated(version), out Major, out Minor, out IsEmbedded)) return;");
+            writer.WriteLine(@"
+        var version = glGetString(GL_VERSION);
+        if(version is null) return;
+        if(!TryParseVersion(MemoryMarshal.CreateReadOnlySpanFromNullTerminated(version), out Major, out Minor, out IsEmbedded)) return;");
+        }
+
+        if (!extensions.IsDefaultOrEmpty)
+        {
+            writer.WriteLine(@"
+        static bool IsExtensionSupported(ReadOnlySpan<nint> extensions, ReadOnlySpan<byte> extension)
+        {
+            foreach(var e in extensions)
+            {
+                if(extension.SequenceEqual(MemoryMarshal.CreateReadOnlySpanFromNullTerminated((byte*)e)))
+                    return true;
+            }
+
+            return false;
+        }");
+
+            writer.WriteLine("delegate* unmanaged<int, uint, byte*> glGetStringi;");
+            GenerateFixedLoadStatement(writer, "delegate* unmanaged<int, uint, byte*>", GetUtf8StringFieldName("glGetStringi"), "glGetStringi");
+
+            writer.WriteLine("delegate* unmanaged<int, int*, void> glGetIntegerv;");
+            GenerateFixedLoadStatement(writer, "delegate* unmanaged<int, int*, void>", GetUtf8StringFieldName("glGetIntegerv"), "glGetIntegerv");
+
+            writer.WriteLine(@"
+        if(glGetStringi is not null && glGetIntegerv is not null) // Fast path (OpenGL 3+)
+        {
+            int extensionsLength;
+            glGetIntegerv(""GL_NUM_EXTENSIONS"", &extensionsLength);
+            byte[] pointerData = ArrayPool<byte>.Shared.Rent(extensionsLength * sizeof(nint));
+            Span<nint> extensions = MemoryMarshal.Cast<byte, nint>(pointerData.AsSpan()[..(extensionsLength * sizeof(nint))]);
+
+            for(int e = 0; e < extensionsLength; ++e)
+                extensions[e] = (nint)glGetStringi(GL_EXTENSIONS, i);
+            
+            ");
+            writer.Indent++;
+            foreach (var extension in extensions)
+                writer.WriteLine($"{extension.Name} = IsExtensionSupported(extensions, {GetUtf8StringExtensionName(extension.Name)});");
+
+            writer.WriteLine();
+            writer.WriteLine("ArrayPool<byte>.Shared.Return(pointerData);");
+            writer.Indent--;
+            writer.WriteLine('}');
         }
     }
 
     private void WriteEGLLoading(IndentedTextWriter writer)
     {
-        writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName("eglQueryString")})");
-        writer.Indent++;
-        writer.WriteLine("eglQueryString = (delegate* unmanaged<void*, int, byte*>)loadFunc(name);");
-        writer.Indent--;
+        writer.WriteLine("delegate* unmanaged<void*, int, byte*> eglQueryString;");
+        GenerateFixedLoadStatement(writer, "delegate* unmanaged<void*, int, byte*>", GetUtf8StringFieldName("eglQueryString"), "eglQueryString");
 
-        writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName("eglGetError")})");
-        writer.Indent++;
-        writer.WriteLine("eglGetError = (delegate* unmanaged<int>)loadFunc(name);");
-        writer.Indent--;
+        writer.WriteLine("delegate* unmanaged<int> eglGetError;");
+        GenerateFixedLoadStatement(writer, "delegate* unmanaged<int>", GetUtf8StringFieldName("eglGetError"), "eglGetError");
 
-        writer.WriteLine("if(eglQueryString == null || eglGetError == null) return;");
+        writer.WriteLine("if(eglQueryString is null || eglGetError is null) return;");
 
-        if (apis.Length is not 0)
+        if (apis.IsDefaultOrEmpty)
         {
-            writer.WriteLine("var version = eglQueryString((void*)EGL_NO_DISPLAY, EGL_VERSION);");
-            writer.WriteLine("_ = eglGetError();");
-
-            writer.WriteLine("if(version == null) (Major, Minor) = (1, 0);");
-            writer.WriteLine("else if(!TryParseVersion(MemoryMarshal.CreateReadOnlySpanFromNullTerminated(version), out Major, out Minor)) return;");
+            writer.WriteLine(@"
+            var version = eglQueryString((void*)EGL_NO_DISPLAY, EGL_VERSION);
+            _ = eglGetError();
+            if(version == null) (Major, Minor) = (1, 0);
+            else if(!TryParseVersion(MemoryMarshal.CreateReadOnlySpanFromNullTerminated(version), out Major, out Minor)) return;");
         }
-    }
-
-    private void WriteExtensionLoading(IndentedTextWriter writer)
-    {
-        // TODO: Extension Loading
     }
 
     private void LoadIncludedApis()
@@ -439,7 +512,7 @@ public unsafe partial class {Options.ClassName}
         {
             if (extension.Supported != Options.Api
             || (extension.SupportedProfile is not GLProfile.None && extension.SupportedProfile != Options.Profile)
-            || (extension.GLSupported.Where(gl => Options.GLApis.Select(g => g.Api).Contains(gl)).Count() == 0))
+            || !extension.GLSupported.Where(gl => Options.GLApis.Select(g => g.Api).Contains(gl)).Any())
                 continue;
 
             foreach (var requires in extension.Requires)
@@ -452,6 +525,9 @@ public unsafe partial class {Options.ClassName}
 
     private void LoadRequires(RequireRemove requires)
     {
+        if (requires.Profile is not GLProfile.None & (requires.GLApi is GLApi.GL & requires.Profile != Options.Profile))
+            return;
+
         foreach (var command in requires.Commands)
         {
             if (includedCommands.Find(c => c.Proto.Name == command.Name) is not null)
@@ -473,7 +549,7 @@ public unsafe partial class {Options.ClassName}
 
     private void LoadRemoves(RequireRemove removes)
     {
-        if (removes.Profile != GLProfile.None & (removes.GLApi is GLApi.GL & removes.Profile != Options.Profile))
+        if (removes.Profile is not GLProfile.None & (removes.GLApi is GLApi.GL & removes.Profile != Options.Profile))
             return;
 
         foreach (var command in removes.Commands)
@@ -533,6 +609,17 @@ public unsafe partial class {Options.ClassName}
         return "ulong";
     }
 
+    private static void GenerateFixedLoadStatement(IndentedTextWriter writer, string functionType, string fixedString, string functionName)
+    {
+        writer.WriteLine($"fixed(byte* name = {fixedString})");
+        writer.Indent++;
+        writer.WriteLine($"{functionName} = ({functionType})loadFunc(name);");
+        writer.Indent--;
+    }
+
     private static string GetUtf8StringFieldName(string functionName)
         => $"{functionName}FunctionName";
+
+    private static string GetUtf8StringExtensionName(string extensionName)
+        => $"{extensionName}ExtensionName";
 }

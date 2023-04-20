@@ -46,7 +46,7 @@ public unsafe partial class EGL
     internal static ReadOnlySpan<byte> eglCreatePlatformWindowSurfaceFunctionName => "eglCreatePlatformWindowSurface"u8;
     internal static ReadOnlySpan<byte> eglCreatePlatformPixmapSurfaceFunctionName => "eglCreatePlatformPixmapSurface"u8;
     internal static ReadOnlySpan<byte> eglWaitSyncFunctionName => "eglWaitSync"u8;
-
+    
     private readonly delegate* unmanaged</* EGLDisplay */ void*, /* EGLint */ int*, /* EGLConfig */ void**, /* EGLint */ int, /* EGLint */ int*, /* EGLBoolean */ int> eglChooseConfig;
     private readonly delegate* unmanaged</* EGLDisplay */ void*, /* EGLSurface */ void*, /* EGLNativePixmapType */ void*, /* EGLBoolean */ int> eglCopyBuffers;
     private readonly delegate* unmanaged</* EGLDisplay */ void*, /* EGLConfig */ void*, /* EGLContext */ void*, /* EGLint */ int*, /* EGLContext */ void*> eglCreateContext;
