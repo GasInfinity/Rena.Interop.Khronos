@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using System.CommandLine;
 using System.Collections.Immutable;
+using System.CommandLine.Invocation;
 
 namespace Rena.Interop.OpenGL.Generator;
 
@@ -8,9 +9,9 @@ public static class Program
 {
     private static readonly Option<Api> ApiOption = new("--api", "Select the api to use") { IsRequired = true };
 
-    private static readonly Option<GLApi[]> GLApis = new("--gl-apis", "Select the GL apis to use") { Arity = ArgumentArity.OneOrMore, AllowMultipleArgumentsPerToken = true };
+    private static readonly Option<GLApi[]> GLApisOption = new("--gl-apis", () => Array.Empty<GLApi>(), "Select the GL apis to use") { Arity = ArgumentArity.OneOrMore, AllowMultipleArgumentsPerToken = true };
 
-    private static readonly Option<string[]> GLVersions = new("--gl-versions", "Select the GL api versions to use (Length must match with provided apis)") { Arity = ArgumentArity.OneOrMore, AllowMultipleArgumentsPerToken = true };
+    private static readonly Option<string[]> GLVersionsOption = new("--gl-versions", () => Array.Empty<string>(), "Select the GL api versions to use (Length must match with provided apis)") { Arity = ArgumentArity.OneOrMore, AllowMultipleArgumentsPerToken = true };
 
     private static readonly Option<GLProfile> ProfileOption = new("--profile", () => GLProfile.Compatibility, "Select the OpenGL profile to use (Only affects output when --api=GL and --gl-apis contains GL)");
 
@@ -20,28 +21,41 @@ public static class Program
 
     private static readonly Option<string> NamespaceOption = new("--namespace", "The namespace to use when generating the files") { IsRequired = true };
 
-    private static readonly Option<string> VersionOption = new("--api-version", "The version to use when generating the files") { };
+    private static readonly Option<string> ApiVersionOption = new("--api-version", () => string.Empty, "The version to use when generating the files") { };
+
+    private static readonly Option<string[]> ApiExtensionsOption = new("--api-extensions", () => Array.Empty<string>(), "The extensions to generate (Supports '*' wildcard to generate every extension you want)") { Arity = ArgumentArity.OneOrMore, AllowMultipleArgumentsPerToken = true };
 
     public static async Task<int> Main(string[] args)
     {
         var rootCommand = new RootCommand("OpenGL related bindings generator")
         {
             ApiOption,
-            GLApis,
-            GLVersions,
+            GLApisOption,
+            GLVersionsOption,
             ProfileOption,
             OutputOption,
             ClassNameOption,
             NamespaceOption,
-            VersionOption
+            ApiVersionOption,
+            ApiExtensionsOption
         };
 
-        rootCommand.SetHandler(Generate, ApiOption, GLApis, GLVersions, ProfileOption, OutputOption, ClassNameOption, NamespaceOption, VersionOption);
+        rootCommand.SetHandler(Generate);
         return await rootCommand.InvokeAsync(args);
     }
 
-    private static async Task Generate(Api api, GLApi[] glApis, string[] glVersionsString, GLProfile profile, string output, string className, string @namespace, string apiVersionString)
+    private static async Task Generate(InvocationContext context)
     {
+        Api api = context.ParseResult.GetValueForOption(ApiOption);
+        GLApi[] glApis = context.ParseResult.GetValueForOption(GLApisOption)!;
+        string[] glVersionsString = context.ParseResult.GetValueForOption(GLVersionsOption)!;
+        GLProfile glProfile = context.ParseResult.GetValueForOption(ProfileOption);
+        string output = context.ParseResult.GetValueForOption(OutputOption)!;
+        string className = context.ParseResult.GetValueForOption(ClassNameOption)!;
+        string @namespace = context.ParseResult.GetValueForOption(NamespaceOption)!;
+        string apiVersionString = context.ParseResult.GetValueForOption(ApiVersionOption)!;
+        string[] extensions = context.ParseResult.GetValueForOption(ApiExtensionsOption)!;
+
         ApiVersion apiVersion = default;
 
         if (api is not Api.GL)
@@ -59,24 +73,24 @@ public static class Program
 
         var totalGLApis = totalGLApisBuilder.MoveToImmutable();
         var url = GetSpecUrl(api);
-        Console.WriteLine($"Generating for '{api}'");
+        context.Console.WriteLine($"Generating for '{api}'");
 
         if (totalGLApis.Length > 0)
         {
             foreach (var glApi in totalGLApis)
-                Console.WriteLine($"With GLApi '{glApi.Item1}' version '{glApi.Item2}'");
+                context.Console.WriteLine($"With GLApi '{glApi.Item1}' version '{glApi.Item2}'");
 
-            Console.WriteLine($"With profile '{profile}'");
+            context.Console.WriteLine($"With profile '{glProfile}'");
         }
 
         using HttpClient client = new();
         var xml = await client.GetStringAsync(url);
-        Console.WriteLine($"Downloaded xml from {url}");
+        context.Console.WriteLine($"Downloaded xml from {url}");
         XmlDocument xmlDoc = new();
         xmlDoc.LoadXml(xml);
         Registry registry = new(xmlDoc.DocumentElement!);
 
-        Console.WriteLine("Starting generation");
+        context.Console.WriteLine("Starting generation");
         Generator gen = new(registry, new()
         {
             OutputPath = output,
@@ -84,9 +98,9 @@ public static class Program
             Namespace = @namespace,
             Api = api,
             GLApis = totalGLApis,
-            Profile = profile,
+            Profile = glProfile,
             ApiVersion = apiVersion,
-            IncludedExtensions = ImmutableHashSet<string>.Empty
+            IncludedExtensions = extensions.ToImmutableHashSet()
         });
 
         gen.Generate();

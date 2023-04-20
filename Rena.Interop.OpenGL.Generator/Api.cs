@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+
 namespace Rena.Interop.OpenGL.Generator;
 
 [Flags]
@@ -50,4 +52,12 @@ public static class ApiExtensions
             Api.EGL => "egl",
             _ => string.Empty
         };
+
+    public static Api FromSupportedStrings(string supported, out ImmutableArray<GLApi> glSupported, out GLProfile profile)
+    {
+        if (GLApiExtensions.TryGetSupported(supported, out glSupported, out profile))
+            return Api.GL;
+
+        return FromFeatureString(supported, out _);
+    }
 }

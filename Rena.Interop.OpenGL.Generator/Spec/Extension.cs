@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Xml;
 
 namespace Rena.Interop.OpenGL.Generator;
@@ -13,7 +14,9 @@ public class Extension
     private readonly List<RequireRemove> removes = new();
 
     public string Name { get; init; }
-    public string[] Supported { get; init; }
+    public Api Supported { get; init; }
+    public ImmutableArray<GLApi> GLSupported { get; init; }
+    public GLProfile SupportedProfile { get; init; }
     public string Protect { get; init; }
 
     public IReadOnlyList<RequireRemove> Requires
@@ -25,7 +28,9 @@ public class Extension
     public Extension(XmlElement element)
     {
         Name = element.GetAttribute(XmlName);
-        Supported = element.GetAttribute(XmlSupported).Split('|');
+        Supported = ApiExtensions.FromSupportedStrings(element.GetAttribute(XmlSupported), out var glSupported, out var glProfile);
+        GLSupported = glSupported;
+        SupportedProfile = glProfile;
         Protect = element.GetAttribute(XmlProtect);
 
         foreach (XmlNode child in element)

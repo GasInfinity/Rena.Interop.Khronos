@@ -19,7 +19,7 @@ public class Generator
 
     private readonly ImmutableArray<ApiVersion> versions;
     private readonly ImmutableArray<Feature> apis;
-    private readonly IEnumerable<Extension> extensions;
+    private readonly ImmutableArray<Extension> extensions;
     public GeneratorOptions Options { get; }
     public Registry Registry { get; }
 
@@ -44,11 +44,12 @@ public class Generator
         apiPrefix = options.Api.GetPrefix();
 
         if (options.IncludedExtensions.Contains("*"))
-            extensions = registry.ExtensionsList.SelectMany(e => e.ExtensionList);
+            extensions = registry.ExtensionsList.SelectMany(e => e.ExtensionList).ToImmutableArray();
         else
-            extensions = registry.ExtensionsList.SelectMany(e => e.ExtensionList.Where(e => IsExtensionSupported(e) && (options.IncludedExtensions?.Contains(e.Name) ?? false)));
+            extensions = registry.ExtensionsList.SelectMany(e => e.ExtensionList.Where(e => (options.IncludedExtensions?.Contains(e.Name) ?? false))).ToImmutableArray();
 
         LoadIncludedApis();
+        LoadIncludedExtensions();
     }
 
     public void Generate()
@@ -166,20 +167,32 @@ public unsafe partial class {Options.ClassName}
         writer.WriteLine($"public unsafe partial class {Options.ClassName}");
         writer.WriteLine('{');
         writer.Indent++;
-        writer.WriteLine("public readonly ushort Major;");
-        writer.WriteLine("public readonly ushort Minor;");
-        writer.WriteLine("public readonly bool IsEmbedded;");
-        writer.WriteLine();
 
-        foreach (var version in versions)
-            writer.WriteLine($"public readonly bool Version{version.Major}{version.Minor};");
+        if (apis.Length is not 0) // To support only generating extensions
+        {
+            writer.WriteLine("public readonly ushort Major;");
+            writer.WriteLine("public readonly ushort Minor;");
 
-        writer.WriteLine();
-        writer.WriteLine("// Extensions");
-        foreach (var extension in extensions)
-            writer.WriteLine($"public readonly bool {extension.Name[(apiPrefix.Length + 1)..].Replace("3DFX", "ThreeDFX")};");
+            if (Options.Api is Api.GL)
+                writer.WriteLine("public readonly bool IsEmbedded;");
 
-        writer.WriteLine();
+            writer.WriteLine();
+
+            foreach (var version in versions)
+                writer.WriteLine($"public readonly bool Version{version.Major}{version.Minor};");
+
+            writer.WriteLine();
+            writer.WriteLine("// Extensions");
+        }
+
+        if (extensions.Length is not 0)
+        {
+            foreach (var extension in extensions)
+                writer.WriteLine($"public readonly bool {extension.Name};");
+
+            writer.WriteLine();
+        }
+
         writer.WriteLine($"public {Options.ClassName}({LoadFunctionName} loadFunc)");
         writer.WriteLine('{');
         writer.Indent++;
@@ -352,30 +365,34 @@ public unsafe partial class {Options.ClassName}
         {
             case Api.GL:
                 {
-                    WriteGlLoading(writer);
+                    WriteGLLoading(writer);
                     break;
                 }
             case Api.EGL:
                 {
-                    WriteEglLoading(writer);
+                    WriteEGLLoading(writer);
                     break;
                 }
         }
     }
 
-    private static void WriteGlLoading(IndentedTextWriter writer)
+    private void WriteGLLoading(IndentedTextWriter writer)
     {
         writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName("glGetString")})");
         writer.Indent++;
         writer.WriteLine($"glGetString = (delegate* unmanaged<int, byte*>)loadFunc(name);");
         writer.Indent--;
         writer.WriteLine("if(glGetString == null) return;");
-        writer.WriteLine("var version = glGetString(GL_VERSION);");
-        writer.WriteLine("if(version == null) return;");
-        writer.WriteLine("if(!TryParseVersion(MemoryMarshal.CreateReadOnlySpanFromNullTerminated(version), out Major, out Minor, out IsEmbedded)) return;");
+
+        if (apis.Length is not 0)
+        {
+            writer.WriteLine("var version = glGetString(GL_VERSION);");
+            writer.WriteLine("if(version == null) return;");
+            writer.WriteLine("if(!TryParseVersion(MemoryMarshal.CreateReadOnlySpanFromNullTerminated(version), out Major, out Minor, out IsEmbedded)) return;");
+        }
     }
 
-    private static void WriteEglLoading(IndentedTextWriter writer)
+    private void WriteEGLLoading(IndentedTextWriter writer)
     {
         writer.WriteLine($"fixed(byte* name = {GetUtf8StringFieldName("eglQueryString")})");
         writer.Indent++;
@@ -389,11 +406,14 @@ public unsafe partial class {Options.ClassName}
 
         writer.WriteLine("if(eglQueryString == null || eglGetError == null) return;");
 
-        writer.WriteLine("var version = eglQueryString((void*)EGL_NO_DISPLAY, EGL_VERSION);");
-        writer.WriteLine("_ = eglGetError();");
+        if (apis.Length is not 0)
+        {
+            writer.WriteLine("var version = eglQueryString((void*)EGL_NO_DISPLAY, EGL_VERSION);");
+            writer.WriteLine("_ = eglGetError();");
 
-        writer.WriteLine("if(version == null) (Major, Minor) = (1, 0);");
-        writer.WriteLine("else if(!TryParseVersion(MemoryMarshal.CreateReadOnlySpanFromNullTerminated(version), out Major, out Minor)) return;");
+            writer.WriteLine("if(version == null) (Major, Minor) = (1, 0);");
+            writer.WriteLine("else if(!TryParseVersion(MemoryMarshal.CreateReadOnlySpanFromNullTerminated(version), out Major, out Minor)) return;");
+        }
     }
 
     private void WriteExtensionLoading(IndentedTextWriter writer)
@@ -406,49 +426,62 @@ public unsafe partial class {Options.ClassName}
         foreach (var api in apis)
         {
             foreach (var requires in api.Requires)
-            {
-                if (requires.Profile != GLProfile.None & (requires.GLApi is GLApi.GL & requires.Profile != Options.Profile))
-                    continue;
-
-
-                foreach (var command in requires.Commands)
-                {
-                    if (includedCommands.Find(c => c.Proto.Name == command.Name) is not null)
-                        continue;
-
-                    var c = Registry.CommandsList.SelectMany(c => c.CommandList).First(com => com.Proto.Name == command.Name);
-                    includedCommands.Add(c);
-                }
-
-                foreach (var specEnum in requires.Enums)
-                {
-                    if (includedEnums.Find(e => e.Name == specEnum.Name) is not null)
-                        continue;
-
-                    var e = Registry.EnumsList.SelectMany(e => e.Enums).First(@enum => @enum.Name == specEnum.Name);
-                    includedEnums.Add(e);
-                }
-            }
+                LoadRequires(requires);
 
             foreach (var removes in api.Removes)
-            {
-                if (removes.Profile != GLProfile.None & (removes.GLApi is GLApi.GL & removes.Profile != Options.Profile))
-                    continue;
-
-
-                foreach (var command in removes.Commands)
-                    includedCommands.RemoveAll(c => c.Proto.Name == command.Name);
-
-                foreach (var specEnum in removes.Enums)
-                    includedEnums.RemoveAll(e => e.Name == specEnum.Name);
-            }
+                LoadRemoves(removes);
         }
     }
 
-    private bool IsExtensionSupported(Extension extension)
-        => extension.Supported.Contains(Options.Api == Api.GL
-                                     ? (Options.Profile == GLProfile.Core ? "glcore" : "gl")
-                                     : "");
+    private void LoadIncludedExtensions()
+    {
+        foreach (var extension in extensions)
+        {
+            if (extension.Supported != Options.Api
+            || (extension.SupportedProfile is not GLProfile.None && extension.SupportedProfile != Options.Profile)
+            || (extension.GLSupported.Where(gl => Options.GLApis.Select(g => g.Api).Contains(gl)).Count() == 0))
+                continue;
+
+            foreach (var requires in extension.Requires)
+                LoadRequires(requires);
+
+            foreach (var removes in extension.Removes)
+                LoadRemoves(removes);
+        }
+    }
+
+    private void LoadRequires(RequireRemove requires)
+    {
+        foreach (var command in requires.Commands)
+        {
+            if (includedCommands.Find(c => c.Proto.Name == command.Name) is not null)
+                continue;
+
+            var c = Registry.CommandsList.SelectMany(c => c.CommandList).First(com => com.Proto.Name == command.Name);
+            includedCommands.Add(c);
+        }
+
+        foreach (var specEnum in requires.Enums)
+        {
+            if (includedEnums.Find(e => e.Name == specEnum.Name) is not null)
+                continue;
+
+            var e = Registry.EnumsList.SelectMany(e => e.Enums).First(@enum => @enum.Name == specEnum.Name);
+            includedEnums.Add(e);
+        }
+    }
+
+    private void LoadRemoves(RequireRemove removes)
+    {
+        if (removes.Profile != GLProfile.None & (removes.GLApi is GLApi.GL & removes.Profile != Options.Profile))
+            return;
+
+        foreach (var command in removes.Commands)
+            includedCommands.RemoveAll(c => c.Proto.Name == command.Name);
+
+        foreach (var specEnum in removes.Enums)
+            includedEnums.RemoveAll(e => e.Name == specEnum.Name);
+    }
 
     private string GenerateFunctionPointerType(Command command)
     {
