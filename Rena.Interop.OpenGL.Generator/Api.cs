@@ -43,16 +43,6 @@ public static class ApiExtensions
         };
     }
 
-    public static string GetPrefix(this Api api)
-        => api switch
-        {
-            Api.GL => "gl",
-            Api.GLX => "glX",
-            Api.WGL => "wgl",
-            Api.EGL => "egl",
-            _ => string.Empty
-        };
-
     public static Api FromSupportedStrings(string supported, out ImmutableArray<GLApi> glSupported, out GLProfile profile)
     {
         if (GLApiExtensions.TryGetSupported(supported, out glSupported, out profile))

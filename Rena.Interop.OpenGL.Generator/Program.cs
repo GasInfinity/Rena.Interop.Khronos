@@ -83,12 +83,9 @@ public static class Program
             context.Console.WriteLine($"With profile '{glProfile}'");
         }
 
-        using HttpClient client = new();
-        var xml = await client.GetStringAsync(url);
-        context.Console.WriteLine($"Downloaded xml from {url}");
-        XmlDocument xmlDoc = new();
-        xmlDoc.LoadXml(xml);
-        Registry registry = new(xmlDoc.DocumentElement!);
+        context.Console.WriteLine($"Downloading registry for {api}");
+        Registry registry = await LoadRegistry(api);
+        context.Console.WriteLine("Downloaded");
 
         context.Console.WriteLine("Starting generation");
         Generator gen = new(registry, new()
@@ -101,9 +98,18 @@ public static class Program
             Profile = glProfile,
             ApiVersion = apiVersion,
             IncludedExtensions = extensions.ToImmutableHashSet()
-        });
+        }, context.Console);
 
         gen.Generate();
+    }
+
+    private async static Task<Registry> LoadRegistry(Api api)
+    {
+        using HttpClient client = new();
+        var xml = await client.GetStringAsync(GetSpecUrl(api));
+        XmlDocument xmlDoc = new();
+        xmlDoc.LoadXml(xml);
+        return new Registry(xmlDoc.DocumentElement!);
     }
 
     private static string GetSpecUrl(Api api)

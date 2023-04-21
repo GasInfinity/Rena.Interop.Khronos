@@ -43,6 +43,7 @@ public class Command
         builder.Append($"{command.Proto.Type}>");
 
         var functionType = builder.ToString();
+        builder.Clear();
         BuilderPool.Return(builder);
         return functionType;
     }

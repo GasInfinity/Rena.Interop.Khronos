@@ -5,22 +5,20 @@ namespace Rena.Interop.OpenGL;
 
 public unsafe partial class GLES2
 {
+    public delegate void* LoadFunction(byte* name);
     public readonly ushort Major;
     public readonly ushort Minor;
-    public readonly bool IsEmbedded;
     
     public readonly bool Version20;
     public readonly bool Version30;
     public readonly bool Version31;
     public readonly bool Version32;
-    
     public GLES2(LoadFunction loadFunc)
     {
         delegate* unmanaged<int, byte*> glGetString;
         fixed(byte* name = glGetStringFunctionName)
             glGetString = (delegate* unmanaged<int, byte*>)loadFunc(name);
         if(glGetString == null) return;
-        
         var version = glGetString(GL_VERSION);
         if(version is null) return;
         if(!TryParseVersion(MemoryMarshal.CreateReadOnlySpanFromNullTerminated(version), out Major, out Minor, out IsEmbedded)) return;

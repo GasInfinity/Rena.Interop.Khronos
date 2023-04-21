@@ -5,6 +5,7 @@ namespace Rena.Interop.EGL;
 
 public unsafe partial class EGL
 {
+    public delegate void* LoadFunction(byte* name);
     public readonly ushort Major;
     public readonly ushort Minor;
     
@@ -14,7 +15,6 @@ public unsafe partial class EGL
     public readonly bool Version13;
     public readonly bool Version14;
     public readonly bool Version15;
-    
     public EGL(LoadFunction loadFunc)
     {
         delegate* unmanaged<void*, int, byte*> eglQueryString;
@@ -24,6 +24,10 @@ public unsafe partial class EGL
         fixed(byte* name = eglGetErrorFunctionName)
             eglGetError = (delegate* unmanaged<int>)loadFunc(name);
         if(eglQueryString is null || eglGetError is null) return;
+        var version = eglQueryString((void*)EGL_NO_DISPLAY, EGL_VERSION);
+        _ = eglGetError();
+        if(version == null) (Major, Minor) = (1, 0);
+        else if(!TryParseVersion(MemoryMarshal.CreateReadOnlySpanFromNullTerminated(version), out Major, out Minor)) return;
         
         Version10 = Major > 1 || (Major == 1 && Minor >= 0);
         Version11 = Major > 1 || (Major == 1 && Minor >= 1);

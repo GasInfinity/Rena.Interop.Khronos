@@ -5,8 +5,8 @@ namespace Rena.Interop.OpenGL.Generator;
 
 public static class Generation
 {
-    const string LoadFunctionTypeName = "LoadFunction";
-    const string LoadFunctionParameterName = "loadFunc";
+    public const string LoadFunctionTypeName = "LoadFunction";
+    public const string LoadFunctionParameterName = "loadFunc";
 
     public static IndentedTextWriter AddIndentation(this IndentedTextWriter writer)
     {
@@ -20,13 +20,38 @@ public static class Generation
         return writer;
     }
 
-    public static void GenerateFixedLoadStatements(IndentedTextWriter writer, ReadOnlySpan<char> fixedValue, ReadOnlySpan<char> fieldName, ReadOnlySpan<char> castedType)
+    public static IndentedTextWriter Wrt(this IndentedTextWriter writer, string? value)
+    {
+        writer.Write(value);
+        return writer;
+    }
+
+    public static IndentedTextWriter WrtLine(this IndentedTextWriter writer, string? value)
+    {
+        writer.WriteLine(value);
+        return writer;
+    }
+
+    public static IndentedTextWriter WrtLine(this IndentedTextWriter writer, char value)
+    {
+        writer.WriteLine(value);
+        return writer;
+    }
+
+    public static IndentedTextWriter WrtLine(this IndentedTextWriter writer)
+    {
+        writer.WriteLine();
+        return writer;
+    }
+
+    public static void GenerateFixedLoadStatement(IndentedTextWriter writer, ReadOnlySpan<char> fixedValue, ReadOnlySpan<char> fieldName, ReadOnlySpan<char> castedType)
     {
         const string FixedVariableName = "name";
 
-        writer.WriteLine(@$"
-        fixed(byte* {FixedVariableName} = {fixedValue})
-            {fieldName} = ({castedType}){LoadFunctionParameterName}({FixedVariableName})");
+        writer.WrtLine($"fixed(byte* {FixedVariableName} = {fixedValue})")
+              .AddIndentation()
+                .WrtLine($"{fieldName} = ({castedType}){LoadFunctionParameterName}({FixedVariableName});")
+              .RemoveIndentation();
     }
 
     public static void GenerateSharpFunction(IndentedTextWriter writer, ReadOnlySpan<char> apiPrefix, Command command)
@@ -65,12 +90,25 @@ public static class Generation
         writer.RemoveIndentation();
     }
 
+    public static void GenerateSharpConstant(IndentedTextWriter writer, SpecEnum constant)
+    {
+        string value = SharpConstantValueFromRaw(constant.Value);
+        string type = ConstantTypeFromValue(value);
+        writer.WriteLine($"public const {type} {constant.Name} = unchecked(({type}){value});");
+    }
+
+    public static void GenerateSharpUtf8FunctionName(IndentedTextWriter writer, Command command)
+        => writer.WriteLine($"internal static ReadOnlySpan<byte> {FunctionToUtf8FunctionName(command.Name)} => \"{command.Name}\"u8;");
+
+    public static void GenerateSharpFunctionMember(IndentedTextWriter writer, Command command)
+        => writer.WriteLine($"private readonly {command.SharpPointerType} {command.Name};");
+
     public static string FunctionToUtf8FunctionName(ReadOnlySpan<char> functionName)
         => $"{functionName}FunctionName";
 
     public static string ExtensionToUtf8ExtensionName(ReadOnlySpan<char> extensionName)
         => $"{extensionName}ExtensionName";
-    
+
     public static string SharpConstantValueFromRaw(string value)
     {
         const string EglCast = "EGL_CAST(";

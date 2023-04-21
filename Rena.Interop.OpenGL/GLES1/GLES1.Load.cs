@@ -5,21 +5,19 @@ namespace Rena.Interop.OpenGL;
 
 public unsafe partial class GLES1
 {
+    public delegate void* LoadFunction(byte* name);
     internal static ReadOnlySpan<byte> glGetStringiFunctionName => "glGetStringi"u8;
     internal const int GL_NUM_EXTENSIONS = 0x821D;
     public readonly ushort Major;
     public readonly ushort Minor;
-    public readonly bool IsEmbedded;
     
     public readonly bool Version10;
-    
     public GLES1(LoadFunction loadFunc)
     {
         delegate* unmanaged<int, byte*> glGetString;
         fixed(byte* name = glGetStringFunctionName)
             glGetString = (delegate* unmanaged<int, byte*>)loadFunc(name);
         if(glGetString == null) return;
-        
         var version = glGetString(GL_VERSION);
         if(version is null) return;
         if(!TryParseVersion(MemoryMarshal.CreateReadOnlySpanFromNullTerminated(version), out Major, out Minor, out IsEmbedded)) return;
