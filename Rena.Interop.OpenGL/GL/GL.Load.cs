@@ -28,6 +28,7 @@ public unsafe partial class GL
     public readonly bool Version44;
     public readonly bool Version45;
     public readonly bool Version46;
+    public readonly bool IsEmbedded;
     public GL(LoadFunction loadFunc)
     {
         delegate* unmanaged<int, byte*> glGetString;

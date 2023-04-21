@@ -13,6 +13,7 @@ public unsafe partial class GLES2
     public readonly bool Version30;
     public readonly bool Version31;
     public readonly bool Version32;
+    public readonly bool IsEmbedded;
     public GLES2(LoadFunction loadFunc)
     {
         delegate* unmanaged<int, byte*> glGetString;

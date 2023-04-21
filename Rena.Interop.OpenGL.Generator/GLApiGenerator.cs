@@ -12,6 +12,12 @@ public sealed class GLApiGenerator : ApiGenerator
     {
     }
 
+    public override void WriteLoaderFields(IndentedTextWriter writer)
+    {
+        base.WriteLoaderFields(writer);
+        writer.WriteLine("public readonly bool IsEmbedded;");
+    }
+
     public override void WriteRequiredFields(IndentedTextWriter writer)
     {
         base.WriteRequiredFields(writer);

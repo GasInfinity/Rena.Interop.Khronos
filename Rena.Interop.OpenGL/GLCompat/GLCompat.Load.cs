@@ -28,6 +28,7 @@ public unsafe partial class GLCompat
     public readonly bool Version44;
     public readonly bool Version45;
     public readonly bool Version46;
+    public readonly bool IsEmbedded;
     public GLCompat(LoadFunction loadFunc)
     {
         delegate* unmanaged<int, byte*> glGetString;

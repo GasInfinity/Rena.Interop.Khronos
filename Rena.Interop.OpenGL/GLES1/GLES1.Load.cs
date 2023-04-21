@@ -12,6 +12,7 @@ public unsafe partial class GLES1
     public readonly ushort Minor;
     
     public readonly bool Version10;
+    public readonly bool IsEmbedded;
     public GLES1(LoadFunction loadFunc)
     {
         delegate* unmanaged<int, byte*> glGetString;
