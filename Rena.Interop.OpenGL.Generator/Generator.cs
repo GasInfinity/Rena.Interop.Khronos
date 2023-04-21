@@ -2,6 +2,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Text;
+using static Rena.Interop.OpenGL.Generator.Generation;
 
 namespace Rena.Interop.OpenGL.Generator;
 
@@ -164,16 +165,16 @@ public unsafe partial class {Options.ClassName}
         writer.WriteLine();
         writer.WriteLine($"public unsafe partial class {Options.ClassName}");
         writer.WriteLine('{');
-        writer.Indent++;
+        writer.AddIndentation();
 
         switch (Options.Api) // Required things in each api
         {
             case Api.GL:
                 {
-                    if (includedCommands.Find(c => c.Proto.Name is "glGetString") is null)
+                    if (includedCommands.Find(c => c.Name is "glGetString") is null)
                         writer.WriteLine($"internal static ReadOnlySpan<byte> {FunctionToUtf8FunctionName("glGetString")} => \"glGetString\"u8;");
 
-                    if (includedCommands.Find(c => c.Proto.Name is "glGetStringi") is null)
+                    if (includedCommands.Find(c => c.Name is "glGetStringi") is null)
                         writer.WriteLine($"internal static ReadOnlySpan<byte> {FunctionToUtf8FunctionName("glGetStringi")} => \"glGetStringi\"u8;");
 
                     if (includedEnums.Find(e => e.Name is "GL_EXTENSIONS") is null)
@@ -216,7 +217,7 @@ public unsafe partial class {Options.ClassName}
 
         writer.WriteLine($"public {Options.ClassName}({LoadFunctionName} loadFunc)");
         writer.WriteLine('{');
-        writer.Indent++;
+        writer.AddIndentation();
         WriteApiSpecificLoading(writer);
         writer.WriteLine();
 
@@ -231,19 +232,19 @@ public unsafe partial class {Options.ClassName}
             else
                 writer.WriteLine($"if(Version{api.Number.Major}{api.Number.Minor})");
             writer.WriteLine('{');
-            writer.Indent++;
+            writer.AddIndentation();
 
             foreach (var c in api.Requires.SelectMany(a => a.Commands))
             {
-                var command = includedCommands.Find(com => com.Proto.Name == c.Name);
+                var command = includedCommands.Find(com => com.Name == c.Name);
 
                 if (command is null)
                     continue;
 
-                GenerateFixedLoadStatement(writer, GenerateFunctionPointerType(command), FunctionToUtf8FunctionName(command.Proto.Name), $"this.{command.Proto.Name}");
+                GenerateFixedLoadStatements(writer, command.SharpPointerType, FunctionToUtf8FunctionName(command.Name), $"this.{command.Name}");
             }
 
-            writer.Indent--;
+            writer.RemoveIndentation();
             writer.WriteLine('}');
         }
 
@@ -253,25 +254,25 @@ public unsafe partial class {Options.ClassName}
 
             writer.WriteLine($"if({extension.Name})");
             writer.WriteLine('{');
-            writer.Indent++;
+            writer.AddIndentation();
 
             foreach (var c in extension.Requires.SelectMany(e => e.Commands))
             {
-                var command = includedCommands.Find(com => com.Proto.Name == c.Name);
+                var command = includedCommands.Find(com => com.Name == c.Name);
 
                 if (command is null)
                     continue;
 
-                GenerateFixedLoadStatement(writer, GenerateFunctionPointerType(command), FunctionToUtf8FunctionName(command.Proto.Name), $"this.{command.Proto.Name}");
+                GenerateFixedLoadStatements(writer, command.SharpPointerType, FunctionToUtf8FunctionName(command.Name), $"this.{command.Name}");
             }
 
-            writer.Indent--;
+            writer.RemoveIndentation();
             writer.WriteLine('}');
         }
 
-        writer.Indent--;
+        writer.RemoveIndentation();
         writer.WriteLine('}');
-        writer.Indent--;
+        writer.RemoveIndentation();
         writer.WriteLine('}');
     }
 
@@ -292,10 +293,10 @@ public unsafe partial class {Options.ClassName}
         writer.WriteLine();
         writer.WriteLine($"public partial class {Options.ClassName}");
         writer.WriteLine('{');
-        writer.Indent++;
+        writer.AddIndentation();
         foreach (var @enum in includedEnums)
             GenerateConstant(writer, @enum);
-        writer.Indent--;
+        writer.RemoveIndentation();
         writer.WriteLine('}');
     }
 
@@ -323,21 +324,21 @@ public unsafe partial class {Options.ClassName}
         writer.WriteLine();
         writer.WriteLine($"public unsafe partial class {Options.ClassName}");
         writer.WriteLine('{');
-        writer.Indent++;
+        writer.AddIndentation();
         foreach (var command in includedCommands)
             GenerateMemberName(writer, command);
         writer.WriteLine();
         foreach (var command in includedCommands)
             GenerateMembers(writer, command);
-        writer.Indent--;
+        writer.RemoveIndentation();
         writer.WriteLine('}');
     }
 
     private void GenerateMemberName(IndentedTextWriter writer, Command command)
-        => writer.WriteLine($"internal static ReadOnlySpan<byte> {FunctionToUtf8FunctionName(command.Proto.Name)} => \"{command.Proto.Name}\"u8;");
+        => writer.WriteLine($"internal static ReadOnlySpan<byte> {FunctionToUtf8FunctionName(command.Name)} => \"{command.Name}\"u8;");
 
     private void GenerateMembers(IndentedTextWriter writer, Command command)
-        => writer.WriteLine($"private readonly {GenerateFunctionPointerType(command)} {command.Proto.Name};");
+        => writer.WriteLine($"private readonly {command.SharpPointerType} {command.Name};");
 
     private void GenerateFunctions()
     {
@@ -356,48 +357,11 @@ public unsafe partial class {Options.ClassName}
         writer.WriteLine();
         writer.WriteLine($"public unsafe partial class {Options.ClassName}");
         writer.WriteLine('{');
-        writer.Indent++;
+        writer.AddIndentation();
         foreach (var command in includedCommands)
-            GenerateFunction(writer, command);
-        writer.Indent--;
+            GenerateSharpFunction(writer, apiPrefix, command);
+        writer.AddIndentation();
         writer.WriteLine('}');
-    }
-
-    private void GenerateFunction(IndentedTextWriter writer, Command command)
-    {
-        var realName = command.Proto.Name;
-        var name = realName;
-
-        if (name.StartsWith(apiPrefix))
-            name = name[apiPrefix.Length..];
-
-        writer.Write($"public {command.Proto.Type} {name}(");
-
-        var paramCount = command.Parameters.Count;
-        var i = 1;
-        foreach (var param in command.Parameters)
-        {
-            writer.Write($"{param.Type} @{param.Name}");
-
-            if (i++ < paramCount)
-                writer.Write(", ");
-        }
-
-        writer.WriteLine(')');
-        writer.Indent++;
-        writer.Write($"=> {realName}(");
-
-        i = 1;
-        foreach (var param in command.Parameters)
-        {
-            writer.Write($"@{param.Name}");
-
-            if (i++ < paramCount)
-                writer.Write(", ");
-        }
-
-        writer.WriteLine(");");
-        writer.Indent--;
     }
 
     private void WriteApiSpecificLoading(IndentedTextWriter writer)
@@ -420,7 +384,7 @@ public unsafe partial class {Options.ClassName}
     private void GenerateGLLoading(IndentedTextWriter writer)
     {
         writer.WriteLine("delegate* unmanaged<int, byte*> glGetString;");
-        GenerateFixedLoadStatement(writer, "delegate* unmanaged<int, byte*>", FunctionToUtf8FunctionName("glGetString"), "glGetString");
+        GenerateFixedLoadStatements(writer, "delegate* unmanaged<int, byte*>", FunctionToUtf8FunctionName("glGetString"), "glGetString");
         writer.WriteLine("if(glGetString == null) return;");
 
         if (!apis.IsDefaultOrEmpty)
@@ -449,17 +413,17 @@ public unsafe partial class {Options.ClassName}
         ");
 
             writer.WriteLine("delegate* unmanaged<int, uint, byte*> glGetStringi;");
-            GenerateFixedLoadStatement(writer, "delegate* unmanaged<int, uint, byte*>", FunctionToUtf8FunctionName("glGetStringi"), "glGetStringi");
+            GenerateFixedLoadStatements(writer, "delegate* unmanaged<int, uint, byte*>", FunctionToUtf8FunctionName("glGetStringi"), "glGetStringi");
 
             writer.WriteLine("delegate* unmanaged<int, int*, void> glGetIntegerv;");
-            GenerateFixedLoadStatement(writer, "delegate* unmanaged<int, int*, void>", FunctionToUtf8FunctionName("glGetIntegerv"), "glGetIntegerv");
+            GenerateFixedLoadStatements(writer, "delegate* unmanaged<int, int*, void>", FunctionToUtf8FunctionName("glGetIntegerv"), "glGetIntegerv");
 
             GenerateGL3ExtensionLoading(writer);
             writer.WriteLine("else");
             writer.WriteLine('{');
-            writer.Indent++;
+            writer.AddIndentation();
             GenerateGLExtensionLoading(writer);
-            writer.Indent--;
+            writer.RemoveIndentation();
             writer.WriteLine('}');
         }
     }
@@ -478,28 +442,27 @@ public unsafe partial class {Options.ClassName}
                 extensions[e] = (nint)glGetStringi(GL_EXTENSIONS, i);
             
             ");
-        writer.Indent++;
+        writer.AddIndentation();
         foreach (var extension in extensions)
             writer.WriteLine($"{extension.Name} = IsExtensionSupported(extensions, {ExtensionToUtf8ExtensionName(extension.Name)});");
 
         writer.WriteLine();
         writer.WriteLine("ArrayPool<byte>.Shared.Return(pointerData);");
-        writer.Indent--;
+        writer.RemoveIndentation();
         writer.WriteLine('}');
     }
 
     private void GenerateGLExtensionLoading(IndentedTextWriter writer)
     {
-
     }
 
     private void GenerateEGLLoading(IndentedTextWriter writer)
     {
         writer.WriteLine("delegate* unmanaged<void*, int, byte*> eglQueryString;");
-        GenerateFixedLoadStatement(writer, "delegate* unmanaged<void*, int, byte*>", FunctionToUtf8FunctionName("eglQueryString"), "eglQueryString");
+        GenerateFixedLoadStatements(writer, "delegate* unmanaged<void*, int, byte*>", FunctionToUtf8FunctionName("eglQueryString"), "eglQueryString");
 
         writer.WriteLine("delegate* unmanaged<int> eglGetError;");
-        GenerateFixedLoadStatement(writer, "delegate* unmanaged<int>", FunctionToUtf8FunctionName("eglGetError"), "eglGetError");
+        GenerateFixedLoadStatements(writer, "delegate* unmanaged<int>", FunctionToUtf8FunctionName("eglGetError"), "eglGetError");
 
         writer.WriteLine("if(eglQueryString is null || eglGetError is null) return;");
 
@@ -549,10 +512,10 @@ public unsafe partial class {Options.ClassName}
 
         foreach (var command in requires.Commands)
         {
-            if (includedCommands.Find(c => c.Proto.Name == command.Name) is not null)
+            if (includedCommands.Find(c => c.Name == command.Name) is not null)
                 continue;
 
-            var c = Registry.CommandsList.SelectMany(c => c.CommandList).First(com => com.Proto.Name == command.Name);
+            var c = Registry.CommandsList.SelectMany(c => c.CommandList).First(com => com.Name == command.Name);
             includedCommands.Add(c);
         }
 
@@ -572,73 +535,9 @@ public unsafe partial class {Options.ClassName}
             return;
 
         foreach (var command in removes.Commands)
-            includedCommands.RemoveAll(c => c.Proto.Name == command.Name);
+            includedCommands.RemoveAll(c => c.Name == command.Name);
 
         foreach (var specEnum in removes.Enums)
             includedEnums.RemoveAll(e => e.Name == specEnum.Name);
     }
-
-    private string GenerateFunctionPointerType(Command command)
-    {
-        if (functionTypeMap.TryGetValue(command, out var type))
-            return type;
-
-        StringBuilder builder = new();
-        builder.Append("delegate* unmanaged<");
-
-        foreach (var param in command.Parameters)
-            builder.Append($"{param.Type}, ");
-
-        builder.Append($"{command.Proto.Type}>");
-
-        var processedType = builder.ToString();
-        _ = functionTypeMap.TryAdd(command, processedType);
-        return processedType;
-    }
-
-    private static string SharpConstantValueFromRaw(string value)
-    {
-        const string EglCast = "EGL_CAST(";
-
-        if (value.StartsWith(EglCast))
-            return value[(value.IndexOf(',') + 1)..value.IndexOf(')')];
-
-        return value;
-    }
-
-    private static string ConstantTypeFromValue(string value)
-    {
-        const string Prefix = "0x";
-
-        var numberStyle = NumberStyles.Integer;
-        var number = value.AsSpan();
-
-        if (number.StartsWith(Prefix))
-        {
-            number = number[Prefix.Length..];
-            numberStyle = NumberStyles.HexNumber;
-        }
-
-        if (int.TryParse(number, numberStyle, CultureInfo.InvariantCulture, out _))
-            return "int";
-        if (uint.TryParse(number, numberStyle, CultureInfo.InvariantCulture, out _))
-            return "uint";
-        if (long.TryParse(number, numberStyle, CultureInfo.InvariantCulture, out _))
-            return "long";
-        return "ulong";
-    }
-
-    private static void GenerateFixedLoadStatement(IndentedTextWriter writer, string functionType, string fixedString, string functionName)
-    {
-        writer.WriteLine($"fixed(byte* name = {fixedString})");
-        writer.Indent++;
-        writer.WriteLine($"{functionName} = ({functionType})loadFunc(name);");
-        writer.Indent--;
-    }
-
-    private static string FunctionToUtf8FunctionName(string functionName)
-        => $"{functionName}FunctionName";
-
-    private static string ExtensionToUtf8ExtensionName(string extensionName)
-        => $"{extensionName}ExtensionName";
 }
