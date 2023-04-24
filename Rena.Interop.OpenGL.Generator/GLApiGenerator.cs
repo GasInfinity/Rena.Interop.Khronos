@@ -31,6 +31,9 @@ public sealed class GLApiGenerator : ApiGenerator
         if (!includedCommands.Any(c => c.Name is "glGetStringi"))
             writer.WriteLine($"internal static ReadOnlySpan<byte> {FunctionToUtf8FunctionName("glGetStringi")} => \"glGetStringi\"u8;");
 
+        if (!includedCommands.Any(c => c.Name is "glGetIntegerv"))
+            writer.WriteLine($"internal static ReadOnlySpan<byte> {FunctionToUtf8FunctionName("glGetIntegerv")} => \"glGetIntegerv\"u8;");
+
         if (!includedEnums.Any(e => e.Name is "GL_EXTENSIONS"))
             writer.WriteLine("internal const int GL_EXTENSIONS = 0x1F03;");
 
