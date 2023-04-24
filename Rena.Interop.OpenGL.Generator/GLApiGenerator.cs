@@ -101,7 +101,7 @@ public sealed class GLApiGenerator : ApiGenerator
                 .WrtLine()
                 .WrtLine("for(int e = 0; e < extensionsLength; ++e)")
                 .AddIndentation()
-                    .WrtLine("extensions[e] = (nint)glGetStringi(GL_EXTENSIONS, i);")
+                    .WrtLine("extensions[e] = (nint)glGetStringi(GL_EXTENSIONS, (uint)i);")
                 .RemoveIndentation()
                 .WrtLine();
 
