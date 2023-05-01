@@ -67,8 +67,6 @@ public class Generator
         GenerateEnums();
         console.WriteLine("Generating FunctionMembers.cs");
         GenerateFunctionMembers();
-        console.WriteLine("Generating Functions.cs");
-        GenerateFunctions();
     }
 
     private void GenerateUtil()
@@ -128,7 +126,7 @@ public class Generator
         writer.WriteLine();
 
         foreach (var version in LoadedVersions)
-            writer.WriteLine($"Version{version.Major}{version.Minor} = Major > {version.Major} || (Major == {version.Major} && Minor >= {version.Minor});");
+            writer.WriteLine($"Version{version.Major}{version.Minor} = Major > {version.Major} | (Major == {version.Major} & Minor >= {version.Minor});");
 
         foreach (var api in LoadedApis)
         {
@@ -147,7 +145,7 @@ public class Generator
                 if (command is null)
                     continue;
 
-                GenerateFixedLoadStatement(writer, FunctionToUtf8FunctionName(command.Name), $"this.{command.Name}", command.SharpPointerType);
+                GenerateFixedLoadStatement(writer, FunctionToUtf8FunctionName(command.Name), $"this.{FunctionNameToSharpFunctionMemberName(ApiGenerator.Prefix, command.Name)}", command.SharpPointerType);
             }
 
             writer.RemoveIndentation()
@@ -169,11 +167,25 @@ public class Generator
                 if (command is null)
                     continue;
 
-                GenerateFixedLoadStatement(writer, FunctionToUtf8FunctionName(command.Name), $"this.{command.Name}", command.SharpPointerType);
+                GenerateFixedLoadStatement(writer, FunctionToUtf8FunctionName(command.Name), $"this.{FunctionNameToSharpFunctionMemberName(ApiGenerator.Prefix, command.Name)}", command.SharpPointerType);
             }
 
             writer.RemoveIndentation()
                   .WrtLine('}');
+        }
+
+        if (Options.GenerateAliases)
+        {
+            foreach (var command in includedCommands)
+            {
+                if (string.IsNullOrEmpty(command.Alias))
+                    continue;
+
+                writer.WrtLine($"if(this.{FunctionNameToSharpFunctionMemberName(ApiGenerator.Prefix, command.Alias)} is null)")
+                    .AddIndentation()
+                    .WrtLine($"this.{FunctionNameToSharpFunctionMemberName(ApiGenerator.Prefix, command.Alias)} = this.{FunctionNameToSharpFunctionMemberName(ApiGenerator.Prefix, command.Name)};")
+                    .RemoveIndentation();
+            }
         }
 
         writer.RemoveIndentation()
@@ -228,29 +240,6 @@ public class Generator
         writer.WriteLine('}');
     }
 
-    private void GenerateFunctions()
-    {
-        var output = $"{Options.OutputPath}/{Options.ClassName}.Functions.cs";
-
-        var dirName = Path.GetDirectoryName(output);
-
-        if (!string.IsNullOrEmpty(dirName))
-            _ = Directory.CreateDirectory(dirName);
-
-        using FileStream functionsFile = File.Create(output);
-        using StreamWriter functionsWriter = new(functionsFile);
-        using IndentedTextWriter writer = new(functionsWriter);
-
-        writer.WriteLine($"namespace {Options.Namespace};");
-        writer.WriteLine();
-        writer.WriteLine($"public unsafe partial class {Options.ClassName}");
-        writer.WriteLine('{');
-        writer.AddIndentation();
-        ApiGenerator.WriteFunctionDeclarations(writer);
-        writer.RemoveIndentation();
-        writer.WriteLine('}');
-    }
-
     private void LoadIncludedApis()
     {
         foreach (var api in LoadedApis)
@@ -269,7 +258,7 @@ public class Generator
         {
             if (extension.Supported != Options.Api
             || (extension.Supported is Api.GL & (extension.SupportedProfile is not GLProfile.None & extension.SupportedProfile != Options.Profile)
-            && !extension.GLSupported.Where(gl => Options.GLApis.Select(g => g.Api).Contains(gl)).Any()))
+            && !extension.GLSupported.Any(gl => Options.GLApis.Select(g => g.Api).Contains(gl))))
                 continue;
 
             foreach (var requires in extension.Requires)

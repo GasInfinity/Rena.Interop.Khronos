@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Xml;
 using Microsoft.Extensions.ObjectPool;
@@ -8,9 +7,12 @@ namespace Rena.Interop.OpenGL.Generator;
 public class Command
 {
     public const string XmlElementName = "command";
+    public const string XmlAlias = "alias";
+    public const string XmlAliasName = "name";
 
     private readonly List<Param> parameters = new();
     public Proto Proto { get; init; }
+    public string Alias { get; init; }
     public string SharpPointerType { get; init; }
     public string Name
         => Proto.Name;
@@ -21,6 +23,7 @@ public class Command
     public Command(XmlElement element)
     {
         Proto = new(element[Proto.XmlElementName]!);
+        Alias = element[XmlAlias]?.GetAttribute(XmlAliasName) ?? string.Empty;
 
         foreach (XmlNode child in element)
         {

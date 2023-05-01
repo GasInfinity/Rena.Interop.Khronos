@@ -54,42 +54,6 @@ public static class Generation
               .RemoveIndentation();
     }
 
-    public static void GenerateSharpFunction(IndentedTextWriter writer, ReadOnlySpan<char> apiPrefix, Command command)
-    {
-        var name = command.Name.AsSpan();
-
-        if (name.StartsWith(apiPrefix))
-            name = name[apiPrefix.Length..];
-
-        writer.Write($"public {command.Proto.Type} {name}(");
-
-        var paramCount = command.Parameters.Count;
-        var i = 0;
-        foreach (var param in command.Parameters)
-        {
-            writer.Write($"{param.Type} @{param.Name}");
-
-            if (++i < paramCount)
-                writer.Write(", ");
-        }
-
-        writer.WriteLine(')');
-        writer.AddIndentation();
-        writer.Write($"=> {command.Name}(");
-
-        i = 1;
-        foreach (var param in command.Parameters)
-        {
-            writer.Write($"@{param.Name}");
-
-            if (i++ < paramCount)
-                writer.Write(", ");
-        }
-
-        writer.WriteLine(");");
-        writer.RemoveIndentation();
-    }
-
     public static void GenerateSharpConstant(IndentedTextWriter writer, SpecEnum constant)
     {
         string value = SharpConstantValueFromRaw(constant.Value);
@@ -100,8 +64,16 @@ public static class Generation
     public static void GenerateSharpUtf8FunctionName(IndentedTextWriter writer, Command command)
         => writer.WriteLine($"internal static ReadOnlySpan<byte> {FunctionToUtf8FunctionName(command.Name)} => \"{command.Name}\"u8;");
 
-    public static void GenerateSharpFunctionMember(IndentedTextWriter writer, Command command)
-        => writer.WriteLine($"private readonly {command.SharpPointerType} {command.Name};");
+    public static void GenerateSharpFunctionMember(IndentedTextWriter writer, string apiPrefix, Command command)
+        => writer.WriteLine($"public readonly {command.SharpPointerType} {FunctionNameToSharpFunctionMemberName(apiPrefix, command.Name)};");
+
+    public static string FunctionNameToSharpFunctionMemberName(string apiPrefix, string functionName)
+    {
+        if (functionName.StartsWith(apiPrefix))
+            return functionName[apiPrefix.Length..];
+
+        return functionName;
+    }
 
     public static string FunctionToUtf8FunctionName(ReadOnlySpan<char> functionName)
         => $"{functionName}FunctionName";

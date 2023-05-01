@@ -25,6 +25,8 @@ public static class Program
 
     private static readonly Option<string[]> ApiExtensionsOption = new("--api-extensions", () => Array.Empty<string>(), "The extensions to generate (Supports '*' wildcard to generate every extension you want)") { Arity = ArgumentArity.OneOrMore, AllowMultipleArgumentsPerToken = true };
 
+    private static readonly Option<bool> GenAliasesOption = new("--gen-aliases", () => true, "Whether to generate aliases or not [e.g if(glDrawElementsBaseVertex is null) glDrawElementsBaseVertex = glDrawElementsBaseVertexEXT;]") { Arity = ArgumentArity.ZeroOrOne };
+
     public static async Task<int> Main(string[] args)
     {
         var rootCommand = new RootCommand("OpenGL related bindings generator")
@@ -37,7 +39,8 @@ public static class Program
             ClassNameOption,
             NamespaceOption,
             ApiVersionOption,
-            ApiExtensionsOption
+            ApiExtensionsOption,
+            GenAliasesOption
         };
 
         rootCommand.SetHandler(Generate);
@@ -55,6 +58,7 @@ public static class Program
         string @namespace = context.ParseResult.GetValueForOption(NamespaceOption)!;
         string apiVersionString = context.ParseResult.GetValueForOption(ApiVersionOption)!;
         string[] extensions = context.ParseResult.GetValueForOption(ApiExtensionsOption)!;
+        bool genAliases = context.ParseResult.GetValueForOption(GenAliasesOption);
 
         ApiVersion apiVersion = default;
 
@@ -97,7 +101,8 @@ public static class Program
             GLApis = totalGLApis,
             Profile = glProfile,
             ApiVersion = apiVersion,
-            IncludedExtensions = extensions.ToImmutableHashSet()
+            IncludedExtensions = extensions.ToImmutableHashSet(),
+            GenerateAliases = genAliases
         }, context.Console);
 
         gen.Generate();

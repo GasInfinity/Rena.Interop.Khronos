@@ -48,13 +48,6 @@ public abstract class ApiGenerator
     public virtual void WriteLoadingStatements(IndentedTextWriter writer)
     {
     }
-
-    public virtual void WriteFunctionDeclarations(IndentedTextWriter writer)
-    {
-        foreach (var command in MainGenerator.IncludedCommands)
-            GenerateSharpFunction(writer, Prefix, command);
-    }
-
     public virtual void WriteConstants(IndentedTextWriter writer)
     {
         foreach (var @enum in MainGenerator.IncludedEnums)
@@ -66,7 +59,7 @@ public abstract class ApiGenerator
         foreach (var command in MainGenerator.IncludedCommands)
         {
             GenerateSharpUtf8FunctionName(writer, command);
-            GenerateSharpFunctionMember(writer, command);
+            GenerateSharpFunctionMember(writer, Prefix, command);
         }
     }
 

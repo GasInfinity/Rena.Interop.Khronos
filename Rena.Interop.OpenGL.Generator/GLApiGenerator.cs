@@ -95,13 +95,13 @@ public sealed class GLApiGenerator : ApiGenerator
               .AddIndentation()
                 .WrtLine("hasLoadedExtensions = true;")
                 .WrtLine("int extensionsLength;")
-                .WrtLine("glGetIntegerv(\"GL_NUM_EXTENSIONS\", &extensionsLength);")
+                .WrtLine("glGetIntegerv(GL_NUM_EXTENSIONS, &extensionsLength);")
                 .WrtLine("byte[] pointerData = ArrayPool<byte>.Shared.Rent(extensionsLength * sizeof(nint));")
                 .WrtLine("Span<nint> extensions = MemoryMarshal.Cast<byte, nint>(pointerData.AsSpan()[..(extensionsLength * sizeof(nint))]);")
                 .WrtLine()
                 .WrtLine("for(int e = 0; e < extensionsLength; ++e)")
                 .AddIndentation()
-                    .WrtLine("extensions[e] = (nint)glGetStringi(GL_EXTENSIONS, (uint)i);")
+                    .WrtLine("extensions[e] = (nint)glGetStringi(GL_EXTENSIONS, (uint)e);")
                 .RemoveIndentation()
                 .WrtLine();
 
@@ -116,9 +116,9 @@ public sealed class GLApiGenerator : ApiGenerator
 
     private void WriteGLExtensionLoading(IndentedTextWriter writer)
     {
-        writer.WrtLine("static bool IsExtensionSupported(ReadOnlySpan<byte> allExtensions, ReadOnlySpan<byte> extension)")
+        writer.WrtLine("static bool CompatIsExtensionSupported(ReadOnlySpan<byte> allExtensions, ReadOnlySpan<byte> extension)")
               .AddIndentation()
-                .WrtLine("=> extensions.IndexOf(extension) != -1;")
+                .WrtLine("=> allExtensions.IndexOf(extension) != -1;")
               .RemoveIndentation()
               .WrtLine()
               .WrtLine("if(!hasLoadedExtensions)")
@@ -129,7 +129,7 @@ public sealed class GLApiGenerator : ApiGenerator
                 .WrtLine();
 
         foreach (var extension in MainGenerator.LoadedExtensions)
-            writer.WriteLine($"{extension.Name} = IsExtensionSupported(allExtensions, {ExtensionToUtf8ExtensionName(extension.Name)});");
+            writer.WriteLine($"{extension.Name} = CompatIsExtensionSupported(allExtensions, {ExtensionToUtf8ExtensionName(extension.Name)});");
 
         writer.RemoveIndentation()
               .WrtLine('}');

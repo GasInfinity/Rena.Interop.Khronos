@@ -13,4 +13,5 @@ public class GeneratorOptions
     public required GLProfile Profile { get; init; }
     public ApiVersion ApiVersion { get; init; }
     public required ImmutableHashSet<string> IncludedExtensions { get; init; } = ImmutableHashSet<string>.Empty;
+    public required bool GenerateAliases { get; init; } = true;
 }
