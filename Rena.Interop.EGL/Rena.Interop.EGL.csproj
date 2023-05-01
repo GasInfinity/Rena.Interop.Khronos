@@ -9,7 +9,7 @@
 
   <PropertyGroup Label="Nuget">
     <PackageId>Rena.Interop.EGL</PackageId>
-    <Version>1.0.9</Version>
+    <Version>1.1.0</Version>
     <Authors>GasInfinity</Authors>
     <Description>Raw EGL bindings for modern .NET</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>

@@ -9,7 +9,7 @@
 
   <PropertyGroup Label="Nuget">
     <PackageId>Rena.Interop.OpenGL</PackageId>
-    <Version>1.0.7</Version>
+    <Version>1.1.0</Version>
     <Authors>GasInfinity</Authors>
     <Description>Raw OpenGL bindings for modern .NET</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
