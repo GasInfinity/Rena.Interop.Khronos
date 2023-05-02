@@ -68,7 +68,7 @@ public class Generator
         console.WriteLine($"Generating single file '{fileName}'");
 
         var filePath = $"{Options.OutputPath}/{fileName}";
-        if (TryCreateDirectories(filePath, console))
+        if (!TryCreateDirectories(filePath, console))
         {
             console.WriteLine("Stopping generation due to one or more errors");
             return;
