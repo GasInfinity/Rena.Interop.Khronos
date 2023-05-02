@@ -1,6 +1,10 @@
+using System.Buffers;
+using System.Buffers.Text;
+using System.Runtime.InteropServices;
+
 namespace Rena.Interop.EGL;
 
-public partial class EGL
+public unsafe partial class EGL
 {
     public const int EGL_ALPHA_SIZE = unchecked((int)0x3021);
     public const int EGL_BAD_ACCESS = unchecked((int)0x3002);

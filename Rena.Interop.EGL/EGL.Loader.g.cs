@@ -1,4 +1,5 @@
 using System.Buffers;
+using System.Buffers.Text;
 using System.Runtime.InteropServices;
 
 namespace Rena.Interop.EGL;
@@ -15,6 +16,7 @@ public unsafe partial class EGL
     public readonly bool Version13;
     public readonly bool Version14;
     public readonly bool Version15;
+    
     public EGL(LoadFunction loadFunc)
     {
         delegate* unmanaged<void*, int, byte*> eglQueryString;

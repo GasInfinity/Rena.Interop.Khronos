@@ -9,9 +9,10 @@ public class GeneratorOptions
     public required string OutputPath { get; init; } = string.Empty;
 
     public required Api Api { get; init; }
-    public required ImmutableArray<(GLApi Api, ApiVersion Version)> GLApis { get; init; } = ImmutableArray<(GLApi, ApiVersion)>.Empty;
-    public required GLProfile Profile { get; init; }
+    public ImmutableArray<(GLApi Api, ApiVersion Version)> GLApis { get; init; } = ImmutableArray<(GLApi, ApiVersion)>.Empty;
+    public GLProfile Profile { get; init; }
     public ApiVersion ApiVersion { get; init; }
-    public required ImmutableHashSet<string> IncludedExtensions { get; init; } = ImmutableHashSet<string>.Empty;
-    public required bool GenerateAliases { get; init; } = true;
+    public ImmutableHashSet<string> IncludedExtensions { get; init; } = ImmutableHashSet<string>.Empty;
+    public bool GenerateAliases { get; init; } = true;
+    public bool GenerateSingleFile { get; init;}
 }

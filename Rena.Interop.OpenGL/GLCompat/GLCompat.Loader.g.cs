@@ -1,4 +1,5 @@
 using System.Buffers;
+using System.Buffers.Text;
 using System.Runtime.InteropServices;
 
 namespace Rena.Interop.OpenGL;
@@ -28,7 +29,9 @@ public unsafe partial class GLCompat
     public readonly bool Version44;
     public readonly bool Version45;
     public readonly bool Version46;
+    
     public readonly bool IsEmbedded;
+    
     public GLCompat(LoadFunction loadFunc)
     {
         delegate* unmanaged<int, byte*> glGetString;

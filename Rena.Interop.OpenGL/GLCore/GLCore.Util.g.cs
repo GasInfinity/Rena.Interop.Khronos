@@ -1,4 +1,6 @@
+using System.Buffers;
 using System.Buffers.Text;
+using System.Runtime.InteropServices;
 
 namespace Rena.Interop.OpenGL;
 
@@ -28,6 +30,7 @@ public unsafe partial class GLCore
         major = minor = 0;
         return false;
     }
+    
     internal static ReadOnlySpan<byte> OpenGlEsCmPrefix => "OpenGL ES-CM"u8;
     internal static ReadOnlySpan<byte> OpenGlEsCxPrefix => "OpenGL ES-CX"u8;
     internal static ReadOnlySpan<byte> OpenGlEsPrefix => "OpenGL ES"u8;

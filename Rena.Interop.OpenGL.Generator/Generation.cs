@@ -1,4 +1,5 @@
 using System.CodeDom.Compiler;
+using System.CommandLine;
 using System.Globalization;
 
 namespace Rena.Interop.OpenGL.Generator;
@@ -7,6 +8,26 @@ public static class Generation
 {
     public const string LoadFunctionTypeName = "LoadFunction";
     public const string LoadFunctionParameterName = "loadFunc";
+
+    public static bool TryCreateDirectories(string filePath, IConsole console)
+    {
+        var directoryPath = Path.GetDirectoryName(filePath);
+
+        if (string.IsNullOrEmpty(directoryPath))
+            return true;
+
+        try
+        {
+            _ = Directory.CreateDirectory(directoryPath);
+            console.WriteLine($"Created directory/directories at '{directoryPath}'");
+            return true;
+        }
+        catch (Exception exception)
+        {
+            console.WriteLine($"Error while creating directory/directories at '{directoryPath}'. Exception: {exception}");
+            return false;
+        }
+    }
 
     public static IndentedTextWriter AddIndentation(this IndentedTextWriter writer)
     {
@@ -62,11 +83,13 @@ public static class Generation
     }
 
     public static void GenerateSharpUtf8FunctionName(IndentedTextWriter writer, Command command)
-        => writer.WriteLine($"internal static ReadOnlySpan<byte> {FunctionToUtf8FunctionName(command.Name)} => \"{command.Name}\"u8;");
+        => writer.WriteLine($"public static ReadOnlySpan<byte> {FunctionToUtf8FunctionName(command.Name)} => \"{command.Name}\"u8;");
 
     public static void GenerateSharpFunctionMember(IndentedTextWriter writer, string apiPrefix, Command command)
         => writer.WriteLine($"public readonly {command.SharpPointerType} {FunctionNameToSharpFunctionMemberName(apiPrefix, command.Name)};");
 
+    public static string NameToSharpFileName(ReadOnlySpan<char> name)
+        => $"{name}.g.cs";
     public static string FunctionNameToSharpFunctionMemberName(string apiPrefix, string functionName)
     {
         if (functionName.StartsWith(apiPrefix))

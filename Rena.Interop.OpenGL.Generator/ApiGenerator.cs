@@ -9,45 +9,97 @@ public abstract class ApiGenerator
     public abstract string Prefix { get; }
     public Generator MainGenerator { get; }
 
-    public ApiGenerator(Generator generator)
+    protected ApiGenerator(Generator generator)
         => MainGenerator = generator;
 
-    public virtual void WriteRequiredFields(IndentedTextWriter writer)
+    public void WriteLoading(IndentedTextWriter writer)
     {
-        writer.WriteLine($"public delegate void* {LoadFunctionTypeName}(byte* name);");
-    }
+        WriteRequiredFields(writer);
+        WriteLoaderFields(writer);
 
-    public virtual void WriteLoaderFields(IndentedTextWriter writer)
-    {
-        if (!MainGenerator.LoadedApis.IsDefaultOrEmpty)
-        {
-            writer.WrtLine("public readonly ushort Major;")
-                  .WrtLine("public readonly ushort Minor;")
-                  .WrtLine();
-
-            foreach (var version in MainGenerator.LoadedVersions)
-                writer.WriteLine($"public readonly bool Version{version.Major}{version.Minor};");
-        }
-
+        var options = MainGenerator.Options;
+        var loadedVersions = MainGenerator.LoadedVersions;
+        var loadedApis = MainGenerator.LoadedApis;
         var loadedExtensions = MainGenerator.LoadedExtensions;
+        var includedCommands = MainGenerator.IncludedCommands;
+        var includedEnums = MainGenerator.IncludedEnums;
 
-        if (!loadedExtensions.IsDefaultOrEmpty)
+        writer.WrtLine($"public {options.ClassName}({LoadFunctionTypeName} loadFunc)")
+              .WrtLine('{')
+              .AddIndentation();
+        WriteLoadingStatements(writer);
+        writer.WriteLine();
+
+        foreach (var version in loadedVersions)
+            writer.WriteLine($"Version{version.Major}{version.Minor} = Major > {version.Major} | (Major == {version.Major} & Minor >= {version.Minor});");
+
+        foreach (var api in loadedApis)
         {
             writer.WriteLine();
+            if (options.Api is Api.GL)
+                writer.WriteLine($"if({(api.GLApi.IsEmbedded() ? string.Empty : "!")}IsEmbedded & Version{api.Number.Major}{api.Number.Minor})");
+            else
+                writer.WriteLine($"if(Version{api.Number.Major}{api.Number.Minor})");
+            writer.WrtLine('{')
+                  .AddIndentation();
 
-            foreach (var extension in loadedExtensions)
+            foreach (var c in api.Requires.SelectMany(a => a.Commands))
             {
-                writer.WrtLine($"internal static ReadOnlySpan<byte> {ExtensionToUtf8ExtensionName(extension.Name)} => \"{extension.Name}\"u8;")
-                      .WrtLine($"public readonly bool {extension.Name};");
+                var command = includedCommands.FirstOrDefault(com => com.Name == c.Name);
+
+                if (command is null)
+                    continue;
+
+                GenerateFixedLoadStatement(writer, FunctionToUtf8FunctionName(command.Name), $"this.{FunctionNameToSharpFunctionMemberName(Prefix, command.Name)}", command.SharpPointerType);
             }
 
-            writer.WriteLine();
+            writer.RemoveIndentation()
+                  .WrtLine('}');
         }
+
+        foreach (var extension in loadedExtensions)
+        {
+            writer.WriteLine();
+
+            writer.WrtLine($"if({extension.Name})")
+                  .WrtLine('{')
+                  .AddIndentation();
+
+            foreach (var c in extension.Requires.SelectMany(e => e.Commands))
+            {
+                var command = includedCommands.FirstOrDefault(com => com.Name == c.Name);
+
+                if (command is null)
+                    continue;
+
+                GenerateFixedLoadStatement(writer, FunctionToUtf8FunctionName(command.Name), $"this.{FunctionNameToSharpFunctionMemberName(Prefix, command.Name)}", command.SharpPointerType);
+            }
+
+            writer.RemoveIndentation()
+                  .WrtLine('}');
+        }
+
+        if (options.GenerateAliases)
+        {
+            foreach (var command in includedCommands)
+            {
+                if (string.IsNullOrEmpty(command.Alias))
+                    continue;
+
+                var aliasedFunction = FunctionNameToSharpFunctionMemberName(Prefix, command.Alias);
+                var realFunction = FunctionNameToSharpFunctionMemberName(Prefix, command.Name);
+
+                writer.WrtLine($"if(this.{aliasedFunction} is null)")
+                    .AddIndentation()
+                    .WrtLine($"this.{aliasedFunction} = this.{realFunction};")
+                    .RemoveIndentation();
+            }
+        }
+
+        writer.RemoveIndentation()
+              .WrtLine('}');
     }
 
-    public virtual void WriteLoadingStatements(IndentedTextWriter writer)
-    {
-    }
     public virtual void WriteConstants(IndentedTextWriter writer)
     {
         foreach (var @enum in MainGenerator.IncludedEnums)
@@ -95,5 +147,44 @@ public abstract class ApiGenerator
                 .WrtLine("return false;")
               .RemoveIndentation()
               .WrtLine('}');
+    }
+
+    protected virtual void WriteRequiredFields(IndentedTextWriter writer)
+    {
+        writer.WriteLine($"public delegate void* {LoadFunctionTypeName}(byte* name);");
+    }
+
+    protected virtual void WriteLoaderFields(IndentedTextWriter writer)
+    {
+        if (!MainGenerator.LoadedApis.IsDefaultOrEmpty)
+        {
+            writer.WrtLine("public readonly ushort Major;")
+                  .WrtLine("public readonly ushort Minor;")
+                  .WrtLine();
+
+            foreach (var version in MainGenerator.LoadedVersions)
+                writer.WriteLine($"public readonly bool Version{version.Major}{version.Minor};");
+
+            writer.WriteLine();
+        }
+
+        var loadedExtensions = MainGenerator.LoadedExtensions;
+
+        if (!loadedExtensions.IsDefaultOrEmpty)
+        {
+            writer.WriteLine();
+
+            foreach (var extension in loadedExtensions)
+            {
+                writer.WrtLine($"internal static ReadOnlySpan<byte> {ExtensionToUtf8ExtensionName(extension.Name)} => \"{extension.Name}\"u8;")
+                      .WrtLine($"public readonly bool {extension.Name};");
+            }
+
+            writer.WriteLine();
+        }
+    }
+
+    protected virtual void WriteLoadingStatements(IndentedTextWriter writer)
+    {
     }
 }

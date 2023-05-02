@@ -1,6 +1,10 @@
+using System.Buffers;
+using System.Buffers.Text;
+using System.Runtime.InteropServices;
+
 namespace Rena.Interop.OpenGL;
 
-public partial class GLES1
+public unsafe partial class GLES1
 {
     public const int GL_VERSION_ES_CL_1_0 = unchecked((int)1);
     public const int GL_VERSION_ES_CM_1_1 = unchecked((int)1);

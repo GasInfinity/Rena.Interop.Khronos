@@ -27,6 +27,8 @@ public static class Program
 
     private static readonly Option<bool> GenAliasesOption = new("--gen-aliases", () => true, "Whether to generate aliases or not [e.g if(glDrawElementsBaseVertex is null) glDrawElementsBaseVertex = glDrawElementsBaseVertexEXT;]") { Arity = ArgumentArity.ZeroOrOne };
 
+    private static readonly Option<bool> GenSingleFileOption = new("--gen-single-file", () => true, "Whether to generate in multiple files or only one") { Arity = ArgumentArity.ZeroOrOne };
+
     public static async Task<int> Main(string[] args)
     {
         var rootCommand = new RootCommand("OpenGL related bindings generator")
@@ -40,7 +42,8 @@ public static class Program
             NamespaceOption,
             ApiVersionOption,
             ApiExtensionsOption,
-            GenAliasesOption
+            GenAliasesOption,
+            GenSingleFileOption
         };
 
         rootCommand.SetHandler(Generate);
@@ -59,6 +62,7 @@ public static class Program
         string apiVersionString = context.ParseResult.GetValueForOption(ApiVersionOption)!;
         string[] extensions = context.ParseResult.GetValueForOption(ApiExtensionsOption)!;
         bool genAliases = context.ParseResult.GetValueForOption(GenAliasesOption);
+        bool genSingleFile = context.ParseResult.GetValueForOption(GenSingleFileOption);
 
         ApiVersion apiVersion = default;
 
@@ -89,7 +93,6 @@ public static class Program
 
         context.Console.WriteLine($"Downloading registry for {api}");
         Registry registry = await LoadRegistry(api);
-        context.Console.WriteLine("Downloaded");
 
         context.Console.WriteLine("Starting generation");
         Generator gen = new(registry, new()
@@ -102,7 +105,8 @@ public static class Program
             Profile = glProfile,
             ApiVersion = apiVersion,
             IncludedExtensions = extensions.ToImmutableHashSet(),
-            GenerateAliases = genAliases
+            GenerateAliases = genAliases,
+            GenerateSingleFile = genSingleFile,
         }, context.Console);
 
         gen.Generate();

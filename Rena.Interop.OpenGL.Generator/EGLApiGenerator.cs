@@ -12,7 +12,7 @@ public sealed class EGLApiGenerator : ApiGenerator
     {
     }
 
-    public override void WriteRequiredFields(IndentedTextWriter writer)
+    protected override void WriteRequiredFields(IndentedTextWriter writer)
     {
         base.WriteRequiredFields(writer);
 
@@ -22,7 +22,7 @@ public sealed class EGLApiGenerator : ApiGenerator
             writer.WriteLine("internal const int EGL_EXTENSIONS = 0x3055;");
     }
 
-    public override void WriteLoadingStatements(IndentedTextWriter writer)
+    protected override void WriteLoadingStatements(IndentedTextWriter writer)
     {
         base.WriteLoadingStatements(writer);
 

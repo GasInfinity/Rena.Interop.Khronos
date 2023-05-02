@@ -12,13 +12,15 @@ public sealed class GLApiGenerator : ApiGenerator
     {
     }
 
-    public override void WriteLoaderFields(IndentedTextWriter writer)
+    protected override void WriteLoaderFields(IndentedTextWriter writer)
     {
         base.WriteLoaderFields(writer);
-        writer.WriteLine("public readonly bool IsEmbedded;");
+
+        writer.WrtLine("public readonly bool IsEmbedded;")
+              .WrtLine();
     }
 
-    public override void WriteRequiredFields(IndentedTextWriter writer)
+    protected override void WriteRequiredFields(IndentedTextWriter writer)
     {
         base.WriteRequiredFields(writer);
 
@@ -41,7 +43,7 @@ public sealed class GLApiGenerator : ApiGenerator
             writer.WriteLine("internal const int GL_NUM_EXTENSIONS = 0x821D;");
     }
 
-    public override void WriteLoadingStatements(IndentedTextWriter writer)
+    protected override void WriteLoadingStatements(IndentedTextWriter writer)
     {
         base.WriteLoadingStatements(writer);
 
@@ -139,7 +141,8 @@ public sealed class GLApiGenerator : ApiGenerator
     {
         base.WriteUtilFields(writer);
 
-        writer.WrtLine("internal static ReadOnlySpan<byte> OpenGlEsCmPrefix => \"OpenGL ES-CM\"u8;")
+        writer.WrtLine()
+              .WrtLine("internal static ReadOnlySpan<byte> OpenGlEsCmPrefix => \"OpenGL ES-CM\"u8;")
               .WrtLine("internal static ReadOnlySpan<byte> OpenGlEsCxPrefix => \"OpenGL ES-CX\"u8;")
               .WrtLine("internal static ReadOnlySpan<byte> OpenGlEsPrefix => \"OpenGL ES\"u8;")
               .WrtLine("internal static ReadOnlySpan<byte> OpenGlScPrefix => \"OpenGL SC\"u8;")

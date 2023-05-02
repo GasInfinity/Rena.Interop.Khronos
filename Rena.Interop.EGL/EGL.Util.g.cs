@@ -1,4 +1,6 @@
+using System.Buffers;
 using System.Buffers.Text;
+using System.Runtime.InteropServices;
 
 namespace Rena.Interop.EGL;
 
