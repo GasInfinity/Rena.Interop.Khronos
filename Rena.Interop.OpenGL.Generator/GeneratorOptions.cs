@@ -14,5 +14,6 @@ public class GeneratorOptions
     public ApiVersion ApiVersion { get; init; }
     public ImmutableHashSet<string> IncludedExtensions { get; init; } = ImmutableHashSet<string>.Empty;
     public bool GenerateAliases { get; init; } = true;
-    public bool GenerateSingleFile { get; init;}
+    public bool GenerateSingleFile { get; init; }
+    public bool EnsureInitializedFunctions { get; init; }
 }
