@@ -57,8 +57,12 @@ public abstract class ApiGenerator
 
             if (options.EnsureInitializedFunctions)
             {
-                writer.WrtLine("else")
-                      .WrtLine('{')
+                writer.Write("else ");
+                if(options.Api == Api.GL)
+                    writer.WriteLine($"if({(api.GLApi.IsEmbedded() ? string.Empty : "!")}IsEmbedded)");
+                else
+                    writer.WriteLine();
+                writer.WrtLine('{')
                       .AddIndentation();
 
                 foreach (var c in api.Requires.SelectMany(a => a.Commands))
