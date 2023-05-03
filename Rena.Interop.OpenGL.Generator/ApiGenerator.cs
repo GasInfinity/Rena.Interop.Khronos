@@ -54,30 +54,6 @@ public abstract class ApiGenerator
 
             writer.RemoveIndentation()
                   .WrtLine('}');
-
-            if (options.EnsureInitializedFunctions)
-            {
-                writer.Write("else ");
-                if(options.Api == Api.GL)
-                    writer.WriteLine($"if({(api.GLApi.IsEmbedded() ? string.Empty : "!")}IsEmbedded)");
-                else
-                    writer.WriteLine();
-                writer.WrtLine('{')
-                      .AddIndentation();
-
-                foreach (var c in api.Requires.SelectMany(a => a.Commands))
-                {
-                    var command = includedCommands.FirstOrDefault(com => com.Name == c.Name);
-
-                    if (command is null)
-                        continue;
-
-                    writer.WriteLine($"this.{FunctionNameToSharpFunctionMemberName(Prefix, command.Name)} = ({command.SharpPointerType})EmptyMethodPointer;");
-                }
-
-                writer.RemoveIndentation()
-                  .WrtLine('}');
-            }
         }
 
         foreach (var extension in loadedExtensions)
@@ -100,33 +76,12 @@ public abstract class ApiGenerator
 
             writer.RemoveIndentation()
                   .WrtLine('}');
-
-            if (options.EnsureInitializedFunctions)
-            {
-                writer.WrtLine("else")
-                      .WrtLine('{')
-                      .AddIndentation();
-
-                foreach (var c in extension.Requires.SelectMany(e => e.Commands))
-                {
-                    var command = includedCommands.FirstOrDefault(com => com.Name == c.Name);
-
-                    if (command is null)
-                        continue;
-
-                    writer.WriteLine($"this.{FunctionNameToSharpFunctionMemberName(Prefix, command.Name)} = ({command.SharpPointerType})EmptyMethodPointer;");
-                }
-
-                writer.RemoveIndentation()
-                  .WrtLine('}');
-            }
         }
 
         if (options.GenerateAliases)
         {
             writer.WriteLine();
 
-            var comparedPointer = options.EnsureInitializedFunctions ? "EmptyMethodPointer" : "null";
             foreach (var command in includedCommands)
             {
                 if (string.IsNullOrEmpty(command.Alias))
@@ -135,7 +90,7 @@ public abstract class ApiGenerator
                 var aliasedFunction = FunctionNameToSharpFunctionMemberName(Prefix, command.Alias);
                 var realFunction = FunctionNameToSharpFunctionMemberName(Prefix, command.Name);
 
-                writer.WrtLine($"if(this.{aliasedFunction} == {comparedPointer})")
+                writer.WrtLine($"if(this.{aliasedFunction} == null)")
                     .AddIndentation()
                     .WrtLine($"this.{aliasedFunction} = this.{realFunction};")
                     .RemoveIndentation();
@@ -198,12 +153,6 @@ public abstract class ApiGenerator
     protected virtual void WriteRequiredFields(IndentedTextWriter writer)
     {
         writer.WriteLine($"public delegate void* {LoadFunctionTypeName}(byte* name);");
-
-        if (MainGenerator.Options.EnsureInitializedFunctions)
-        {
-            writer.WrtLine("[UnmanagedCallersOnly] internal static void EmptyMethod() {}")
-                  .WrtLine("internal static void* EmptyMethodPointer = (void*)(delegate* unmanaged<void>)&EmptyMethod;");
-        }
     }
 
     protected virtual void WriteLoaderFields(IndentedTextWriter writer)

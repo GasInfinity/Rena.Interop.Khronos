@@ -17,9 +17,8 @@ public static class Program
     private static readonly Option<string> NamespaceOption = new("--namespace", "The namespace to use when generating the files") { IsRequired = true };
     private static readonly Option<string> ApiVersionOption = new("--api-version", () => string.Empty, "The version to use when generating the files") { };
     private static readonly Option<string[]> ApiExtensionsOption = new("--api-extensions", () => Array.Empty<string>(), "The extensions to generate (Supports '*' wildcard to generate every extension you want)") { Arity = ArgumentArity.OneOrMore, AllowMultipleArgumentsPerToken = true };
-    private static readonly Option<bool> GenAliasesOption = new("--gen-aliases", () => true, "Whether to generate aliases or not [e.g if(glDrawElementsBaseVertex is null) glDrawElementsBaseVertex = glDrawElementsBaseVertexEXT;]") { Arity = ArgumentArity.ZeroOrOne };
-    private static readonly Option<bool> GenSingleFileOption = new("--gen-single-file", () => true, "Whether to generate in multiple files or only one") { Arity = ArgumentArity.ZeroOrOne };
-    private static readonly Option<bool> GenEnsureInitialized = new("--gen-ensure-initialized", () => true, "Ensures that a function pointer won't be null by using an ([UnmanagedCallersOnly]) empty method.") { Arity = ArgumentArity.ZeroOrOne };
+    private static readonly Option<bool> GenAliasesOption = new("--gen-aliases", "Whether to generate aliases or not [e.g if(glDrawElementsBaseVertex is null) glDrawElementsBaseVertex = glDrawElementsBaseVertexEXT;]") { Arity = ArgumentArity.ZeroOrOne };
+    private static readonly Option<bool> GenSingleFileOption = new("--gen-single-file", "Whether to generate in multiple files or only one") { Arity = ArgumentArity.ZeroOrOne };
 
     public static async Task<int> Main(string[] args)
     {
@@ -35,8 +34,7 @@ public static class Program
             ApiVersionOption,
             ApiExtensionsOption,
             GenAliasesOption,
-            GenSingleFileOption,
-            GenEnsureInitialized
+            GenSingleFileOption
         };
 
         rootCommand.SetHandler(Generate);
@@ -56,7 +54,6 @@ public static class Program
         string[] extensions = context.ParseResult.GetValueForOption(ApiExtensionsOption)!;
         bool genAliases = context.ParseResult.GetValueForOption(GenAliasesOption);
         bool genSingleFile = context.ParseResult.GetValueForOption(GenSingleFileOption);
-        bool genEnsureInitialized = context.ParseResult.GetValueForOption(GenEnsureInitialized);
 
         ApiVersion apiVersion = default;
 
@@ -101,7 +98,6 @@ public static class Program
             IncludedExtensions = extensions.ToImmutableHashSet(),
             GenerateAliases = genAliases,
             GenerateSingleFile = genSingleFile,
-            EnsureInitializedFunctions = genEnsureInitialized
         }, context.Console);
 
         gen.Generate();
