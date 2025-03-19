@@ -7,7 +7,7 @@ public sealed class VulkanSpecificationLoader() : ISpecificationLoader
 {
     private static bool IsGlobalCommand(string name, Command c)
     {
-        if(name == "vkGetInstanceProcAddr" || name == "vkGetDeviceProcAddr") // Special function...
+        if(name == "vkGetInstanceProcAddr") // Special function...
             return true;
 
         IType first = c.Parameters.First().Value.Type.PointerStrippedType;
@@ -19,7 +19,7 @@ public sealed class VulkanSpecificationLoader() : ISpecificationLoader
     }
 
     private static bool IsInstanceCommand(string name, Command c)
-        => c.Parameters.First().Value.Type.PointerStrippedType is UnknownType u && (u.Name == "VkInstance" || u.Name == "VkPhysicalDevice");
+        => name == "vkGetDeviceProcAddr" || c.Parameters.First().Value.Type.PointerStrippedType is UnknownType u && (u.Name == "VkInstance" || u.Name == "VkPhysicalDevice");
 
     public string PrettyEnumPrefix => "VK_";
 
@@ -255,7 +255,7 @@ public sealed class VulkanSpecificationLoader() : ISpecificationLoader
 
             using (builder.EnterBlock())
             {
-                builder.WriteLine($"var loader = ivk.GVk.GetDeviceProcAddr;");
+                builder.WriteLine($"var loader = ivk.GetDeviceProcAddr;");
                 builder.WriteLine("this.IVk = ivk;"); 
                 
                 foreach(Feature feature in includedFeatures)
